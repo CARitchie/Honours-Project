@@ -29,7 +29,7 @@ public class GravityReceiver : MonoBehaviour
             {
                 Vector3 distance = sources[i].transform.position - transform.position;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / (distance.sqrMagnitude);
+                float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;
                 force += distance.normalized * strength;
             }
         }

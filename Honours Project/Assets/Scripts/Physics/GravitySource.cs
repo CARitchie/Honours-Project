@@ -7,12 +7,11 @@ public class GravitySource : MonoBehaviour
     [SerializeField] float surfaceAcceleration;
     [SerializeField] float distanceToSurface;
 
-    Rigidbody rb;
     float mass;
 
     protected virtual void Awake()
     {
-        CalculateMass();
+        mass = CalculateMass();
     }
 
     private void Start()
@@ -20,9 +19,9 @@ public class GravitySource : MonoBehaviour
         GravityController.AddSource(this);
     }
 
-    void CalculateMass()
+    public float CalculateMass()
     {
-        mass = (surfaceAcceleration * Mathf.Pow(distanceToSurface, 2)) / GravityController.gravityConstant;
+        return (surfaceAcceleration * Mathf.Pow(distanceToSurface, 2)) / GravityController.gravityConstant;
     }
 
     public float GetMass()
