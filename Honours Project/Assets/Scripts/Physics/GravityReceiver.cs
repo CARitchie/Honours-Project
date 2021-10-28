@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class GravityReceiver : MonoBehaviour
 {
-    Rigidbody rb;
+    protected Rigidbody rb;
 
     private void Awake()
     {
@@ -17,7 +17,7 @@ public class GravityReceiver : MonoBehaviour
         GravityController.AddReceiver(this);
     }
 
-    public void CalculateForce(List<GravitySource> sources)
+    public virtual void CalculateForce(List<GravitySource> sources)
     {
         Vector3 force = Vector3.zero;
 
