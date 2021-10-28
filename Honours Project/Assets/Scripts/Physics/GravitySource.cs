@@ -28,4 +28,9 @@ public class GravitySource : MonoBehaviour
     {
         return mass;
     }
+
+    public float GetDistance()
+    {
+        return distanceToSurface;
+    }
 }

@@ -7,11 +7,14 @@ public class OrbitViewer : MonoBehaviour
     [SerializeField] bool displayOrbits;
     [SerializeField] int numberOfPoints;
     [SerializeField] float timeStep;
+    [SerializeField] Transform followCamera;
+    [SerializeField] int followTarget;
     [SerializeField] List<OrbitObject> orbitObjects = new List<OrbitObject>();
 
     private void OnValidate()
     {
         UpdateOrbits();
+        StartFollow();
     }
 
     void UpdateOrbits()
@@ -51,6 +54,28 @@ public class OrbitViewer : MonoBehaviour
             orbitObject.SetActive(active);
         }
     }
+
+    void StartFollow()
+    {
+        if (!Application.isPlaying) return;
+        if (followTarget >= 0 && followTarget < orbitObjects.Count)
+        {
+            StopAllCoroutines();
+            StartCoroutine(FollowPlanet());
+        }
+    }
+
+    IEnumerator FollowPlanet()
+    {
+        Camera.main.gameObject.SetActive(false);
+        followCamera.gameObject.SetActive(true);
+
+        while (true && followTarget >= 0 && followTarget < orbitObjects.Count)
+        {
+            followCamera.transform.position = orbitObjects[followTarget].GetPosition();
+            yield return new WaitForFixedUpdate();
+        }
+    }
 }
 
 [System.Serializable]
@@ -74,6 +99,11 @@ class OrbitObject
         lastPos = source.transform.position;
         velocity = source.GetVelocity();
         positions = new List<Vector3>();
+    }
+
+    public Vector3 GetPosition()
+    {
+        return source.transform.position + Vector3.up * source.GetDistance() * 10;
     }
 
     Vector3 CalculateAcceleration(List<OrbitObject> orbitObjects)
