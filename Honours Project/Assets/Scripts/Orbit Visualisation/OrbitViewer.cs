@@ -9,7 +9,12 @@ public class OrbitViewer : MonoBehaviour
     [SerializeField] float timeStep;
     [SerializeField] Transform followCamera;
     [SerializeField] int followTarget;
+    [SerializeField] int relativeBody;
+    [SerializeField] Transform holder;
     [SerializeField] List<OrbitObject> orbitObjects = new List<OrbitObject>();
+
+    Vector3 origin;
+    bool relative = false;
 
     private void OnValidate()
     {
@@ -17,7 +22,7 @@ public class OrbitViewer : MonoBehaviour
         StartFollow();
     }
 
-    void UpdateOrbits()
+    public void UpdateOrbits()
     {
         if (Application.isPlaying) return;
 
@@ -32,7 +37,17 @@ public class OrbitViewer : MonoBehaviour
             orbitObject.Initialise();
         }
 
-        for(int i = 0; i < numberOfPoints; i++)
+        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)
+        {
+            origin = orbitObjects[relativeBody].GetPosition();
+            relative = true;
+        }
+        else
+        {
+            relative = false;
+        }
+
+        for (int i = 0; i < numberOfPoints; i++)
         {
             foreach (OrbitObject orbitObject in orbitObjects)
             {
@@ -41,7 +56,14 @@ public class OrbitViewer : MonoBehaviour
 
             foreach (OrbitObject orbitObject in orbitObjects)
             {
-                orbitObject.ChangePosition(timeStep);
+                if (!relative)
+                {
+                    orbitObject.ChangePosition(timeStep);
+                }
+                else
+                {
+                    orbitObject.ChangePosition(timeStep, orbitObjects[relativeBody].GetLastPos() - origin);
+                }
                 orbitObject.Finalise();
             }
         }
@@ -60,6 +82,12 @@ public class OrbitViewer : MonoBehaviour
         if (!Application.isPlaying) return;
         if (followTarget >= 0 && followTarget < orbitObjects.Count)
         {
+            if (relativeBody >= 0 && relativeBody < orbitObjects.Count)
+            {
+                origin = orbitObjects[relativeBody].GetPosition();
+                relative = true;
+            }
+
             StopAllCoroutines();
             StartCoroutine(FollowPlanet());
         }
@@ -72,7 +100,11 @@ public class OrbitViewer : MonoBehaviour
 
         while (true && followTarget >= 0 && followTarget < orbitObjects.Count)
         {
-            followCamera.transform.position = orbitObjects[followTarget].GetPosition();
+            followCamera.transform.position = orbitObjects[followTarget].GetCameraPosition();
+            if (relative)
+            {
+                holder.position = orbitObjects[relativeBody].GetPosition() - origin;
+            }
             yield return new WaitForFixedUpdate();
         }
     }
@@ -103,7 +135,17 @@ class OrbitObject
 
     public Vector3 GetPosition()
     {
+        return source.transform.position;
+    }
+
+    public Vector3 GetCameraPosition()
+    {
         return source.transform.position + Vector3.up * source.GetDistance() * 10;
+    }
+
+    public Vector3 GetLastPos()
+    {
+        return lastPos;
     }
 
     Vector3 CalculateAcceleration(List<OrbitObject> orbitObjects)
@@ -134,6 +176,12 @@ class OrbitObject
     public void ChangePosition(float timeStep)
     {
         positions.Add(lastPos);
+        lastPos += velocity * timeStep;
+    }
+
+    public void ChangePosition(float timeStep, Vector3 difference)
+    {
+        positions.Add(lastPos - difference);
         lastPos += velocity * timeStep;
     }
 

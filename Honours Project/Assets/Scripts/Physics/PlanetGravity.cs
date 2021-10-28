@@ -22,4 +22,11 @@ public class PlanetGravity : GravitySource
     {
         return initialVelocity;
     }
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying) return;
+
+        FindObjectOfType<OrbitViewer>().UpdateOrbits();
+    }
 }
