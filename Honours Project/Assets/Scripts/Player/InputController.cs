@@ -9,6 +9,7 @@ public class InputController : MonoBehaviour
     public static InputController Instance;
 
     public static event Action Jump;
+    public static event Action Interact;
 
     PlayerInput input;
 
@@ -39,4 +40,8 @@ public class InputController : MonoBehaviour
         Jump?.Invoke();
     }
 
+    void OnInteract()
+    {
+        Interact?.Invoke();
+    }
 }

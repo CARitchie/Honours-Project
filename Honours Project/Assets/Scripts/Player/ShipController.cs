@@ -7,6 +7,7 @@ public class ShipController : MonoBehaviour
 {
     [SerializeField] float engineStrength;
     [SerializeField] float sensitivity;
+    [SerializeField] GameObject cam;
 
     InputAction[] shipControls = new InputAction[8];
     InputAction lookAction;
@@ -44,7 +45,7 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
-        //if (!active) return;
+        if (!active) return;
 
         Movement();
         Look();

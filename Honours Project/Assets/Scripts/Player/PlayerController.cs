@@ -21,13 +21,13 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponentInParent<Rigidbody>();
         cam = GetComponentInChildren<Camera>().transform;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         input = InputController.GetInput();
 
         if(input != null)
