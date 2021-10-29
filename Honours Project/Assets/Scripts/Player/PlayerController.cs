@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     InputAction lookAction;
     Rigidbody rb;
     Transform cam;
+    PlayerInput input;
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        PlayerInput input = InputController.GetInput();
+        input = InputController.GetInput();
 
         if(input != null)
         {
