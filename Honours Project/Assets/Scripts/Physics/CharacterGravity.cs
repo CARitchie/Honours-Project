@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CharacterGravity : GravityReceiver
 {
+    [SerializeField] float rotationSpeed = 150;
+
     public override void CalculateForce(List<GravitySource> sources)
     {
         Vector3 force = Vector3.zero;
@@ -36,7 +38,7 @@ public class CharacterGravity : GravityReceiver
 
         Quaternion rot = Quaternion.FromToRotation(transform.up, -dir);
 
-        rot = Quaternion.RotateTowards(Quaternion.identity, rot, Time.deltaTime * 150);
+        rot = Quaternion.RotateTowards(Quaternion.identity, rot, Time.deltaTime * rotationSpeed);
 
         transform.rotation = rot * transform.rotation;
     }

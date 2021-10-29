@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour
 {
     public static InputController Instance;
+
+    public static event Action Jump;
 
     PlayerInput input;
 
@@ -29,6 +32,11 @@ public class InputController : MonoBehaviour
         if (Instance == null) return null;
 
         return Instance.input;
+    }
+
+    void OnJump()
+    {
+        Jump?.Invoke();
     }
 
 }

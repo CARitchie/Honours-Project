@@ -6,7 +6,10 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float speed;
+    [SerializeField] float jumpStrength = 5;
     [SerializeField] float sensitivity;
+
+    float verticalLook = 0;
 
     InputAction[] movementActions = new InputAction[4];
     InputAction lookAction;
@@ -17,6 +20,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponentInParent<Rigidbody>();
         cam = GetComponentInChildren<Camera>().transform;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Start()
@@ -32,7 +38,14 @@ public class PlayerController : MonoBehaviour
 
             lookAction = input.actions.FindAction("Look");
         }
+
+        InputController.Jump += Jump;
         
+    }
+
+    private void OnDestroy()
+    {
+        InputController.Jump -= Jump;
     }
 
     // Update is called once per frame
@@ -57,7 +70,15 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
+        verticalLook += -look.y * sensitivity * Time.deltaTime;
+        verticalLook = Mathf.Clamp(verticalLook, -90, 90);
+
         transform.localEulerAngles += new Vector3(0, look.x, 0) * sensitivity * Time.deltaTime;
-        cam.localEulerAngles += new Vector3(-look.y, 0, 0) * sensitivity * Time.deltaTime;
+        cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
+    }
+
+    void Jump()
+    {
+        rb.AddForce(transform.up * jumpStrength, ForceMode.VelocityChange);
     }
 }
