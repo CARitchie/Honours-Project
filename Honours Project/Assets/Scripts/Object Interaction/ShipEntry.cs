@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class ShipEntry : MonoBehaviour, Interact
 {
+    ShipController ship;
+
+    private void Awake()
+    {
+        ship = GetComponentInParent<ShipController>();
+    }
+
     public void OnEnter()
     {
-        Debug.Log("Enter Ship");
     }
 
     public void OnExit()
     {
-        Debug.Log("Exit Ship");
     }
 
     public void OnSelect()
     {
-        Debug.Log("Select Ship");
+        ship.Activate();
     }
 }

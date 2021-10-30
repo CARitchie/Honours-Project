@@ -324,7 +324,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   jumpStrength: 5
-  sensitivity: 80
+  sensitivity: 60
 --- !u!1 &432564248
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,8 +439,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34413c0a08b04ef4a950b26a2136f5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engineStrength: 11.5
+  engineStrength: 11
   sensitivity: 800
+  maxRotation: 1000
   cam: {fileID: 432564248}
 --- !u!114 &457763780
 MonoBehaviour:

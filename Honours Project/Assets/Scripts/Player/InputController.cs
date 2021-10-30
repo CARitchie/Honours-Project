@@ -10,6 +10,7 @@ public class InputController : MonoBehaviour
 
     public static event Action Jump;
     public static event Action Interact;
+    public static event Action Exit;
 
     PlayerInput input;
 
@@ -35,6 +36,13 @@ public class InputController : MonoBehaviour
         return Instance.input;
     }
 
+    public static void SetMap(string map)
+    {
+        if (Instance == null) return;
+
+        Instance.input.SwitchCurrentActionMap(map);
+    }
+
     void OnJump()
     {
         Jump?.Invoke();
@@ -43,5 +51,10 @@ public class InputController : MonoBehaviour
     void OnInteract()
     {
         Interact?.Invoke();
+    }
+
+    void OnExitShip()
+    {
+        Exit?.Invoke();
     }
 }

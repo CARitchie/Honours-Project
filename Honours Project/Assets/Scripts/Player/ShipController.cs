@@ -7,6 +7,7 @@ public class ShipController : MonoBehaviour
 {
     [SerializeField] float engineStrength;
     [SerializeField] float sensitivity;
+    [SerializeField] float maxRotation = 1000;
     [SerializeField] GameObject cam;
 
     InputAction[] shipControls = new InputAction[8];
@@ -41,6 +42,13 @@ public class ShipController : MonoBehaviour
 
             lookAction = input.actions.FindAction("ShipLook");
         }
+
+        InputController.Exit += Deactivate;
+    }
+
+    private void OnDestroy()
+    {
+        InputController.Exit -= Deactivate;
     }
 
     private void Update()
@@ -53,12 +61,22 @@ public class ShipController : MonoBehaviour
 
     public void Activate()
     {
-
+        cam.SetActive(true);
+        active = true;
+        InputController.SetMap("Ship");
+        PlayerController.Instance.Deactivate();
     }
 
     public void Deactivate()
     {
+        active = false;
+        cam.SetActive(false);
+        InputController.SetMap("Player");
 
+        PlayerController.Instance.SetRotation(transform.eulerAngles);
+        PlayerController.Instance.SetPosition(transform.position + transform.up);
+        PlayerController.Instance.ForceVelocity(rb.velocity);
+        PlayerController.Instance.Activate();
     }
 
     void Movement()
@@ -85,6 +103,11 @@ public class ShipController : MonoBehaviour
 
         // 0.08 makes rotation fade out rather than instantly stop
         angVel -= angVel.normalized * angVel.sqrMagnitude * 0.08f * Time.deltaTime;
+
+        // Added in to prevent Quaternions from becoming infinite and then breaking
+        angVel.x = Mathf.Clamp(angVel.x, -maxRotation, maxRotation);
+        angVel.y = Mathf.Clamp(angVel.y, -maxRotation, maxRotation);
+        angVel.z = Mathf.Clamp(angVel.z, -maxRotation, maxRotation);
 
         transform.Rotate(angVel * Time.deltaTime);
 

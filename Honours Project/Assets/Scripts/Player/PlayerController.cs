@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     float verticalLook = 0;
 
+    public static PlayerController Instance;
+
     InputAction[] movementActions = new InputAction[4];
     InputAction lookAction;
     Rigidbody rb;
@@ -19,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         rb = GetComponentInParent<Rigidbody>();
         cam = GetComponentInChildren<Camera>().transform;
     }
@@ -81,5 +84,32 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         rb.AddForce(transform.up * jumpStrength, ForceMode.VelocityChange);
+    }
+
+    public void Activate()
+    {
+        transform.parent.gameObject.SetActive(true);
+    }
+
+    public void Deactivate()
+    {
+        transform.parent.gameObject.SetActive(false);
+        transform.localEulerAngles = Vector3.zero;
+        cam.localEulerAngles = Vector3.zero;
+    }
+
+    public void ForceVelocity(Vector3 velocity)
+    {
+        rb.velocity = velocity;
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        transform.parent.position = position;
+    }
+
+    public void SetRotation(Vector3 rotation)
+    {
+        transform.parent.eulerAngles = rotation;
     }
 }
