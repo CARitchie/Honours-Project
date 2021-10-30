@@ -7,7 +7,7 @@ public class GravityReceiver : MonoBehaviour
 {
     protected Rigidbody rb;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
@@ -17,7 +17,7 @@ public class GravityReceiver : MonoBehaviour
         GravityController.AddReceiver(this);
     }
 
-    public virtual void CalculateForce(List<GravitySource> sources)
+    public virtual void CalculateForce(List<GravitySource> sources, float time)
     {
         Vector3 force = Vector3.zero;
 

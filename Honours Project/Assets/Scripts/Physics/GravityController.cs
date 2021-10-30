@@ -31,9 +31,11 @@ public class GravityController : MonoBehaviour
 
     void AddForces()
     {
+        float time = Time.fixedDeltaTime;
+
         foreach(GravityReceiver receiver in receivers)
         {
-            receiver.CalculateForce(sources);
+            receiver.CalculateForce(sources, time);
         }
     }
 

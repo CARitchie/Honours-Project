@@ -15,7 +15,7 @@ public class PlanetGravity : GravitySource
 
         rb = GetComponent<Rigidbody>();
         rb.mass = GetMass();
-        rb.AddForce(initialVelocity, ForceMode.VelocityChange);
+        //rb.AddForce(initialVelocity, ForceMode.VelocityChange);
     }
 
     public Vector3 GetVelocity()

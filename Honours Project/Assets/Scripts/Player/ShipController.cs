@@ -51,7 +51,7 @@ public class ShipController : MonoBehaviour
         InputController.Exit -= Deactivate;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!active) return;
 
@@ -86,30 +86,32 @@ public class ShipController : MonoBehaviour
         move += transform.up * (shipControls[4].ReadValue<float>() - shipControls[5].ReadValue<float>());
 
         move *= engineStrength;
-        move *= Time.deltaTime;
+        move *= Time.fixedDeltaTime;
 
         rb.AddForce(move, ForceMode.VelocityChange);
     }
 
     void Look()
     {
+        float time = Time.fixedDeltaTime;
+
         // 0.5 and 0.1 are necessary to make motion smoother https://forum.unity.com/threads/mouse-delta-input.646606/
-        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f * Time.deltaTime;
+        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f * time;
 
         angVel.x -= look.y * sensitivity;
         angVel.y += look.x * sensitivity;
 
-        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * sensitivity * 0.6f * Time.deltaTime;
+        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * sensitivity * 0.6f * time;
 
         // 0.08 makes rotation fade out rather than instantly stop
-        angVel -= angVel.normalized * angVel.sqrMagnitude * 0.08f * Time.deltaTime;
+        angVel -= angVel.normalized * angVel.sqrMagnitude * 0.08f * time;
 
         // Added in to prevent Quaternions from becoming infinite and then breaking
         angVel.x = Mathf.Clamp(angVel.x, -maxRotation, maxRotation);
         angVel.y = Mathf.Clamp(angVel.y, -maxRotation, maxRotation);
         angVel.z = Mathf.Clamp(angVel.z, -maxRotation, maxRotation);
 
-        transform.Rotate(angVel * Time.deltaTime);
+        transform.Rotate(angVel * time);
 
         rb.angularVelocity = Vector3.zero;
     }

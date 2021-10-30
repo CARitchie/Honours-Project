@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterGravity : GravityReceiver
+public class PlanetReceiver : GravityReceiver
 {
-    [SerializeField] float rotationSpeed = 150;
+    [SerializeField] Vector3 velocity;
 
     public override void CalculateForce(List<GravitySource> sources, float time)
     {
@@ -21,10 +21,10 @@ public class CharacterGravity : GravityReceiver
             {
                 Vector3 distance = sources[i].transform.position - transform.position;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;
+                float strength = (G * sources[i].GetMass()) / distance.sqrMagnitude;
                 force += distance.normalized * strength;
 
-                if(strength > max)
+                if (strength > max)
                 {
                     max = strength;
                     dir = distance.normalized * strength;
@@ -32,14 +32,7 @@ public class CharacterGravity : GravityReceiver
             }
         }
 
-        rb.AddForce(force);
-
-        // https://answers.unity.com/questions/395033/quaternionfromtorotation-misunderstanding.html
-
-        Quaternion rot = Quaternion.FromToRotation(transform.up, -dir);
-
-        rot = Quaternion.RotateTowards(Quaternion.identity, rot, time * rotationSpeed);
-
-        transform.rotation = rot * transform.rotation;
+        velocity += force * time;
+        rb.MovePosition(rb.position + (velocity * time));
     }
 }

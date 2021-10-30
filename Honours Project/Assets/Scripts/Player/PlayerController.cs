@@ -67,17 +67,21 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = forward * transform.forward + sideways * transform.right;
 
-        transform.parent.position += moveDirection * speed * Time.deltaTime;
+        if (moveDirection == Vector3.zero) return;
+
+        Vector3 target = rb.position + (moveDirection * speed * Time.deltaTime);
+
+        rb.MovePosition(target);
     }
 
     void Look()
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
-        verticalLook += -look.y * sensitivity * Time.deltaTime;
+        verticalLook += -look.y * sensitivity;
         verticalLook = Mathf.Clamp(verticalLook, -90, 90);
 
-        transform.localEulerAngles += new Vector3(0, look.x, 0) * sensitivity * Time.deltaTime;
+        transform.localEulerAngles += new Vector3(0, look.x, 0) * sensitivity;
         cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
     }
 
