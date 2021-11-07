@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlanetReceiver : GravityReceiver
 {
     [SerializeField] Vector3 velocity;
+    [SerializeField] Vector3 angularVelocity;
 
     public override void CalculateForce(List<GravitySource> sources, float time)
     {
@@ -34,5 +35,6 @@ public class PlanetReceiver : GravityReceiver
 
         velocity += force * time;
         rb.MovePosition(rb.position + (velocity * time));
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(angularVelocity * time));
     }
 }
