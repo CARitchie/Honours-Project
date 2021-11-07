@@ -45,9 +45,13 @@ Shader "My Shaders/Atmosphere Shader"
 
             sampler2D _MainTex;
 			float3 _PlanetOrigin;
+			float3 _PlanetRadius;
 			float _AtmosphereRadius;
 			sampler2D _CameraDepthTexture;
 			int _NumberOfSteps;
+			float3 _LightOrigin;
+			float _Strength;
+			float _SunsetStrength;
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -77,6 +81,26 @@ Shader "My Shaders/Atmosphere Shader"
 				return float2(-1,-1);
 			}
 
+			float3 Density(float3 position) {
+				float2 sunResult = SphereCollision(position, _LightOrigin - position, _PlanetOrigin, _AtmosphereRadius);
+
+				float distanceIn = sunResult.y - sunResult.x;
+
+				float sunStrength = (distanceIn) / _AtmosphereRadius;
+				float closeness = 1 - (length(position - _PlanetOrigin) - _PlanetRadius) / (_AtmosphereRadius - _PlanetRadius);
+
+				float opacity = closeness - sunStrength * 500;
+
+				if (opacity < 0) opacity = 0;
+
+				float sunset = distanceIn / (_AtmosphereRadius - _PlanetRadius);
+
+				float3 density = float3(opacity *(sunset * _SunsetStrength), opacity, opacity);
+
+				return density;
+
+			}
+
             fixed4 frag (v2f i) : SV_Target
             {
 				fixed4 col = tex2D(_MainTex, i.uv);
@@ -97,18 +121,21 @@ Shader "My Shaders/Atmosphere Shader"
 				float limit = min(distanceIn, depth - result.x);
 
 				float progress = 0;
-				float density = 0;
+				float3 density = 0;
 
 				while (progress < limit) {
-					
-					density += 0.1f * step;
+					float3 position = _WorldSpaceCameraPos + normalize(i.viewDir) * (result.x + progress);
+
+					density += Density(position) * step;
 					
 					
 					
 					progress += step;
 				}
+
 				density /= _NumberOfSteps;
-				col += density;
+				float3 newColour = float3(0.25f, 0.4f, 0.8f) * density * _Strength;
+				col.rgb += newColour;
 
 				return col;
             }

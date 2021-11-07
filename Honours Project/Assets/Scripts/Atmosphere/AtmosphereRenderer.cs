@@ -8,6 +8,7 @@ public class AtmosphereRenderer : MonoBehaviour
     [SerializeField] Material material;
 
     [SerializeField] Atmosphere atmosphere;
+    [SerializeField] Transform sun;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class AtmosphereRenderer : MonoBehaviour
         if (atmosphere == null) return;
 
         material = atmosphere.ModifyMaterial(material);
+        material.SetVector("_LightOrigin", sun.position);
 
         Graphics.Blit(source, destination, material);
     }
