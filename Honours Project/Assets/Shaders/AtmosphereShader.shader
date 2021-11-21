@@ -5,6 +5,9 @@ Shader "My Shaders/Atmosphere Shader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_Colour("Colour", Color) = (1, 1, 1, 1)
+		_SunsetColour("Sunset Colour", Color) = (1, 1, 1, 1)
+		_SunColour("Sun Colour", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -52,6 +55,9 @@ Shader "My Shaders/Atmosphere Shader"
 			float3 _LightOrigin;
 			float _Strength;
 			float _SunsetStrength;
+			float4 _Colour;
+			float4 _SunsetColour;
+			float4 _SunColour;
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -91,11 +97,17 @@ Shader "My Shaders/Atmosphere Shader"
 
 				float opacity = closeness - sunStrength * 500;
 
-				if (opacity < 0) opacity = 0;
+				float sunset;
 
-				float sunset = distanceIn / (_AtmosphereRadius - _PlanetRadius);
+				if (opacity <= 0) {
+					opacity = 0;
+					sunset = 0;
+				}
+				else {
+					sunset = (distanceIn / (_AtmosphereRadius - _PlanetRadius)) * closeness * opacity * 100;
+				}
 
-				float3 density = float3(opacity *(sunset * _SunsetStrength), opacity, opacity);
+				float3 density = float3(opacity, opacity, opacity) + (_SunsetColour.rgb * (sunset * _SunsetStrength));
 
 				return density;
 
@@ -133,8 +145,13 @@ Shader "My Shaders/Atmosphere Shader"
 					progress += step;
 				}
 
+				float2 sunResult = SphereCollision(_WorldSpaceCameraPos, i.viewDir, _LightOrigin, 200);
+				if (!(sunResult.x <= 0 || sunResult.x >= depth)) {
+					col.rgb += _SunColour * density;
+				}
+
 				density /= _NumberOfSteps;
-				float3 newColour = float3(0.25f, 0.4f, 0.8f) * density * _Strength;
+				float3 newColour = _Colour.rgb * density * _Strength;
 				col.rgb += newColour;
 
 				return col;

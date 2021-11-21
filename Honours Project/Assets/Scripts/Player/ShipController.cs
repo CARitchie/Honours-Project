@@ -74,7 +74,7 @@ public class ShipController : MonoBehaviour
         InputController.SetMap("Player");
 
         PlayerController.Instance.SetRotation(transform.eulerAngles);
-        PlayerController.Instance.SetPosition(transform.position + transform.up);
+        PlayerController.Instance.SetPosition(transform.position + transform.up * 3);
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
     }

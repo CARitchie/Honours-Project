@@ -12,7 +12,7 @@ public class CharacterGravity : GravityReceiver
 
         float G = GravityController.gravityConstant;
 
-        float max = 0;
+        float max = 100000000;
         Vector3 dir = Vector3.zero;
 
         for (int i = 0; i < sources.Count; i++)
@@ -24,9 +24,9 @@ public class CharacterGravity : GravityReceiver
                 float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;
                 force += distance.normalized * strength;
 
-                if(strength > max)
+                if(distance.sqrMagnitude - sources[i].GetSquareDistance() < max)
                 {
-                    max = strength;
+                    max = distance.sqrMagnitude;
                     dir = distance.normalized * strength;
                 }
             }

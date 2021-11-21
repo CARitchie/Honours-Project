@@ -33,4 +33,9 @@ public class GravitySource : MonoBehaviour
     {
         return distanceToSurface;
     }
+
+    public float GetSquareDistance()
+    {
+        return Mathf.Pow(distanceToSurface, 2);
+    }
 }
