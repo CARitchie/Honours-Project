@@ -146,7 +146,7 @@ Shader "My Shaders/Atmosphere Shader"
 				}
 
 				float2 sunResult = SphereCollision(_WorldSpaceCameraPos, i.viewDir, _LightOrigin, 200);
-				if (!(sunResult.x <= 0 || sunResult.x >= depth)) {
+				if (sunResult.x > 0 && sunResult.x < depth) {
 					col.rgb += _SunColour * density;
 				}
 
