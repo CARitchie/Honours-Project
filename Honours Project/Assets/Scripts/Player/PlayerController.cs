@@ -5,16 +5,19 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float speed;
+    [SerializeField] float walkSpeed;
+    [SerializeField] float sprintSpeed;
     [SerializeField] float jumpStrength = 5;
     [SerializeField] float sensitivity;
 
     float verticalLook = 0;
+    float movementSpeed;
 
     public static PlayerController Instance;
 
     InputAction[] movementActions = new InputAction[4];
     InputAction lookAction;
+    InputAction sprintAction;
     Rigidbody rb;
     Transform cam;
     PlayerInput input;
@@ -41,6 +44,7 @@ public class PlayerController : MonoBehaviour
             movementActions[3] = input.actions.FindAction("MoveLeft");
 
             lookAction = input.actions.FindAction("Look");
+            sprintAction = input.actions.FindAction("Sprint");
         }
 
         InputController.Jump += Jump;
@@ -69,7 +73,16 @@ public class PlayerController : MonoBehaviour
 
         if (moveDirection == Vector3.zero) return;
 
-        Vector3 target = rb.position + (moveDirection * speed * Time.deltaTime);
+        if(sprintAction.ReadValue<float>() > 0)
+        {
+            movementSpeed = sprintSpeed;
+        }
+        else
+        {
+            movementSpeed = walkSpeed;
+        }
+
+        Vector3 target = rb.position + (moveDirection * movementSpeed * Time.deltaTime);
 
         rb.MovePosition(target);
     }

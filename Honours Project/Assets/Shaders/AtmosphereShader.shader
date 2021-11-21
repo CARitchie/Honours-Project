@@ -8,6 +8,7 @@ Shader "My Shaders/Atmosphere Shader"
 		_Colour("Colour", Color) = (1, 1, 1, 1)
 		_SunsetColour("Sunset Colour", Color) = (1, 1, 1, 1)
 		_SunColour("Sun Colour", Color) = (1, 1, 1, 1)
+		_Closeness("Closeness", float) = 25
     }
     SubShader
     {
@@ -58,6 +59,7 @@ Shader "My Shaders/Atmosphere Shader"
 			float4 _Colour;
 			float4 _SunsetColour;
 			float4 _SunColour;
+			float _Closeness;
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -85,6 +87,10 @@ Shader "My Shaders/Atmosphere Shader"
 				}
 
 				return float2(-1,-1);
+			}
+
+			float SquareMag(float3 vec) {
+				return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 			}
 
 			float3 Density(float3 position) {
@@ -138,7 +144,10 @@ Shader "My Shaders/Atmosphere Shader"
 				while (progress < limit) {
 					float3 position = _WorldSpaceCameraPos + normalize(i.viewDir) * (result.x + progress);
 
-					density += Density(position) * step;
+					float distance = SquareMag(position - _WorldSpaceCameraPos) / _Closeness;
+					distance = clamp(distance, 0, 1);
+
+					density += Density(position) * step * distance;
 					
 					
 					

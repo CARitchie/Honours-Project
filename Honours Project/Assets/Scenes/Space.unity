@@ -492,7 +492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24fcfa1950027e949bed5b8f27eaa6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  walkSpeed: 3
+  sprintSpeed: 6
   jumpStrength: 5
   sensitivity: 0.2
 --- !u!1 &432564248
@@ -686,8 +687,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34413c0a08b04ef4a950b26a2136f5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engineStrength: 10.5
-  sensitivity: 600
+  engineStrength: 10
+  sensitivity: 500
   maxRotation: 1000
   cam: {fileID: 432564248}
 --- !u!114 &457763780
