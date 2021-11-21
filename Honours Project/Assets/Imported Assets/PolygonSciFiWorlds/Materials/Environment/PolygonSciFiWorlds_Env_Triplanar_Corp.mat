@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: PolygonSciFiWorlds_Env_Triplanar_Corp
   m_Shader: {fileID: 4800000, guid: 8e3a7be9db42981418988bc59e1916cb, type: 3}
   m_ShaderKeywords: 
@@ -260,11 +261,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Ground_Detail_Power: 1
+    - _Ground_Detail_Power: 0
     - _Ground_Detail_Scale: 0.137
     - _Ground_Falloff: 65
     - _Ground_Noise_Scale: 0
-    - _Ground_Pebble_Scale: 0.0361
+    - _Ground_Pebble_Scale: 0
     - _MEtallic: 0.421
     - _Metallic: 0
     - _Mode: 0
@@ -308,3 +309,4 @@ Material:
     - _Rock_Colour: {r: 0.056228366, g: 0.05482265, b: 0.09558821, a: 1}
     - _Rock_Colour_Primary: {r: 0.17766005, g: 0.24931695, b: 0.3897059, a: 0}
     - _Rock_Colour_Secondary: {r: 1, g: 0.16911763, b: 0.16911763, a: 0}
+  m_BuildTextureStacks: []
