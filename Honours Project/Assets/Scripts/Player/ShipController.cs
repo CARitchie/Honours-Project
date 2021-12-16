@@ -81,7 +81,6 @@ public class ShipController : MonoBehaviour
 
     void Movement()
     {
-        Debug.Log(shipControls[4].ReadValue<float>());
         Vector3 move = transform.forward * (shipControls[0].ReadValue<float>() - shipControls[2].ReadValue<float>());
         move += transform.right * (shipControls[1].ReadValue<float>() - shipControls[3].ReadValue<float>());
         move += transform.up * (shipControls[4].ReadValue<float>() - shipControls[5].ReadValue<float>()) * 1.2f;
