@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613c14fd52a344749bd820047379d5e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 46e7ccbc211e6264e9562bdb47d50dc4, type: 2}
+  material: {fileID: 2100000, guid: 124f90c9074b17a4f99da6a0c9c0e943, type: 2}
   atmosphere: {fileID: 1784249951}
   sun: {fileID: 617997808}
 --- !u!1 &333595321
@@ -710,7 +710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613c14fd52a344749bd820047379d5e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 46e7ccbc211e6264e9562bdb47d50dc4, type: 2}
+  material: {fileID: 2100000, guid: 124f90c9074b17a4f99da6a0c9c0e943, type: 2}
   atmosphere: {fileID: 1784249951}
   sun: {fileID: 617997808}
 --- !u!1 &457763778
@@ -4304,6 +4304,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JungleWorld
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ad35a641e6e62d499b271187f86e660, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ad35a641e6e62d499b271187f86e660, type: 3}
 --- !u!1 &1334036054
@@ -5809,10 +5813,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetRadius: 50
-  atmosphereRadius: 67.8
-  numberOfSteps: 500
-  strength: 55
+  atmosphereRadius: 68.8
+  numberOfSteps: 5
+  strength: 1
   sunsetStrength: 600
+  wavelengths: {x: 700, y: 530, z: 440}
+  scatterStrength: 30.23
 --- !u!1001 &1974563970
 PrefabInstance:
   m_ObjectHideFlags: 0
