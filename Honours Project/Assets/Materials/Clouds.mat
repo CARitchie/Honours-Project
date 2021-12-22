@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Atmosphere2
-  m_Shader: {fileID: 4800000, guid: b877ab50840d58d4fad2823eaca829ce, type: 3}
+  m_Name: Clouds
+  m_Shader: {fileID: 4800000, guid: e3a18cb8ed6f7bc4ea4441bf0680a111, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,10 +19,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Noise:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -59,35 +55,46 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WeatherMap:
+        m_Texture: {fileID: 2800000, guid: 5a2eb4b9bc70b4e44be8f7236d2ffaaa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _AnvilAmount: 1
+    - _Balance: 2.25
     - _BumpScale: 1
-    - _Closeness: 30
-    - _CloudMultiplier: 0
-    - _CloudScale: 0
-    - _CloudThickness: 0
-    - _CloudThreshold: 0
+    - _CSe: 2
+    - _CSi: 2.5
+    - _CloudScale: 2.69
+    - _Coverage: 1
     - _Cutoff: 0.5
-    - _DensityFalloff: 5.6
+    - _Density: 0.88
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxDensity: 180.87
     - _Metallic: 0
     - _Mode: 0
+    - _NumberOfSteps: 10
     - _OcclusionStrength: 1
-    - _OutScatterPoints: 10
+    - _Opacity: 0.14
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _SunSteps: 3
     - _UVSec: 0
     - _ZWrite: 1
-    - smallG: 0
+    - _ins: 1
+    - _ivo: 0.5
+    - _outs: 1
     m_Colors:
+    - _BoundsMax: {r: 400, g: 116.2, b: 400, a: 1}
+    - _BoundsMin: {r: -400, g: 10, b: -400, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Colour: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SunColour: {r: 1, g: 1, b: 1, a: 1}
-    - _SunsetColour: {r: 1, g: 1, b: 1, a: 1}
+    - boundsMax: {r: 10, g: 10, b: 10, a: 1}
+    - boundsMin: {r: -10, g: -10, b: -10, a: 1}
   m_BuildTextureStacks: []

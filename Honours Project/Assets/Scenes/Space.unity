@@ -5813,9 +5813,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetRadius: 50
-  atmosphereRadius: 68.8
+  atmosphereRadius: 70
   numberOfSteps: 5
-  strength: 1
+  strength: 0.8
   sunsetStrength: 600
   wavelengths: {x: 700, y: 530, z: 440}
   scatterStrength: 30.23
