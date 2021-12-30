@@ -27,6 +27,7 @@ public class PlanetGravity : GravitySource
     {
         if (Application.isPlaying) return;
 
-        FindObjectOfType<OrbitViewer>().UpdateOrbits();
+        OrbitViewer orbitViewer = FindObjectOfType<OrbitViewer>();
+        if( orbitViewer != null) orbitViewer.UpdateOrbits();
     }
 }
