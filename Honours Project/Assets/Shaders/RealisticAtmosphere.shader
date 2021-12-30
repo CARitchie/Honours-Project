@@ -6,6 +6,7 @@ Properties
 		_Closeness("Closeness", float) = 25
 		_DensityFalloff("Density Falloff", float) = 1
 		_OutScatterPoints("Out Scattering Points", int) = 1
+		_MaxDensity("Maximum density", float) = 1
     }
     SubShader
     {
@@ -57,6 +58,7 @@ Properties
             float3 scatteringCoefficients;
 			int _OutScatterPoints;
 			float _DensityFalloff;
+			float _MaxDensity;
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -128,7 +130,7 @@ Properties
 				return opticalDepth;
 			}
 
-			float3 CalculateLight(float3 origin, float3 dir, float dist, float3 cameraPos){
+			float4 CalculateLight(float3 origin, float3 dir, float dist, float3 cameraPos){
 				float3 pos = origin;
 				float step = dist / (_NumberOfSteps - 1);
 				float3 inScatteredLight = float3(0,0,0);
@@ -151,7 +153,9 @@ Properties
 					pos += dir * step;
 				}
 
-				return inScatteredLight * _Strength;
+				float rayDensity = OutScattering(origin,dir,dist);
+				float3 light = inScatteredLight * _Strength;
+				return float4(light.x,light.y,light.z,rayDensity);
 			}
 
             fixed4 frag (v2f i) : SV_Target
@@ -172,8 +176,15 @@ Properties
 
 				if(dstThroughAtmosphere > 0){
 					float3 entryPoint = origin + dir * dstToAtmosphere;
-					float3 light = CalculateLight(entryPoint, dir, dstThroughAtmosphere, origin);
-					col.xyz += light;
+					float4 light = CalculateLight(entryPoint, dir, dstThroughAtmosphere, origin);
+
+					if(depth > 10000){
+						float density = light.x + light.y + light.z;
+						density = 1 - saturate(density / _MaxDensity);
+						col.xyz *= density;
+					}
+
+					col.xyz += light.xyz;
 				}
 
 				return col;
