@@ -7,8 +7,8 @@ public class PathFinder : MonoBehaviour
     [SerializeField] float height;
     [SerializeField] Transform planet;
     [SerializeField] Transform targetObject;
-    [SerializeField] GameObject identifier;
     [SerializeField] bool visualise;
+    [SerializeField] int maxIterations = 1000;
 
     List<Node> openList = new List<Node>();
     List<Node> closedList = new List<Node>();
@@ -18,6 +18,7 @@ public class PathFinder : MonoBehaviour
     float diagonalCost = 14;
 
     Node currentNode = null;
+    List<Vector3> completed = new List<Vector3>();
 
     void Start(){
         if(!visualise){
@@ -25,8 +26,7 @@ public class PathFinder : MonoBehaviour
 
             int size = path.Count;
             for(int i = 0 ; i < size ; i++){
-                GameObject sphere = Instantiate(identifier,transform);
-                sphere.transform.position = path.Pop();
+                completed.Add(path.Pop());
             }
         }else{
             StartCoroutine(VisualiseProcess(targetObject.position));
@@ -50,8 +50,8 @@ public class PathFinder : MonoBehaviour
         bool found = false;
 
         while(!found){
-            Debug.Log(counter);
             currentNode = FindSmallestCost();
+            if(currentNode == null) return null;
 
             if(AddToClosed(currentNode) || counter == 0){
                 found = true;
@@ -83,12 +83,13 @@ public class PathFinder : MonoBehaviour
         if(originData == null) yield return null;
         openList.Add(new Node(null, originData, 0, CalculateHCost(originData[0])));
         
-        int counter = 3000;
+        int counter = maxIterations;
         bool found = false;
 
         while(!found){
-            Debug.Log(counter);
+
             currentNode = FindSmallestCost();
+            if(currentNode == null) yield return null;
 
             if(AddToClosed(currentNode) || counter == 0){
                 found = true;
@@ -97,6 +98,14 @@ public class PathFinder : MonoBehaviour
             }
             counter--;
             yield return new WaitForEndOfFrame();
+        }
+
+        while(currentNode.Parent != null){
+            completed.Add(currentNode.Position);
+            currentNode = currentNode.Parent;
+
+            yield return new WaitForEndOfFrame();
+            //yield return new WaitForEndOfFrame();
         }
     }
 
@@ -112,6 +121,8 @@ public class PathFinder : MonoBehaviour
     }
 
     Node FindSmallestCost(){
+        if(openList == null || openList.Count < 1) return null;
+
         Node min = openList[0];
         for(int i = 1 ; i < openList.Count;i++){
             if(openList[i].FCost < min.FCost) min = openList[i];
@@ -126,7 +137,7 @@ public class PathFinder : MonoBehaviour
         Vector3[] positionData = FindPosition(position, parent.Forward);
         if(positionData == null) return;
 
-        cost = (positionData[0] - parent.Position).magnitude;
+        cost = (positionData[0] - parent.Position).sqrMagnitude;
 
         if(positionData != null){
             Node newNode = new Node(parent, positionData, cost, CalculateHCost(positionData[0]));
@@ -169,7 +180,7 @@ public class PathFinder : MonoBehaviour
     }
 
     public Vector3[] FindPosition(Vector3 position, Vector3 oldForward){
-        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, 10, 1 << 8)){
+        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, 3, 1 << 8)){
             return null;
         }
 
@@ -206,6 +217,11 @@ public class PathFinder : MonoBehaviour
                 Gizmos.color = new Color(0,1,0,0.5f);
             }
             Gizmos.DrawSphere(node.Position,0.5f);
+        }
+
+        Gizmos.color = Color.red;
+        for(int i = 0 ; i < completed.Count - 1 ; i++){
+            Gizmos.DrawLine(completed[i],completed[i+1]);
         }
     
     }
