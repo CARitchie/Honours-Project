@@ -21,17 +21,9 @@ public class PathFinder : MonoBehaviour
     List<Vector3> completed = new List<Vector3>();
 
     void Start(){
-        if(!visualise){
-            Stack<Vector3> path = FindPath(targetObject.position);
-
-            int size = path.Count;
-            for(int i = 0 ; i < size ; i++){
-                completed.Add(path.Pop());
-            }
-        }else{
+        if(visualise && targetObject != null){
             StartCoroutine(VisualiseProcess(targetObject.position));
         }
-
     }
 
     public Stack<Vector3> FindPath(Vector3 target){
