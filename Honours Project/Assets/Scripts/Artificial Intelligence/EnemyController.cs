@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Transform target;
     [SerializeField] float timeDelay = 5;
 
+    [SerializeField] Transform planet;
+
     Rigidbody rb;
     PathFinder pathFinder;
     CharacterGravity gravity;
@@ -50,11 +52,11 @@ public class EnemyController : MonoBehaviour
     void Update(){
         if(currentNode == Vector3.zero) return;
 
-        Look(currentNode);
+        Look(currentNode + planet.position);
         Move();
 
-        if((currentNode - transform.position).sqrMagnitude < 1){
-            if(nodes.Count > 0){
+        if((currentNode + planet.position - transform.position).sqrMagnitude < 1){
+            if(nodes != null || nodes.Count > 0){
                 currentNode = nodes.Pop();
             }else{
                 currentNode = Vector3.zero;

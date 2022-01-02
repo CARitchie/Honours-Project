@@ -20,6 +20,8 @@ public class PathFinder : MonoBehaviour
     Node currentNode = null;
     List<Vector3> completed = new List<Vector3>();
 
+    Vector3 originalPos;
+
     void Start(){
         if(visualise && targetObject != null){
             StartCoroutine(VisualiseProcess(targetObject.position));
@@ -30,6 +32,7 @@ public class PathFinder : MonoBehaviour
         this.target = target;
         openList = new List<Node>();
         closedList = new List<Node>();
+        originalPos = planet.position;
 
         Vector3 start = transform.position;
         Vector3 dir = transform.forward;
@@ -56,7 +59,7 @@ public class PathFinder : MonoBehaviour
         Stack<Vector3> path = new Stack<Vector3>();
 
         while(currentNode.Parent != null){
-            path.Push(currentNode.Position);
+            path.Push(currentNode.Position - planet.position);
             currentNode = currentNode.Parent;
         }
 
@@ -67,6 +70,7 @@ public class PathFinder : MonoBehaviour
         this.target = target;
         openList = new List<Node>();
         closedList = new List<Node>();
+        originalPos = planet.position;
 
         Vector3 start = transform.position;
         Vector3 dir = transform.forward;
@@ -93,7 +97,7 @@ public class PathFinder : MonoBehaviour
         }
 
         while(currentNode.Parent != null){
-            completed.Add(currentNode.Position);
+            completed.Add(currentNode.Position - planet.position);
             currentNode = currentNode.Parent;
 
             yield return new WaitForEndOfFrame();
@@ -191,6 +195,8 @@ public class PathFinder : MonoBehaviour
     }
 
     void OnDrawGizmosSelected(){
+        Vector3 offset = planet.position - originalPos;
+
         foreach(Node node in openList){
             if(node == currentNode){
                 Gizmos.color = new Color(1,0,0,0.5f);
@@ -198,7 +204,7 @@ public class PathFinder : MonoBehaviour
             }else{
                 Gizmos.color = new Color(0,0,1,0.5f);
             }
-            Gizmos.DrawSphere(node.Position,0.5f);
+            Gizmos.DrawSphere(node.Position + offset,0.5f);
         }
 
         foreach(Node node in closedList){
@@ -208,12 +214,12 @@ public class PathFinder : MonoBehaviour
             }else{
                 Gizmos.color = new Color(0,1,0,0.5f);
             }
-            Gizmos.DrawSphere(node.Position,0.5f);
+            Gizmos.DrawSphere(node.Position + offset,0.5f);
         }
 
         Gizmos.color = Color.red;
         for(int i = 0 ; i < completed.Count - 1 ; i++){
-            Gizmos.DrawLine(completed[i],completed[i+1]);
+            Gizmos.DrawLine(completed[i] + planet.position,completed[i+1] + planet.position);
         }
     
     }

@@ -2056,7 +2056,7 @@ Transform:
   m_Children:
   - {fileID: 1571513731}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &931287549
 GameObject:
@@ -2496,7 +2496,7 @@ Transform:
   m_Children:
   - {fileID: 2137881549}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1247731095
 GameObject:
@@ -3848,7 +3848,7 @@ MonoBehaviour:
   height: 1
   planet: {fileID: 1500727239}
   targetObject: {fileID: 49066981}
-  visualise: 0
+  visualise: 1
   maxIterations: 1000
 --- !u!4 &1379765490
 Transform:
@@ -3857,9 +3857,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1379765488}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.24, y: 50.67, z: -149.91}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0023999999, y: 0.5067, z: 0.0008999634}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 1574030830}
   - {fileID: 722298925}
@@ -3867,8 +3867,8 @@ Transform:
   - {fileID: 137604035}
   - {fileID: 706741247}
   - {fileID: 1686317777}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1500727239}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418816158
 GameObject:
@@ -4074,6 +4074,7 @@ GameObject:
   - component: {fileID: 1500727236}
   - component: {fileID: 1500727240}
   - component: {fileID: 1500727235}
+  - component: {fileID: 1500727241}
   m_Layer: 8
   m_Name: TestPlanet
   m_TagString: Untagged
@@ -4168,7 +4169,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -150}
   m_LocalScale: {x: 100, y: 100, z: 100}
-  m_Children: []
+  m_Children:
+  - {fileID: 1379765490}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4188,6 +4190,20 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 3
+--- !u!114 &1500727241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500727234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e691e5e632ee5c549956e279def4fbd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &1547853666
 GameObject:
   m_ObjectHideFlags: 0
@@ -4428,6 +4444,7 @@ MonoBehaviour:
   rotationSpeed: 3
   target: {fileID: 49066981}
   timeDelay: 5
+  planet: {fileID: 1500727239}
 --- !u!1 &1574030829
 GameObject:
   m_ObjectHideFlags: 0
