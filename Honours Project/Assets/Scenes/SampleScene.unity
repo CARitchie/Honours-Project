@@ -2472,7 +2472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe2acdf76027b9b4283f97e5ede48cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidObject: {fileID: 2137881548}
+  boidObject: {fileID: 1126105898275114, guid: 73781b1e6e46fc5498eedad8a0bd2d2d, type: 3}
   numberOfBoids: 100
   boidSpeed: 10
   separationSpeed: 5

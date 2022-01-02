@@ -56,7 +56,7 @@ public class EnemyController : MonoBehaviour
         Move();
 
         if((currentNode + planet.position - transform.position).sqrMagnitude < 1){
-            if(nodes != null || nodes.Count > 0){
+            if(nodes != null && nodes.Count > 0){
                 currentNode = nodes.Pop();
             }else{
                 currentNode = Vector3.zero;
