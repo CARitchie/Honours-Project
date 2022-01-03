@@ -9,11 +9,6 @@ Shader "My Shaders/Atmosphere Shader"
 		_SunsetColour("Sunset Colour", Color) = (1, 1, 1, 1)
 		_SunColour("Sun Colour", Color) = (1, 1, 1, 1)
 		_Closeness("Closeness", float) = 25
-		_CloudScale("Cloud Texture Scale",float) = 0
-		_CloudThreshold("Cloud Threshold",float) = 0
-		_CloudMultiplier("Cloud Multiplier",float) = 0
-		_CloudThickness("Cloud Thickness",float) = 0
-		Noise("Cloud Texture",3D) = "white" {}
     }
     SubShader
     {
@@ -65,12 +60,7 @@ Shader "My Shaders/Atmosphere Shader"
 			float4 _SunsetColour;
 			float4 _SunColour;
 			float _Closeness;
-			float _CloudScale;
-			float _CloudThreshold;
-			float _CloudMultiplier;
-			float _CloudThickness;
-			Texture3D<float4> Noise;
-			SamplerState samplerNoise;
+
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -130,13 +120,6 @@ Shader "My Shaders/Atmosphere Shader"
 
 			}
 
-			float CloudDensity(float3 position) {
-				float3 uvw = (position - _PlanetOrigin) * _CloudScale * 0.001;
-				float4 shape = Noise.SampleLevel(samplerNoise, uvw, 0);
-				float density = max(0, shape.r - _CloudThreshold) * _CloudMultiplier;
-				return density;
-			}
-
 			float SquareDistToCentre(float3 centre, float3 pos) {
 				float3 dir = centre - pos;
 				return dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
@@ -167,7 +150,6 @@ Shader "My Shaders/Atmosphere Shader"
 
 				float progress = 0;
 				float3 density = 0;
-				float cloudDensity = 0;
 
 				while (progress < limit) {
 					float3 position = origin + normalize(i.viewDir) * (result.x + progress);
@@ -197,22 +179,14 @@ Shader "My Shaders/Atmosphere Shader"
 						multiplier = 1 - (distanceToCentre / top);
 					}
 
-					multiplier = max(0, multiplier);
-					cloudDensity += CloudDensity(position) * step * multiplier;
-					
+					multiplier = max(0, multiplier);		
 					
 					progress += step;
 				}
 
 				density /= _NumberOfSteps;
-				cloudDensity /= _NumberOfSteps;
 
 				float value = 0;
-				
-				value = cloudDensity / _CloudThickness;
-
-				value = clamp(value, 0.1f, 1);
-				float3 cloudColour = float3(value, value, value);
 
 				/*
 				float2 sunResult = SphereCollision(_WorldSpaceCameraPos, i.viewDir, _LightOrigin, 200);
@@ -220,7 +194,7 @@ Shader "My Shaders/Atmosphere Shader"
 					col.rgb += _SunColour * density;
 				}*/
 
-				float3 newColour = (_Colour.rgb * density * _Strength) + (cloudDensity * cloudColour);
+				float3 newColour = (_Colour.rgb * density * _Strength);
 				col.rgb += newColour;
 
 				return col;
