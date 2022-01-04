@@ -32,6 +32,11 @@ public class CharacterGravity : GravityReceiver
             }
         }
 
+        if(localGravitySources.Count > 0){
+            force += GetLocalForce();
+            dir = ClosestLocalSource().GetDirection();
+        }
+
         rb.AddForce(force);
 
         // https://answers.unity.com/questions/395033/quaternionfromtorotation-misunderstanding.html
