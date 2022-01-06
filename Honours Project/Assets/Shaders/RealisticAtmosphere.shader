@@ -178,12 +178,14 @@ Properties
 					float3 entryPoint = origin + dir * dstToAtmosphere;
 					float4 light = CalculateLight(entryPoint, dir, dstThroughAtmosphere, origin);
 
+					/*
 					if(depth > 10000){
 						float density = light.x + light.y + light.z;
 						density = 1 - saturate(density / _MaxDensity);
 						col.xyz *= density;
 					}
-
+					*/
+					
 					col.xyz += light.xyz;
 				}
 

@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     Transform cam;
     PlayerInput input;
 
+    Vector3 lastVelocity;
+
     private void Awake()
     {
         Instance = this;
@@ -48,6 +50,8 @@ public class PlayerController : MonoBehaviour
         }
 
         InputController.Jump += Jump;
+
+        lastVelocity = rb.velocity;
         
     }
 
@@ -62,6 +66,10 @@ public class PlayerController : MonoBehaviour
         Movement();
 
         Look();
+    }
+
+    void FixedUpdate(){
+        VelocityCheck();
     }
 
     void Movement()
@@ -118,6 +126,7 @@ public class PlayerController : MonoBehaviour
     public void ForceVelocity(Vector3 velocity)
     {
         rb.velocity = velocity;
+        lastVelocity = velocity;
     }
 
     public void SetPosition(Vector3 position)
@@ -128,5 +137,13 @@ public class PlayerController : MonoBehaviour
     public void SetRotation(Vector3 rotation)
     {
         transform.parent.eulerAngles = rotation;
+    }
+
+    void VelocityCheck(){
+        Vector3 currentVelocity = rb.velocity;
+        float deltaV = (lastVelocity - currentVelocity).magnitude;
+        lastVelocity = currentVelocity;
+
+        if(deltaV > 15) Debug.LogError("Velocity death: " + deltaV + "m/s");
     }
 }

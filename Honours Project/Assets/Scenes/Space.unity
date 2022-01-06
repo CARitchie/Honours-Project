@@ -6942,4 +6942,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d855e7f60c28d32428c299445432a29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 9.8
+  strength: 98
