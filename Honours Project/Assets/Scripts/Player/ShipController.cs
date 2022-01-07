@@ -65,6 +65,7 @@ public class ShipController : MonoBehaviour
         active = true;
         InputController.SetMap("Ship");
         PlayerController.Instance.Deactivate();
+        GlobalLightControl.SwitchToShip(transform);
     }
 
     public void Deactivate()
@@ -73,6 +74,7 @@ public class ShipController : MonoBehaviour
         cam.SetActive(false);
         InputController.SetMap("Player");
 
+        GlobalLightControl.SwitchToPlayer();
         PlayerController.Instance.SetRotation(transform.eulerAngles);
         PlayerController.Instance.SetPosition(transform.position + transform.up * 3);
         PlayerController.Instance.ForceVelocity(rb.velocity);

@@ -6,12 +6,21 @@ public class GlobalLightControl : MonoBehaviour
 {
     [SerializeField] Transform directionalLight;
 
-    Transform player;
+    static GlobalLightControl Instance;
+
+    Transform[] player = new Transform[2];
+    int index = 0;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        player = PlayerController.Instance.transform;
+        index = 0;
+        player[0] = PlayerController.Instance.transform;
     }
 
     // Update is called once per frame
@@ -21,6 +30,19 @@ public class GlobalLightControl : MonoBehaviour
     }
 
     void LookAtPlayer(){
-        directionalLight.forward = player.position - directionalLight.position;
+        directionalLight.forward = player[index].position - directionalLight.position;
+    }
+
+    public static void SwitchToPlayer(){
+        if(Instance == null) return;
+
+        Instance.index = 0;
+    }
+        
+    public static void SwitchToShip(Transform ship){
+        if(Instance == null) return;
+
+        Instance.player[1] = ship;
+        Instance.index = 1;
     }
 }
