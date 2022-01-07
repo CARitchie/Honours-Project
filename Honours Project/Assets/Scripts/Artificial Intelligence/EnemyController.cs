@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : PersonController
 {
-    [SerializeField] float walkSpeed;
-    [SerializeField] float rotationSpeed;
+    [Header("Enemy Settings")]
     [SerializeField] Transform target;
     [SerializeField] float timeDelay = 5;
-
     [SerializeField] Transform planet;
 
-    Rigidbody rb;
     PathFinder pathFinder;
     CharacterGravity gravity;
 
@@ -19,14 +16,17 @@ public class EnemyController : MonoBehaviour
 
     Vector3 currentNode;
 
-    private void Awake()
+    protected override void Awake()
     {
-        rb = GetComponentInParent<Rigidbody>();
+        base.Awake();
+
         pathFinder = GetComponentInParent<PathFinder>();
         gravity = GetComponentInParent<CharacterGravity>();
     }
 
-    void Start(){
+    protected override void Start(){
+        base.Start();
+
         CalculatePath();
         StartCoroutine(Finder());
     }
@@ -64,9 +64,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void Move(){
-        
-        Vector3 target = rb.position + (transform.forward * walkSpeed * Time.deltaTime);
+    protected override void Move()
+    {
+        movementSpeed = walkSpeed;
+
+        Vector3 target = rb.position + (transform.forward * movementSpeed * Time.deltaTime);
 
         rb.MovePosition(target);
     }
@@ -77,7 +79,7 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = point - transform.position;
         Vector3 originalAngles = transform.localEulerAngles;
 
-        direction = Vector3.RotateTowards(transform.forward, direction, rotationSpeed * Time.deltaTime, 0.0f);
+        direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(direction);
         
         Vector3 newAngles = transform.localEulerAngles;

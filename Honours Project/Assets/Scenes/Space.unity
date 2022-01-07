@@ -664,7 +664,7 @@ GameObject:
   - component: {fileID: 294976151}
   - component: {fileID: 294976153}
   - component: {fileID: 294976152}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -833,8 +833,8 @@ GameObject:
   m_Component:
   - component: {fileID: 333595322}
   - component: {fileID: 333595323}
-  m_Layer: 0
-  m_Name: Controller
+  m_Layer: 10
+  m_Name: Player Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -871,8 +871,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3
   sprintSpeed: 6
+  lookSensitivity: 0.2
   jumpStrength: 5
-  sensitivity: 0.2
 --- !u!1 &344137059
 GameObject:
   m_ObjectHideFlags: 0
@@ -2841,7 +2841,7 @@ GameObject:
   - component: {fileID: 813592375}
   - component: {fileID: 813592374}
   - component: {fileID: 813592373}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2904,7 +2904,7 @@ GameObject:
   - component: {fileID: 830469888}
   - component: {fileID: 830469887}
   - component: {fileID: 830469886}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3246,7 +3246,7 @@ GameObject:
   - component: {fileID: 1007783729}
   - component: {fileID: 1007783732}
   - component: {fileID: 1007783731}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

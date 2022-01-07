@@ -3,36 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : PersonController
 {
-    [SerializeField] float walkSpeed;
-    [SerializeField] float sprintSpeed;
+    [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
-    [SerializeField] float sensitivity;
 
     float verticalLook = 0;
-    float movementSpeed;
 
     public static PlayerController Instance;
 
     InputAction[] movementActions = new InputAction[4];
     InputAction lookAction;
     InputAction sprintAction;
-    Rigidbody rb;
     Transform cam;
     PlayerInput input;
 
-    Vector3 lastVelocity;
-
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         Instance = this;
-        rb = GetComponentInParent<Rigidbody>();
         cam = GetComponentInChildren<Camera>().transform;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -49,10 +46,7 @@ public class PlayerController : MonoBehaviour
             sprintAction = input.actions.FindAction("Sprint");
         }
 
-        InputController.Jump += Jump;
-
-        lastVelocity = rb.velocity;
-        
+        InputController.Jump += Jump;    
     }
 
     private void OnDestroy()
@@ -63,16 +57,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movement();
+        Move();
 
         Look();
     }
 
-    void FixedUpdate(){
-        VelocityCheck();
-    }
-
-    void Movement()
+    protected override void Move()
     {
         float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
         float sideways = movementActions[1].ReadValue<float>() - movementActions[3].ReadValue<float>();
@@ -99,15 +89,17 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
-        verticalLook += -look.y * sensitivity;
+        verticalLook += -look.y * lookSensitivity;
         verticalLook = Mathf.Clamp(verticalLook, -90, 90);
 
-        transform.localEulerAngles += new Vector3(0, look.x, 0) * sensitivity;
+        transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
         cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
     }
 
     void Jump()
     {
+        if(!grounded) return;
+
         rb.AddForce(transform.up * jumpStrength, ForceMode.VelocityChange);
     }
 
@@ -121,29 +113,5 @@ public class PlayerController : MonoBehaviour
         transform.parent.gameObject.SetActive(false);
         transform.localEulerAngles = Vector3.zero;
         cam.localEulerAngles = Vector3.zero;
-    }
-
-    public void ForceVelocity(Vector3 velocity)
-    {
-        rb.velocity = velocity;
-        lastVelocity = velocity;
-    }
-
-    public void SetPosition(Vector3 position)
-    {
-        transform.parent.position = position;
-    }
-
-    public void SetRotation(Vector3 rotation)
-    {
-        transform.parent.eulerAngles = rotation;
-    }
-
-    void VelocityCheck(){
-        Vector3 currentVelocity = rb.velocity;
-        float deltaV = (lastVelocity - currentVelocity).magnitude;
-        lastVelocity = currentVelocity;
-
-        if(deltaV > 15) Debug.LogError("Velocity death: " + deltaV + "m/s");
     }
 }
