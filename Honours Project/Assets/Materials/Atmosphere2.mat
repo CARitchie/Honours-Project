@@ -61,7 +61,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _Closeness: 30
+    - _Closeness: 100
     - _CloudMultiplier: 0
     - _CloudScale: 0
     - _CloudThickness: 0

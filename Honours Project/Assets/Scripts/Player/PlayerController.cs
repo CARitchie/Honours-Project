@@ -18,6 +18,8 @@ public class PlayerController : PersonController
     Transform cam;
     PlayerInput input;
 
+    bool doubleJumped = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -98,9 +100,25 @@ public class PlayerController : PersonController
 
     void Jump()
     {
-        if(!grounded) return;
+        if (!grounded && doubleJumped) return;
 
-        rb.AddForce(transform.up * jumpStrength, ForceMode.VelocityChange);
+        float strength = jumpStrength;
+
+        if (!grounded && !doubleJumped)
+        {
+            doubleJumped = true;
+            strength *= 1.2f;
+        }
+
+        rb.AddForce(transform.up * strength, ForceMode.VelocityChange);
+        
+    }
+
+    protected override void CheckGrounded()
+    {
+        base.CheckGrounded();
+
+        if (grounded) doubleJumped = false;
     }
 
     public void Activate()

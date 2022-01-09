@@ -872,7 +872,7 @@ MonoBehaviour:
   walkSpeed: 3
   sprintSpeed: 6
   lookSensitivity: 0.2
-  jumpStrength: 5
+  jumpStrength: 4.5
 --- !u!1 &344137059
 GameObject:
   m_ObjectHideFlags: 0

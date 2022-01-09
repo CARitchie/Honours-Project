@@ -59,7 +59,7 @@ public class PersonController : MonoBehaviour
         if(deltaV > 15) Debug.LogError(transform.name + " Velocity death: " + deltaV + "m/s",transform);
     }
 
-    void CheckGrounded(){
+    protected virtual void CheckGrounded(){
         bool newGrounded = IsGrounded();
         if(grounded != newGrounded){
             grounded = newGrounded;
@@ -67,6 +67,6 @@ public class PersonController : MonoBehaviour
     }
 
     public bool IsGrounded(){
-        return Physics.Raycast(transform.position, -transform.up, 1.02f, ~(1 << 10));
+        return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
     }
 }
