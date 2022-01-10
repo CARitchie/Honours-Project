@@ -14,7 +14,7 @@ public class CharacterGravity : GravityReceiver
     }
 
 
-    public override void CalculateForce(List<GravitySource> sources, float time)
+    public override void CalculateForce(List<PlanetGravity> sources, float time)
     {
         Vector3 force = Vector3.zero;
 
@@ -44,12 +44,15 @@ public class CharacterGravity : GravityReceiver
             }
         }
 
-        controller.SetNearestSource(closestSource);
-
         if(localGravitySources.Count > 0){
             force += GetLocalForce();
-            dir = ClosestLocalSource().GetDirection();
+
+            LocalGravitySource localGravitySource = ClosestLocalSource();
+            dir = localGravitySource.GetDirection();
+            closestSource = localGravitySource;
         }
+
+        controller.SetNearestSource(closestSource);
 
         rb.AddForce(force);
 

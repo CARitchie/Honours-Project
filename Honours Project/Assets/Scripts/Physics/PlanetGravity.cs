@@ -5,17 +5,25 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlanetGravity : GravitySource
 {
+    [SerializeField] float surfaceAcceleration;
+    [SerializeField] float distanceToSurface;
     [SerializeField] Vector3 initialVelocity;
 
     Rigidbody rb;
+    float mass;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
+        mass = CalculateMass();
 
         rb = GetComponent<Rigidbody>();
         rb.mass = GetMass();
         //rb.AddForce(initialVelocity, ForceMode.VelocityChange);
+    }
+
+    private void Start()
+    {
+        GravityController.AddSource(this);
     }
 
     public Vector3 GetVelocity()
@@ -29,5 +37,32 @@ public class PlanetGravity : GravitySource
 
         OrbitViewer orbitViewer = FindObjectOfType<OrbitViewer>();
         if( orbitViewer != null) orbitViewer.UpdateOrbits();
+    }   
+
+    public float CalculateMass()
+    {
+        return (surfaceAcceleration * Mathf.Pow(distanceToSurface, 2)) / GravityController.gravityConstant;
+    }
+
+    public float GetMass()
+    {
+        return mass;
+    }
+
+    public float GetDistance()
+    {
+        return distanceToSurface;
+    }
+
+    public float GetSquareDistance()
+    {
+        return distanceToSurface * distanceToSurface;
+    }
+
+    public override Vector3 GetNorthDirection(Transform player)
+    {
+        Vector3 dir1 = (player.position - transform.position).normalized;
+        Vector3 cross1 = Vector3.Cross(dir1, transform.up).normalized;
+        return Vector3.Cross(cross1, dir1);
     }
 }

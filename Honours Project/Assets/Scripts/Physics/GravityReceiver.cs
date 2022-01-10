@@ -18,7 +18,7 @@ public class GravityReceiver : MonoBehaviour
         GravityController.AddReceiver(this);
     }
 
-    public virtual void CalculateForce(List<GravitySource> sources, float time)
+    public virtual void CalculateForce(List<PlanetGravity> sources, float time)
     {
         Vector3 force = Vector3.zero;
 
@@ -41,11 +41,15 @@ public class GravityReceiver : MonoBehaviour
     }
 
     public void AddLocalGravitySource(LocalGravitySource gravitySource){
-        if(!localGravitySources.Contains(gravitySource)) localGravitySources.Add(gravitySource);
+        if (!localGravitySources.Contains(gravitySource))
+        {
+            localGravitySources.Add(gravitySource);
+        }
     }
 
     public void RemoveLocalGravitySource(LocalGravitySource gravitySource){
         localGravitySources.Remove(gravitySource);
+
     }
 
     protected Vector3 GetLocalForce(){
@@ -70,5 +74,10 @@ public class GravityReceiver : MonoBehaviour
             }
         }
         return source;
+    }
+
+    private void OnDisable()
+    {
+        localGravitySources.Clear();
     }
 }

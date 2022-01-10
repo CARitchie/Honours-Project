@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LocalGravitySource : MonoBehaviour
+public class LocalGravitySource : GravitySource
 {
     [SerializeField] float strength;
 
@@ -36,5 +36,10 @@ public class LocalGravitySource : MonoBehaviour
 
     public Vector3 GetDirection(){
         return -transform.up;
+    }
+
+    public override Vector3 GetNorthDirection(Transform player)
+    {
+        return transform.forward;
     }
 }

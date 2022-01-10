@@ -8,7 +8,7 @@ public class GravityController : MonoBehaviour
     static GravityController Instance;
 
     List<GravityReceiver> receivers = new List<GravityReceiver>();
-    List<GravitySource> sources = new List<GravitySource>();
+    List<PlanetGravity> sources = new List<PlanetGravity>();
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class GravityController : MonoBehaviour
         Instance.receivers.Add(receiver);
     }
 
-    public static void AddSource(GravitySource source)
+    public static void AddSource(PlanetGravity source)
     {
         if (Instance == null) return;
 

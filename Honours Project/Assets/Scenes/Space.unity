@@ -2518,7 +2518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479333933}
   m_LocalRotation: {x: -0.22830994, y: 0, z: -0.6888318, w: 0.68803006}
-  m_LocalPosition: {x: 47.393707, y: -2.6614704, z: -2015.7084}
+  m_LocalPosition: {x: 49.98, y: -2.81, z: -2016.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2833,9 +2833,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128e0f25bcf64b04c9f9a832e82f3572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  influenceRange: 0
   surfaceAcceleration: 50
   distanceToSurface: 200
-  influenceRange: 0
   initialVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &617997805
 MonoBehaviour:
@@ -3333,9 +3333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128e0f25bcf64b04c9f9a832e82f3572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  influenceRange: 20
   surfaceAcceleration: 1
   distanceToSurface: 10
-  influenceRange: 20
   initialVelocity: {x: 39.45, y: 0, z: 1.16}
 --- !u!114 &922274329
 MonoBehaviour:
@@ -6841,9 +6841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128e0f25bcf64b04c9f9a832e82f3572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  influenceRange: 80
   surfaceAcceleration: 9.8
   distanceToSurface: 46.2
-  influenceRange: 80
   initialVelocity: {x: 30, y: 0, z: 0}
 --- !u!54 &1784249946
 Rigidbody:
@@ -7339,6 +7339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d855e7f60c28d32428c299445432a29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  influenceRange: 0
   strength: 98
 --- !u!4 &4159310665511663 stripped
 Transform:

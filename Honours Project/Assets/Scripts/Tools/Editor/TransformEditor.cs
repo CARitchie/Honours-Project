@@ -16,7 +16,7 @@ public class TransformEditor : Editor
     //Unity's built-in editor
     Editor defaultEditor;
     Transform transform;
-    GravitySource source;
+    PlanetGravity source;
     bool align = false;
     bool stick = false;
 
@@ -41,7 +41,7 @@ public class TransformEditor : Editor
     {
         defaultEditor.OnInspectorGUI();
 
-        source = (GravitySource)EditorGUILayout.ObjectField(source, typeof(GravitySource), true);
+        source = (PlanetGravity)EditorGUILayout.ObjectField(source, typeof(PlanetGravity), true);
 
         if (source == null) return;
 

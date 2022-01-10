@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.017902402, g: 0.02754547, b: 0.037775308, a: 1}
+  m_IndirectSpecularColor: {r: 0.017914088, g: 0.02765535, b: 0.03787736, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2203,6 +2203,7 @@ MonoBehaviour:
   sprintSpeed: 6
   lookSensitivity: 0.2
   jumpStrength: 5
+  dud: {fileID: 0}
 --- !u!4 &939523740 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4799787509532296, guid: 0b23288a475856d4cae7fb3b78cd9a03, type: 3}
@@ -4094,6 +4095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128e0f25bcf64b04c9f9a832e82f3572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  influenceRange: 80
   surfaceAcceleration: 9.8
   distanceToSurface: 50
   initialVelocity: {x: 0, y: 0, z: 0}

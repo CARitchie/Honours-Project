@@ -51,12 +51,9 @@ public class Compass : MonoBehaviour
 
     void UpdateTarget()
     {
-        Vector3 dir1 = (playerT.position - planet.transform.position).normalized;
-        Vector3 cross1 = Vector3.Cross(dir1, planet.transform.up).normalized;
-        Vector3 cross2 = Vector3.Cross(cross1, dir1);
-
-        float dot = Vector3.Dot(cross2, playerT.forward);
-        float dot2 = Vector3.Dot(cross2, playerT.right);
+        Vector3 north = planet.GetNorthDirection(playerT);
+        float dot = Vector3.Dot(north, playerT.forward);
+        float dot2 = Vector3.Dot(north, playerT.right);
 
         float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
         angle += 90;

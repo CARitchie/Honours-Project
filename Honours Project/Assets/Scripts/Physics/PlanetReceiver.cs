@@ -7,7 +7,7 @@ public class PlanetReceiver : GravityReceiver
     [SerializeField] Vector3 velocity;
     [SerializeField] Vector3 angularVelocity;
 
-    public override void CalculateForce(List<GravitySource> sources, float time)
+    public override void CalculateForce(List<PlanetGravity> sources, float time)
     {
         Vector3 force = Vector3.zero;
 
