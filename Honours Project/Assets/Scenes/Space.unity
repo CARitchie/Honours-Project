@@ -3282,8 +3282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image1: {fileID: 3750462}
-  player: {fileID: 333595322}
-  planet: {fileID: 1784249950}
+  fadeSpeed: 1
 --- !u!1 &911065791 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ad35a641e6e62d499b271187f86e660, type: 3}

@@ -66,6 +66,7 @@ public class ShipController : MonoBehaviour
         InputController.SetMap("Ship");
         PlayerController.Instance.Deactivate();
         GlobalLightControl.SwitchToShip(transform);
+        Compass.SetActive(false);
     }
 
     public void Deactivate()
@@ -79,6 +80,7 @@ public class ShipController : MonoBehaviour
         PlayerController.Instance.SetPosition(transform.position + transform.up * 3);
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
+        Compass.SetActive(true);
     }
 
     void Movement()
