@@ -5,6 +5,14 @@ using UnityEngine;
 public class CharacterGravity : GravityReceiver
 {
     [SerializeField] float rotationSpeed = 150;
+    PersonController controller;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        controller = GetComponentInChildren<PersonController>();
+    }
+
 
     public override void CalculateForce(List<GravitySource> sources, float time)
     {
@@ -12,25 +20,31 @@ public class CharacterGravity : GravityReceiver
 
         float G = GravityController.gravityConstant;
 
-        float max = 100000000;
+        float max = float.MaxValue;
         Vector3 dir = Vector3.zero;
+        GravitySource closestSource = null;
 
         for (int i = 0; i < sources.Count; i++)
         {
             if (sources[i].transform != transform)
             {
-                Vector3 distance = sources[i].transform.position - transform.position;
+                Vector3 direction = sources[i].transform.position - transform.position;
+                float magnitude = direction.sqrMagnitude;
+                direction = direction.normalized;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;
-                force += distance.normalized * strength;
+                float strength = (G * rb.mass * sources[i].GetMass()) / magnitude;
+                force += direction * strength;
 
-                if(distance.sqrMagnitude - sources[i].GetSquareDistance() < max)
+                if(magnitude - sources[i].GetSquareDistance() < max && magnitude < sources[i].Influence)
                 {
-                    max = distance.sqrMagnitude;
-                    dir = distance.normalized * strength;
+                    max = magnitude;
+                    dir = direction * strength;
+                    closestSource = sources[i];
                 }
             }
         }
+
+        controller.SetNearestSource(closestSource);
 
         if(localGravitySources.Count > 0){
             force += GetLocalForce();
@@ -40,6 +54,8 @@ public class CharacterGravity : GravityReceiver
         rb.AddForce(force);
 
         // https://answers.unity.com/questions/395033/quaternionfromtorotation-misunderstanding.html
+
+        if (dir == Vector3.zero) return;
 
         Quaternion rot = Quaternion.FromToRotation(transform.up, -dir);
 

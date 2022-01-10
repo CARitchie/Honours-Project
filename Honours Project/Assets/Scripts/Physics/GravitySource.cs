@@ -6,6 +6,9 @@ public class GravitySource : MonoBehaviour
 {
     [SerializeField] float surfaceAcceleration;
     [SerializeField] float distanceToSurface;
+    [SerializeField] float influenceRange;
+
+    public float Influence { get { return influenceRange * influenceRange; } }
 
     float mass;
 

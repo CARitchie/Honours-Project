@@ -7,6 +7,7 @@ public class PlayerController : PersonController
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
+    [SerializeField] Transform dud;
 
     float verticalLook = 0;
 
@@ -94,8 +95,48 @@ public class PlayerController : PersonController
         verticalLook += -look.y * lookSensitivity;
         verticalLook = Mathf.Clamp(verticalLook, -90, 90);
 
-        transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
-        cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
+        if(nearestSource != null)
+        {
+            transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
+            cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
+        }
+        else
+        {
+            //transform.parent.localEulerAngles += new Vector3(-look.y, 0, 0) * lookSensitivity;
+            //transform.Rotate(transform.right, -look.y * lookSensitivity);
+
+            Vector3 camRot = cam.localEulerAngles;
+            Vector3 localRot = transform.localEulerAngles;
+            bool instant = false;
+            float corrector1 = 0;
+            float corrector2 = 0;
+            if (camRot.x != 0 || localRot.y != 0)
+            {
+                corrector1 = camRot.x;
+                cam.localEulerAngles = new Vector3(0, camRot.y, camRot.z);
+
+                corrector2 = localRot.y;
+                transform.localEulerAngles = new Vector3(localRot.x, 0, localRot.z);
+
+                instant = true;
+            }
+
+            Quaternion rot = dud.rotation;
+            dud.Rotate(Vector3.up, (look.x * lookSensitivity) + corrector2, Space.Self);
+            dud.Rotate(Vector3.right, (-look.y * lookSensitivity) + corrector1, Space.Self);
+            Quaternion newRot = dud.rotation;
+            dud.rotation = rot;
+
+            if (!instant)
+            {
+                rb.MoveRotation(newRot);
+            }
+            else
+            {
+                rb.transform.rotation = newRot;
+            }
+        }
+        
     }
 
     void Jump()

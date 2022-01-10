@@ -13,7 +13,9 @@ public class PersonController : MonoBehaviour
 
     protected bool grounded = false;
     protected Rigidbody rb;
+    protected GravitySource nearestSource;
     Vector3 lastVelocity;
+    
 
     protected virtual void Awake(){
         rb = GetComponentInParent<Rigidbody>();
@@ -23,11 +25,11 @@ public class PersonController : MonoBehaviour
         lastVelocity = rb.velocity;
     }
 
-    void LateUpdate(){
+    protected virtual void LateUpdate(){
         CheckGrounded();
     }
 
-    void FixedUpdate(){
+    protected virtual void FixedUpdate(){
         VelocityCheck();
     }
 
@@ -68,5 +70,15 @@ public class PersonController : MonoBehaviour
 
     public bool IsGrounded(){
         return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
+    }
+
+    public void SetNearestSource(GravitySource source)
+    {
+        nearestSource = source;
+    }
+
+    public GravitySource GetNearestSource()
+    {
+        return nearestSource;
     }
 }
