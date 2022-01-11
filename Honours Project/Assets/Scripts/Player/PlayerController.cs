@@ -13,12 +13,16 @@ public class PlayerController : PersonController
 
     public static PlayerController Instance;
 
-    InputAction[] movementActions = new InputAction[4];
+    InputAction[] movementActions = new InputAction[8];
     InputAction lookAction;
     InputAction sprintAction;
     Transform cam;
     PlayerInput input;
 
+    float fuel;
+    float maxFuel = 200;
+
+    bool inSpace = false;
     bool doubleJumped = false;
 
     protected override void Awake()
@@ -44,12 +48,18 @@ public class PlayerController : PersonController
             movementActions[1] = input.actions.FindAction("MoveRight");
             movementActions[2] = input.actions.FindAction("MoveBack");
             movementActions[3] = input.actions.FindAction("MoveLeft");
+            movementActions[4] = input.actions.FindAction("RotRight");
+            movementActions[5] = input.actions.FindAction("RotLeft");
+            movementActions[6] = input.actions.FindAction("MoveUp");
+            movementActions[7] = input.actions.FindAction("MoveDown");
 
             lookAction = input.actions.FindAction("Look");
             sprintAction = input.actions.FindAction("Sprint");
         }
 
-        InputController.Jump += Jump;    
+        InputController.Jump += Jump;
+
+        fuel = maxFuel;
     }
 
     private void OnDestroy()
@@ -60,6 +70,8 @@ public class PlayerController : PersonController
     // Update is called once per frame
     void Update()
     {
+        inSpace = nearestSource == null;
+
         Move();
 
         Look();
@@ -72,27 +84,44 @@ public class PlayerController : PersonController
 
         Vector3 moveDirection = forward * transform.forward + sideways * transform.right;
 
-        if (moveDirection == Vector3.zero) return;
-
-        if(sprintAction.ReadValue<float>() > 0)
+        if (!inSpace)
         {
-            movementSpeed = sprintSpeed;
+            if (sprintAction.ReadValue<float>() > 0)
+            {
+                movementSpeed = sprintSpeed;
+            }
+            else
+            {
+                movementSpeed = walkSpeed;
+            }
         }
         else
         {
-            movementSpeed = walkSpeed;
+            movementSpeed = walkSpeed * 0.8f;
+            float up = movementActions[6].ReadValue<float>() - movementActions[7].ReadValue<float>();
+            moveDirection += up * transform.up;
         }
 
-        Vector3 target = rb.position + (moveDirection * movementSpeed * Time.deltaTime);
+        if (moveDirection == Vector3.zero) return;
 
-        rb.MovePosition(target);
+        Vector3 velocity = moveDirection * movementSpeed * Time.deltaTime;
+
+        if (!inSpace)
+        {
+            rb.MovePosition(rb.position + velocity);
+        }
+        else
+        {
+            if(UseFuel(velocity)) rb.AddForce(velocity, ForceMode.VelocityChange);
+        }
+
     }
 
     void Look()
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
-        if(nearestSource != null)
+        if(!inSpace)
         {
             verticalLook += -look.y * lookSensitivity;
             verticalLook = Mathf.Clamp(verticalLook, -90, 90);
@@ -123,9 +152,12 @@ public class PlayerController : PersonController
                 instant = true;
             }
 
+            float zAngle = (movementActions[4].ReadValue<float>() - movementActions[5].ReadValue<float>()) * Time.deltaTime * 80;
+
             Quaternion rot = dud.rotation;
             dud.Rotate(Vector3.up, (look.x * lookSensitivity) + corrector2, Space.Self);
             dud.Rotate(Vector3.right, (-look.y * lookSensitivity) + corrector1, Space.Self);
+            dud.Rotate(Vector3.forward, -zAngle, Space.Self);
             Quaternion newRot = dud.rotation;
             dud.rotation = rot;
 
@@ -143,7 +175,7 @@ public class PlayerController : PersonController
 
     void Jump()
     {
-        if (!grounded && doubleJumped) return;
+        if (inSpace || (!grounded && doubleJumped)) return;
 
         float strength = jumpStrength;
 
@@ -174,5 +206,20 @@ public class PlayerController : PersonController
         transform.parent.gameObject.SetActive(false);
         transform.localEulerAngles = Vector3.zero;
         cam.localEulerAngles = Vector3.zero;
+    }
+
+    void IncreaseFuel(float amount)
+    {
+        fuel = Mathf.Clamp(fuel + amount, 0, maxFuel);
+    }
+
+    bool UseFuel(Vector3 amount)
+    {
+        if (fuel <= 0) return false;
+
+        float reduction = amount.magnitude;
+        fuel = Mathf.Clamp(fuel - reduction, 0, maxFuel);
+        Debug.Log(fuel);
+        return true;
     }
 }
