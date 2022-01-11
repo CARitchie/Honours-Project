@@ -92,11 +92,11 @@ public class PlayerController : PersonController
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
 
-        verticalLook += -look.y * lookSensitivity;
-        verticalLook = Mathf.Clamp(verticalLook, -90, 90);
-
         if(nearestSource != null)
         {
+            verticalLook += -look.y * lookSensitivity;
+            verticalLook = Mathf.Clamp(verticalLook, -90, 90);
+
             transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
             cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
         }
@@ -104,6 +104,8 @@ public class PlayerController : PersonController
         {
             //transform.parent.localEulerAngles += new Vector3(-look.y, 0, 0) * lookSensitivity;
             //transform.Rotate(transform.right, -look.y * lookSensitivity);
+
+            verticalLook = 0;
 
             Vector3 camRot = cam.localEulerAngles;
             Vector3 localRot = transform.localEulerAngles;

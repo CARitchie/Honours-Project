@@ -78,6 +78,10 @@ public class GravityReceiver : MonoBehaviour
 
     private void OnDisable()
     {
+        foreach(LocalGravitySource source in localGravitySources)
+        {
+            source.RemoveReceiver(this);
+        }
         localGravitySources.Clear();
     }
 }

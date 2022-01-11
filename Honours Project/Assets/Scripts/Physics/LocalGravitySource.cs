@@ -42,4 +42,9 @@ public class LocalGravitySource : GravitySource
     {
         return transform.forward;
     }
+
+    public void RemoveReceiver(GravityReceiver receiver)
+    {
+        receivers.Remove(receiver);
+    }
 }
