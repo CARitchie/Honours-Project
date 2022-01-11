@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class Compass : MonoBehaviour
 {
-    [SerializeField] RectTransform image1;
+    [SerializeField] RectTransform compassImage;
+    [SerializeField] RectTransform shipImage;
     [SerializeField] float fadeSpeed;
+    [SerializeField] Transform ship;
 
     PersonController player;
     GravitySource planet;
@@ -22,12 +24,12 @@ public class Compass : MonoBehaviour
 
     private void Start()
     {
-        size = image1.sizeDelta.x;
+        size = compassImage.sizeDelta.x;
 
         player = PlayerController.Instance;
         playerT = player.transform;
 
-        images = image1.GetComponentsInChildren<Image>();
+        images = GetComponentsInChildren<Image>();
 
         SetAlpha(0);
     }
@@ -45,8 +47,9 @@ public class Compass : MonoBehaviour
 
         FadeIn();
 
+        FindShip();
         UpdateTarget();
-        image1.localPosition = targetPos;
+        compassImage.localPosition = targetPos;
     }
 
     void UpdateTarget()
@@ -72,6 +75,38 @@ public class Compass : MonoBehaviour
             // West
             targetPos.x = x;
         }
+    }
+
+    void FindShip()
+    {
+        Vector3 directToShip = (playerT.position - ship.position).normalized;
+        Vector3 shipPlayerRight = Vector3.Cross(directToShip, playerT.up).normalized;
+
+        Vector3 toShip = Vector3.Cross(shipPlayerRight, playerT.up);
+        float shipAngle = Vector3.Dot(toShip, playerT.forward);
+
+        float rightAngle = Vector3.Dot(toShip, playerT.right);
+
+        float angle = Mathf.Acos(shipAngle) * Mathf.Rad2Deg;
+
+        float x = (angle / 360) * size;  
+
+        if (float.IsNaN(x)) return;
+
+        Vector3 shipPos = shipImage.localPosition;
+
+        if (rightAngle < 0)
+        {
+            // East
+            shipPos.x = -x;
+        }
+        else
+        {
+            // West
+            shipPos.x = x;
+        }
+
+        shipImage.localPosition = shipPos;
     }
 
     void FadeIn()
