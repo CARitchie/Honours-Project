@@ -5539,7 +5539,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921771751}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8d3bbf678e598e4eb17946a4cec6353, type: 3}
   m_Name: 
@@ -7259,8 +7259,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb34bf75b794e434d8aa5925180ac52f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image1: {fileID: 1191307118}
+  compassImage: {fileID: 0}
+  shipImage: {fileID: 0}
   fadeSpeed: 1
+  ship: {fileID: 0}
 --- !u!114 &2071734144
 MonoBehaviour:
   m_ObjectHideFlags: 0

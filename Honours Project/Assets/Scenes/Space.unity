@@ -738,6 +738,7 @@ GameObject:
   - component: {fileID: 294976149}
   - component: {fileID: 294976148}
   - component: {fileID: 294976151}
+  - component: {fileID: 294976154}
   - component: {fileID: 294976153}
   - component: {fileID: 294976152}
   m_Layer: 10
@@ -899,6 +900,21 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 124f90c9074b17a4f99da6a0c9c0e943, type: 2}
   atmosphere: {fileID: 1784249951}
   sun: {fileID: 617997808}
+--- !u!114 &294976154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294976147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8d3bbf678e598e4eb17946a4cec6353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: 2757e862accd57d44912631709a8abad, type: 2}
+  sun: {fileID: 617997808}
+  planet: {fileID: 1483295463}
 --- !u!1 &333595321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,6 +1100,7 @@ GameObject:
   - component: {fileID: 432564251}
   - component: {fileID: 432564250}
   - component: {fileID: 432564252}
+  - component: {fileID: 432564254}
   - component: {fileID: 432564253}
   m_Layer: 0
   m_Name: Ship Camera
@@ -1232,6 +1249,21 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 124f90c9074b17a4f99da6a0c9c0e943, type: 2}
   atmosphere: {fileID: 1784249951}
   sun: {fileID: 617997808}
+--- !u!114 &432564254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432564248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8d3bbf678e598e4eb17946a4cec6353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: 2757e862accd57d44912631709a8abad, type: 2}
+  sun: {fileID: 617997808}
+  planet: {fileID: 1483295463}
 --- !u!1 &457763778
 GameObject:
   m_ObjectHideFlags: 0
@@ -7117,6 +7149,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1472582657}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1483295462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1483295463}
+  m_Layer: 0
+  m_Name: TempClouds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1483295463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483295462}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -128, y: 0, z: -405}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1784249950}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1502782923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4452234181047282, guid: 1dc817535af7a6b4ca4290415688b032, type: 3}
@@ -7695,6 +7757,7 @@ Transform:
   - {fileID: 193347692}
   - {fileID: 1278327791}
   - {fileID: 4159310665511663}
+  - {fileID: 1483295463}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

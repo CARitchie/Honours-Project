@@ -6,7 +6,8 @@ Shader "My Shaders/Cloud Shader"
         _WeatherMap ("Weather Map", 2D) = "white" {}
         _BoundsMax("Max Height", Vector) = (0,0,0)
         _BoundsMin("Min Height", Vector) = (0,0,0)
-        _Coverage("Global cloud coverage", Range(0.0, 1.0)) = 0.5
+        
+		_Coverage("Global cloud coverage", Range(0.0, 1.0)) = 0.5
         _Density("Global Density", float) = 1
         _AnvilAmount("Anvil Amount",float) = 0
         _CloudScale("Cloud Scale", float) = 1
@@ -18,6 +19,9 @@ Shader "My Shaders/Cloud Shader"
         _outs("Out scatter amount", Range(0.0,1.0)) = 1
         _ivo("Inscatter vs Outscatter", Range(0.0,1.0)) = 0.5
         _MaxDensity("Maximum Density",float) = 1
+
+		_NoiseTex("Noise Tex", 3D) = "white" {}
+		_NoiseScale("Noise Scale", float) = 1
     }
     SubShader
     {
@@ -62,6 +66,9 @@ Shader "My Shaders/Cloud Shader"
 
             SamplerState sampler_WeatherMap;
 
+			Texture3D<float4> Noise;
+			SamplerState samplerNoise;
+
             float3 _BoundsMin;
             float3 _BoundsMax;
             float3 _SunPosition;
@@ -80,6 +87,7 @@ Shader "My Shaders/Cloud Shader"
             float _ivo;
 
             float _MaxDensity;
+			float _NoiseScale;
 
             int _NumberOfSteps;
 
@@ -160,6 +168,17 @@ Shader "My Shaders/Cloud Shader"
                 return Aalter(densityAtPoint, densityToSun) * IOS(theta) * OSambient(densityAtPoint, height);
             }
 
+			float4 GetNoise(float3 pos) {
+				float3 uvw = pos * _NoiseScale;
+
+				float r = Noise.SampleLevel(samplerNoise, uvw, 0);
+				float g = Noise.SampleLevel(samplerNoise, uvw * 0.6, 0);
+				float b = Noise.SampleLevel(samplerNoise, uvw * 0.3, 0);
+				float a = Noise.SampleLevel(samplerNoise, uvw * 0.1, 0);
+
+				return float4(r, g, b, a);
+			}
+
             float Density(float3 pos){
                 float4 data = GetData(pos);
 
@@ -175,8 +194,12 @@ Shader "My Shaders/Cloud Shader"
                 float DRb = height * saturate(Remap(height,0,0.15,0,1));
                 float DRt = saturate(Remap(height,0.9,1.0,1,0));
 
-                float DA = _Density * DRb * DRt;
-                return saturate(Remap(SA, 1 - _Coverage * WMc,1,0,1)) * DA;
+                float DA = _Density * DRb * DRt * 2;
+
+				float4 noiseData = GetNoise(pos);
+				float SNsample = Remap(noiseData.r, (noiseData.g * 0.625 + noiseData.b * 0.25 + noiseData.a * 0.125) - 1, 1, 0, 1);
+
+                return saturate(Remap(SNsample * SA, 1 - _Coverage * WMc,1,0,1)) * DA;
             }
 
             float DensityAlongSunRay(float3 rayOrigin){
@@ -207,7 +230,7 @@ Shader "My Shaders/Cloud Shader"
 
             float4 CalculateLight(float3 rayOrigin, float3 dir, float dist){
 
-                _NumberOfSteps = 30;
+                _NumberOfSteps = 20;
 
 				float3 pos = rayOrigin;
 				float step = dist / (_NumberOfSteps - 1);
