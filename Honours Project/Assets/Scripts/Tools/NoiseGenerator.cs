@@ -111,7 +111,7 @@ public class NoiseGenerator : MonoBehaviour
 
         texture.Apply();
 
-        AssetDatabase.CreateAsset(texture, perlinLocation);
+        //AssetDatabase.CreateAsset(texture, perlinLocation);
 
         Debug.Log("Generating Perlin Noise: COMPLETE");
     }
@@ -143,7 +143,7 @@ public class NoiseGenerator : MonoBehaviour
 
         texture.Apply();
 
-        AssetDatabase.CreateAsset(texture, worleyLocation);
+        //AssetDatabase.CreateAsset(texture, worleyLocation);
 
         Debug.Log("Generating Worley Noise: COMPLETE");
     }
@@ -226,6 +226,6 @@ public class NoiseGenerator : MonoBehaviour
 
         texture.Apply();
 
-        AssetDatabase.CreateAsset(texture, outputLocation);
+        //AssetDatabase.CreateAsset(texture, outputLocation);
     }
 }

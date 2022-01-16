@@ -5,9 +5,6 @@ Shader "My Shaders/New Cloud Shader"
         _MainTex ("Texture", 2D) = "white" {}
 		_WeatherMap("Weather Map", 2D) = "white" {}
 
-		_BoundsMax("Max Height", Vector) = (0,0,0)
-		_BoundsMin("Min Height", Vector) = (0,0,0)
-
 		_Gc("Global cloud coverage", float) = 0.5
 		_Gd("Global cloud density (0 to infinity)", float) = 1
 
@@ -33,6 +30,22 @@ Shader "My Shaders/New Cloud Shader"
 		_DarknessThreshold("Darkness Threshold", Range(0.0,1.0)) = 0.2
 
 		_SunColour("Sun Colour", Color) = (1,1,1,1)
+
+		_MinHeight("Minimum Height", float) = 50
+		_MaxHeight("Maximum Height", float) = 70
+
+		_BlueNoisePower("Blue Noise Power", float) = 5.1
+		_BlueNoiseScale("Blue Noise Scale", float) = 10
+
+		[ShowAsVector2]	_WeatherOffset("Weather Offset", Vector) = (0,0,0,0)
+
+		_PlanetRadius("Planet Radius", float) = 50
+		_PlanetDarkness("Planet Darkness", float) = 20
+		_PlanetDarknessSmallest("Planet Darkness Smallest", float) = 20
+		_StartSunSet("Sunset Start Angle", float) = 0
+		_EndSunSet("Sunset End Angle", float) = 0
+		_StartDarkness("Darkness Start Angle", float) = 0
+		_EndDarkness("Darkness End Angle", float) = 0
     }
     SubShader
     {
@@ -74,9 +87,6 @@ Shader "My Shaders/New Cloud Shader"
             sampler2D _MainTex;
 			sampler2D _CameraDepthTexture;
 
-			float3 _BoundsMin;
-			float3 _BoundsMax;
-
 			float _Gc;	// Global coverage term
 			float _Gd;	// Global density term
 
@@ -117,6 +127,41 @@ Shader "My Shaders/New Cloud Shader"
 
 			float3 _PlanetPos;
 
+			float _MinHeight;
+			float _MaxHeight;
+
+			float _BlueNoisePower;
+			float _BlueNoiseScale;
+
+			float2 _WeatherOffset;
+			float _PlanetRadius;
+			float _PlanetDarkness;
+			float _PlanetDarknessSmallest;
+
+			float _StartSunSet;
+			float _EndSunSet;
+			float _StartDarkness;
+			float _EndDarkness;
+
+			float2 SphereToSquare(float3 position) {
+				float3 pos = normalize(position - _PlanetPos);
+
+				float pi = 3.14159;
+
+				float x = 0.5 + atan2(pos.x, pos.z) / (2 * pi);
+				float y = 0.5 - asin(pos.y) / pi;
+				return float2(x, y);
+			}
+
+			float2 squareUV(float2 uv) {
+				float width = _ScreenParams.x;
+				float height = _ScreenParams.y;
+				//float minDim = min(width, height);
+				float scale = 1000;
+				float x = uv.x * width;
+				float y = uv.y * height;
+				return float2 (x / scale, y / scale);
+			}
 
 			float2 BoxCollision(float3 position, float3 direction, float3 boundsMin, float3 boundsMax) {
 				float3 t0 = (_PlanetPos + boundsMin - position) / direction;
@@ -130,6 +175,34 @@ Shader "My Shaders/New Cloud Shader"
 				float dstToBox = max(0, dstA);
 				float dstInsideBox = max(0, dstB - dstToBox);
 				return float2(dstToBox, dstInsideBox);
+			}
+
+			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius)
+			{
+				// Used https://link.springer.com/content/pdf/10.1007%2F978-1-4842-4427-2_7.pdf
+
+				float3 f = position - sphereCentre;
+
+				float a = dot(direction, direction);
+				float b = 2 * dot(f, direction);
+				float c = dot(f, f) - (sphereRadius * sphereRadius);
+
+				float discriminant = (b*b) - 4 * a * c;
+
+				// If the ray intersects more than once
+				if (discriminant > 0) {
+					float root = sqrt(discriminant);
+
+					float val1 = (-b - root) / (2 * a);
+					float val2 = (-b + root) / (2 * a);
+
+					// If the entry point is behind, set entry point to ray origin
+					if (val1 < 0) val1 = 0;
+
+					if (val2 >= 0) return float2(val1, val2);
+				}
+
+				return float2(-1, -1);
 			}
 
 			float R(float v, float Lo, float Ho, float Ln, float Hn) {
@@ -147,8 +220,8 @@ Shader "My Shaders/New Cloud Shader"
 			}
 
 			float4 SampleMap(float3 position) {
-				float3 uvw = (position - _PlanetPos) * _WeatherScale * 0.001;
-				return _WeatherMap.Sample(sampler_WeatherMap, uvw.xz);
+				float2 uvw = (SphereToSquare(position) + _WeatherOffset) * _WeatherScale * 0.001;
+				return _WeatherMap.Sample(sampler_WeatherMap, uvw.xy);
 			}
 
 			float4 SampleShapeNoise(float3 position) {
@@ -161,11 +234,20 @@ Shader "My Shaders/New Cloud Shader"
 				return _DetailNoise.SampleLevel(sampler_DetailNoise, uvw, 0);
 			}
 
+			float SquareMag(float3 vec) {
+				return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+			}
+
+			float PercentHeight(float3 pos) {
+				float height = distance(pos, _PlanetPos);
+				return (height - _MinHeight) / (_MaxHeight - _MinHeight);
+			}
+
 			float Density(float3 pos) {
 				float4 Wc = SampleMap(pos);
 				float WMc = max(Wc.r, (_Gc - 0.5) * Wc.g * 2);
 
-				float Ph = (pos.y - _BoundsMin.y) / (_BoundsMax.y - _BoundsMin.y);
+				float Ph = PercentHeight(pos);
 				float Wh = Wc.b;	// Weather map height;
 				float Wd = 1;		// Weather map density, should be Wc.a
 
@@ -198,7 +280,7 @@ Shader "My Shaders/New Cloud Shader"
 
 				float3 pos = rayOrigin;
 				float3 dir = normalize(_SunPosition - pos);
-				float dist = BoxCollision(pos, dir, _BoundsMin, _BoundsMax).y;
+				float dist = SphereCollision(pos, dir, _PlanetPos, _MaxHeight).y;
 
 				float step = dist / (SunSteps - 1);
 				float density = 0;
@@ -218,11 +300,43 @@ Shader "My Shaders/New Cloud Shader"
 				return pi * ((1 - square) / (pow(1 + square - 2 * g*theta, 1.5)));
 			}
 
+			float4 ColourLerp(float4 col1, float4 col2, float percent) {
+				percent = saturate(percent);
+				float4 col3 = float4(1, 1, 1, 1);
+
+				col3.r = lerp(col1.r, col2.r, percent);
+				col3.g = lerp(col1.g, col2.g, percent);
+				col3.b = lerp(col1.b, col2.b, percent);
+
+				return col3;
+			}
+
+			float4 AlteredColour(float3 pos) {
+				float4 alteredColour = float4(1, 1, 1, 1);
+
+				float angle = dot(normalize(_PlanetPos - pos), normalize(_SunPosition - pos));
+
+				if (angle >= _EndDarkness) return float4(0, 0, 0, 0);
+				if (angle >= _StartDarkness) {
+					angle = (angle - _StartDarkness) / (_EndDarkness - _StartDarkness);
+					return ColourLerp(_SunColour, float4(0, 0, 0, 0), angle);
+				}
+				if (angle >= _EndSunSet) return _SunColour;
+
+				if (angle >= _StartSunSet) {
+					angle = (angle - _StartSunSet) / (_EndSunSet - _StartSunSet);
+
+					return ColourLerp(alteredColour, _SunColour, angle);
+				}
+
+				return alteredColour;
+			}
+
 			float CalculateLight(float3 position) {
 				float totalDensity = DensityAlongSunRay(position);
 
 				float transmittance = exp(-totalDensity * _SunAbsorption);
-				return _DarknessThreshold + transmittance * (1 - _DarknessThreshold);
+				return (_DarknessThreshold + transmittance * (1 - _DarknessThreshold));
 			}
 
 			float phase(float a) {
@@ -230,16 +344,17 @@ Shader "My Shaders/New Cloud Shader"
 				return _AMin + hgBlend * _PhaseFactor;
 			}
 
-			float2 GetColour(float3 origin, float3 direction, float distance) {
+			float4 GetColour(float3 origin, float3 direction, float distance) {
 				_NumberOfSteps = 40;
 				
 				float3 position = origin;
 				float stepSize = distance / (_NumberOfSteps - 1);
 
-				float light = 0;
+				float3 light = 0;
 				float transmittance = 1;
 
-				float cosAngle = dot(-direction, normalize(_SunPosition - origin));
+				float3 sunDir = normalize(_SunPosition - origin);
+				float cosAngle = dot(-direction, sunDir);
 				float phaseVal = phase(cosAngle);
 
 				[unroll(40)]
@@ -248,14 +363,17 @@ Shader "My Shaders/New Cloud Shader"
 					if (density > 0) {
 						float lightResult = CalculateLight(position);
 
-						light += density * stepSize * transmittance * lightResult * phaseVal;
+						float4 alteredColour = AlteredColour(position);
+
+						light += density * stepSize * transmittance * lightResult * phaseVal * alteredColour;
 						transmittance *= exp(-density * stepSize * _CloudAbsorption);
+						if (transmittance < 0.01) break;
 					}
 					
 					position += direction * stepSize;
 				}
 
-				return float2(light, transmittance);
+				return float4(light.x, light.y, light.z, transmittance);
 			}
 
             fixed4 frag (v2f i) : SV_Target
@@ -269,22 +387,26 @@ Shader "My Shaders/New Cloud Shader"
 				float depth = DECODE_EYEDEPTH(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv)) * viewLength;
 
 				// Find out if the current pixel collides with the atmosphere
-				float2 result = BoxCollision(origin, dir, _BoundsMin, _BoundsMax);
+				float2 result = SphereCollision(origin, dir, _PlanetPos, _MaxHeight);
 
 				float dstToAtmosphere = result.x;
 				float dstThroughAtmosphere = min(result.y, depth - dstToAtmosphere);
 
-				float offset = (_BlueNoise.Sample(sampler_BlueNoise, i.uv * 10) - 0.5) * 2;
-				offset *= 5.1;
+				float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * _BlueNoiseScale), 0);
+				offset *= _BlueNoisePower;
 
 				float3 entry = origin + dir * (dstToAtmosphere + offset);
 
 				if (dstThroughAtmosphere > 0) {
-					float2 result = GetColour(entry, dir, dstThroughAtmosphere);
 
-					float4 newColour = _SunColour * result.r;
+					//float4 map = SampleMap(entry);
+					//return map;
 
-					col.rgb *= result.g;
+					float4 result = GetColour(entry, dir, dstThroughAtmosphere);
+
+					float3 newColour = result.rgb;
+
+					col.rgb *= result.a;
 					col.rgb += newColour.rgb;
 				}
 

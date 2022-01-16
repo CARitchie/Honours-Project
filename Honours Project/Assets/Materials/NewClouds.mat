@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BlueNoise:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 6c840939f3cb6734883f1842daeb6681, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -75,37 +75,48 @@ Material:
     - CSe: 20
     - CSi: 10
     - OSa: 0
-    - _AMin: 1
+    - _AMin: 0.871
+    - _BlueNoisePower: 10
+    - _BlueNoiseScale: 1.5
     - _BumpScale: 1
-    - _CloudAbsorption: 0.75
+    - _CloudAbsorption: 0.6
     - _Cutoff: 0.5
-    - _DarknessThreshold: 0.2
-    - _DetailNoiseScale: 1.8
+    - _DarknessThreshold: 0.05
+    - _DetailNoiseScale: 14.2
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EndDarkness: 0.69
+    - _EndSunSet: 0.3
     - _ExtraDensity: 0
     - _Gc: 1
-    - _Gd: 0.4
+    - _Gd: 3.88
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _InS: 1
     - _IvO: 0.5
     - _MaxDensity: 0.75
+    - _MaxHeight: 90
     - _Metallic: 0
+    - _MinHeight: 60
     - _Mode: 0
     - _NumberOfSteps: 1
     - _OcclusionStrength: 1
     - _OutS: 1
     - _Parallax: 0.02
     - _PhaseFactor: 0.488
-    - _ShapeNoiseScale: 2.36
+    - _PlanetDarkness: 7.48
+    - _PlanetDarknessSmallest: 8.56
+    - _PlanetRadius: 50
+    - _ShapeNoiseScale: 16.36
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StartDarkness: 0.4
+    - _StartSunSet: -0.6
     - _SunAbsorption: 1.2
     - _UVSec: 0
-    - _WeatherScale: 1
+    - _WeatherScale: 1000
     - _ZWrite: 1
     - aMin: 1
     - ac: 0.488
@@ -121,5 +132,6 @@ Material:
     - _BoundsMin: {r: 0, g: 10, b: 0, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SunColour: {r: 1, g: 1, b: 1, a: 1}
+    - _SunColour: {r: 1, g: 0.5374211, b: 0.2588235, a: 1}
+    - _WeatherOffset: {r: 0.39721575, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
