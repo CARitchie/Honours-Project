@@ -133,5 +133,5 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SunColour: {r: 1, g: 0.5374211, b: 0.2588235, a: 1}
-    - _WeatherOffset: {r: 0.39721575, g: 0, b: 0, a: 0}
+    - _WeatherOffset: {r: 0.42516363, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

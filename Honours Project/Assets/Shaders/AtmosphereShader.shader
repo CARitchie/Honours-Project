@@ -1,14 +1,19 @@
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Created by following equations used in https://developer.nvidia.com/gpugems/gpugems2/part-ii-shading-lighting-and-shadows/chapter-16-accurate-atmospheric-scattering
 
 Shader "My Shaders/Atmosphere Shader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-		_Colour("Colour", Color) = (1, 1, 1, 1)
-		_SunsetColour("Sunset Colour", Color) = (1, 1, 1, 1)
-		_SunColour("Sun Colour", Color) = (1, 1, 1, 1)
-		_Closeness("Closeness", float) = 25
+		_Closeness("Closeness", float) = 90
+
+		_Strength("Atmosphere Strength", float) = 1
+		_ScaleHeight("Average Density Height", float) = 1
+		_ScatterConstant("Scattering Constants", Vector) = (1,1,1,1)
+		_SunIntensity("Sun Intensity", Color) = (1,1,1,1)
+		_InScatterSteps("InScatter Steps", Range(2,200)) = 10
+		_OutScatterSteps("OutScatter Steps", Range(2,200)) = 10
     }
     SubShader
     {
@@ -48,18 +53,21 @@ Shader "My Shaders/Atmosphere Shader"
             }
 
             sampler2D _MainTex;
+			sampler2D _CameraDepthTexture;
+
 			float3 _PlanetOrigin;
 			float3 _PlanetRadius;
 			float _AtmosphereRadius;
-			sampler2D _CameraDepthTexture;
-			int _NumberOfSteps;
 			float3 _LightOrigin;
+			
 			float _Strength;
-			float _SunsetStrength;
-			float4 _Colour;
-			float4 _SunsetColour;
-			float4 _SunColour;
 			float _Closeness;
+			float _ScaleHeight;
+			float3 _ScatterConstant = float3(1,1,1);
+			float4 _SunIntensity;
+
+			int _InScatterSteps;
+			int _OutScatterSteps;
 
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
@@ -90,34 +98,78 @@ Shader "My Shaders/Atmosphere Shader"
 				return float2(-1,-1);
 			}
 
-			float SquareMag(float3 vec) {
-				return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+			float PhaseFunction(float theta, float g) {
+				float square = g * g;
+				float val1 = (3 * (1 - square)) / (2 * (2 + square));
+				float val2 = (1 + pow(cos(theta), 2)) / pow(1 + square - 2 * g *cos(theta), 1.5);
+				return val1 * val2;
 			}
 
-			float3 Density(float3 position) {
-				float2 sunResult = SphereCollision(position, _LightOrigin - position, _PlanetOrigin, _AtmosphereRadius);
+			float HeightPercent(float3 pos) {
+				float height = distance(pos, _PlanetOrigin) - _PlanetRadius;
+				return saturate(height / (_AtmosphereRadius - _PlanetRadius));
+			}
 
-				float distanceIn = sunResult.y - sunResult.x;
+			float Density(float3 pos) {
+				float height = HeightPercent(pos);
+				return exp(-height / _ScaleHeight);
+			}
 
-				float sunStrength = (distanceIn) / _AtmosphereRadius;
-				float closeness = 1 - (length(position - _PlanetOrigin) - _PlanetRadius) / (_AtmosphereRadius - _PlanetRadius);
+			float DensityAlongRay(float3 origin, float3 direction, float distance) {
+				float step = distance / _OutScatterSteps;
+				float3 pos = origin;
+				
+				float density = 0;
 
-				float opacity = closeness - sunStrength * 500;
-
-				float sunset;
-
-				if (opacity <= 0) {
-					opacity = 0;
-					sunset = 0;
+				for(int i = 0 ; i < _OutScatterSteps; i++){
+					density += Density(pos) * step;
+					pos += direction * step;
 				}
-				else {
-					sunset = (distanceIn / (_AtmosphereRadius - _PlanetRadius)) * closeness * opacity * 100;
-				}
-
-				float3 density = float3(opacity, opacity, opacity) + (_SunsetColour.rgb * (sunset * _SunsetStrength));
 
 				return density;
+			}
 
+			float3 OutScatter(float3 origin, float3 direction, float distance) {
+				return DensityAlongRay(origin, direction, distance) * 4 * 3.14159 * _ScatterConstant;
+			}
+
+			float GetSunAngle(float3 pos, float3 direction) {
+				float3 dirToSun = normalize(_LightOrigin - pos);
+				float3 dirToOrigin = normalize(-direction);
+				float dotProduct = dot(dirToSun, dirToOrigin);
+
+				return acos(dotProduct);
+			}
+
+			float3 InScatter(float3 origin, float3 direction, float distance) {
+				float sunAngle = GetSunAngle(origin, direction);
+				float phase = PhaseFunction(sunAngle, 0);
+				phase = 1;
+
+				float progress = 0;
+
+				float step = distance / _InScatterSteps;
+				float3 pos = origin;
+
+				float3 lightIn = float3(0,0,0);
+
+				while (progress < distance) {
+
+					float density = Density(pos);
+
+					float3 sunDir = normalize(_LightOrigin - pos);
+					float sunDist = SphereCollision(pos, sunDir, _PlanetOrigin, _AtmosphereRadius).y;
+					float3 sunOutScatter = OutScatter(pos, sunDir, sunDist);
+
+					float3 outScatter = OutScatter(pos, -direction, progress);
+
+					lightIn += density * exp(-sunOutScatter - outScatter) * step;
+
+					progress += step;
+					pos += direction * step;
+				}
+
+				return _SunIntensity * phase * lightIn * _Strength * _ScatterConstant;
 			}
 
 			float SquareDistToCentre(float3 centre, float3 pos) {
@@ -144,58 +196,16 @@ Shader "My Shaders/Atmosphere Shader"
 				}
 
 				float distanceIn = result.y - result.x;
-
-				float step = distanceIn / _NumberOfSteps;
 				float limit = min(distanceIn, depth - result.x);
+				
+				float3 position = origin + direction * result.x;
+				float3 light = InScatter(position, normalize(direction), limit);
 
-				float progress = 0;
-				float3 density = 0;
-
-				while (progress < limit) {
-					float3 position = origin + normalize(i.viewDir) * (result.x + progress);
-
-					float distance = SquareMag(position - origin) / _Closeness;
-					distance = clamp(distance, 0, 1);
-
-					density += Density(position) * step * distance;
-					float _InnerRadius = 55;
-
-					float middle = ((_AtmosphereRadius - _InnerRadius) / 2) + _InnerRadius;
-					middle = middle * middle;
-					float multiplier = 1;
-
-					float distanceToCentre = SquareDistToCentre(_PlanetOrigin, position);
-
-					if (distanceToCentre < middle) {
-						float squared = _InnerRadius * _InnerRadius;
-						middle -= squared;
-						distanceToCentre -= squared;
-						multiplier = distanceToCentre / middle;
-					}
-					else {
-						float top = _AtmosphereRadius * _AtmosphereRadius;
-						top -= middle;
-						distanceToCentre -= middle;
-						multiplier = 1 - (distanceToCentre / top);
-					}
-
-					multiplier = max(0, multiplier);		
-					
-					progress += step;
+				if (depth < _Closeness) {
+					light *= depth / _Closeness;
 				}
 
-				density /= _NumberOfSteps;
-
-				float value = 0;
-
-				/*
-				float2 sunResult = SphereCollision(_WorldSpaceCameraPos, i.viewDir, _LightOrigin, 200);
-				if (sunResult.x > 0 && sunResult.x < depth) {
-					col.rgb += _SunColour * density;
-				}*/
-
-				float3 newColour = (_Colour.rgb * density * _Strength);
-				col.rgb += newColour;
+				col.rgb += light;
 
 				return col;
             }

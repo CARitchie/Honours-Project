@@ -60,8 +60,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - HR: 118.1
+    - NS: 1
+    - _AtmosphereCloseness: 25
     - _BumpScale: 1
-    - _Closeness: 100
+    - _Closeness: 90
     - _CloudMultiplier: 806.19
     - _CloudOffset: 15
     - _CloudScale: 28.31
@@ -73,19 +76,31 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _InScatterSteps: 10
     - _Metallic: 0
     - _Mode: 0
+    - _ObjectCloseness: 100
     - _OcclusionStrength: 1
+    - _OutScatterSteps: 10
     - _Parallax: 0.02
+    - _ScaleHeight: 0.1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Strength: 12.84
+    - _SunAngle: 0.75
+    - _SunFade: -0.55
     - _UVSec: 0
     - _ZWrite: 1
+    - lamb: 0.08
+    - n: 3.3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Colour: {r: 0.43529412, g: 0.74689615, b: 0.99215686, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ScatterConstant: {r: 0.56, g: 2.9, b: 5.7, a: 1}
     - _SunColour: {r: 0, g: 0, b: 0, a: 1}
+    - _SunIntensity: {r: 1, g: 1, b: 1, a: 1}
     - _SunsetColour: {r: 1, g: 0.12284151, b: 0, a: 1}
+    - scatterConstant: {r: 0.86, g: 3.7, b: 8.41, a: 0}
   m_BuildTextureStacks: []
