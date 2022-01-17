@@ -2071,7 +2071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &889779513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4079,7 +4079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1379765489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5163,7 +5163,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1755191183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5447,7 +5447,6 @@ GameObject:
   - component: {fileID: 1921771755}
   - component: {fileID: 1921771754}
   - component: {fileID: 1921771753}
-  - component: {fileID: 1921771756}
   m_Layer: 10
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5532,20 +5531,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1921771756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1921771751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8d3bbf678e598e4eb17946a4cec6353, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: b1a1a94e9b3b91542993a192da668451, type: 2}
-  sun: {fileID: 705507995}
 --- !u!1 &1959631615
 GameObject:
   m_ObjectHideFlags: 0
@@ -7259,7 +7244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb34bf75b794e434d8aa5925180ac52f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  compassImage: {fileID: 0}
+  compassImage: {fileID: 1191307118}
   shipImage: {fileID: 0}
   fadeSpeed: 1
   ship: {fileID: 0}

@@ -5,23 +5,31 @@ using UnityEngine;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class AtmosphereRenderer : MonoBehaviour
 {
-    [SerializeField] Material material;
-
-    [SerializeField] Atmosphere atmosphere;
+    [SerializeField] Atmosphere[] atmospheres;
     [SerializeField] Transform sun;
 
-    private void Awake()
-    {
-        atmosphere = FindObjectOfType<Atmosphere>();
-    }
-
+    [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if (atmosphere == null) return;
+        if (atmospheres == null || atmospheres.Length == 0) return;
 
-        material = atmosphere.ModifyMaterial(material);
-        material.SetVector("_LightOrigin", sun.position);
+        RenderTexture tempTexture = RenderTexture.GetTemporary(source.width, source.height, 0, source.format);
 
-        Graphics.Blit(source, destination, material);
+        Material mat;
+        for(int i = 0; i < atmospheres.Length - 1; i++)
+        {
+            mat = atmospheres[i].GetMaterial();
+            mat.SetVector("_LightOrigin", sun.position);
+            Graphics.Blit(source, tempTexture, mat);
+
+            source = tempTexture;
+        }
+
+        mat = atmospheres[atmospheres.Length - 1].GetMaterial();
+        mat.SetVector("_LightOrigin", sun.position);
+        Graphics.Blit(source, destination, mat);
+
+        tempTexture.Release();
+
     }
 }

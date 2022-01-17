@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Atmosphere
+  m_Name: MarsAtmosphere
   m_Shader: {fileID: 4800000, guid: 9b6dca29c448d7c419b23d0861345f86, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -73,21 +73,23 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Exposure: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _InScatterSteps: 10
+    - _InScatterSteps: 5
     - _Metallic: 0
     - _Mode: 0
     - _ObjectCloseness: 100
     - _OcclusionStrength: 1
     - _OutScatterSteps: 10
     - _Parallax: 0.02
-    - _ScaleHeight: 0.1
+    - _ScaleHeight: 11.6
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Strength: 12.84
+    - _StarFade: 0.19
+    - _Strength: 9.4
     - _SunAngle: 0.75
     - _SunFade: -0.55
     - _UVSec: 0
@@ -98,7 +100,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Colour: {r: 0.43529412, g: 0.74689615, b: 0.99215686, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ScatterConstant: {r: 0.56, g: 2.9, b: 5.7, a: 1}
+    - _ScatterConstant: {r: 1.97, g: 0.32, b: 0.08, a: 1}
     - _SunColour: {r: 0, g: 0, b: 0, a: 1}
     - _SunIntensity: {r: 1, g: 1, b: 1, a: 1}
     - _SunsetColour: {r: 1, g: 0.12284151, b: 0, a: 1}

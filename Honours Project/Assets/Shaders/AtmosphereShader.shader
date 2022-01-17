@@ -14,6 +14,7 @@ Shader "My Shaders/Atmosphere Shader"
 		_SunIntensity("Sun Intensity", Color) = (1,1,1,1)
 		_InScatterSteps("InScatter Steps", Range(2,200)) = 10
 		_OutScatterSteps("OutScatter Steps", Range(2,200)) = 10
+		_StarFade("Star Fade", float) = 0
     }
     SubShader
     {
@@ -69,6 +70,8 @@ Shader "My Shaders/Atmosphere Shader"
 			int _InScatterSteps;
 			int _OutScatterSteps;
 
+			float _StarFade;
+
 
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
@@ -98,6 +101,9 @@ Shader "My Shaders/Atmosphere Shader"
 				return float2(-1,-1);
 			}
 
+			// g = 0 for Rayleigh scattering
+			// g > -1 && g <= -0.75 ofr Mie scattering
+			// Theta is angle between ray and sun
 			float PhaseFunction(float theta, float g) {
 				float square = g * g;
 				float val1 = (3 * (1 - square)) / (2 * (2 + square));
@@ -112,7 +118,7 @@ Shader "My Shaders/Atmosphere Shader"
 
 			float Density(float3 pos) {
 				float height = HeightPercent(pos);
-				return exp(-height / _ScaleHeight);
+				return exp(-height / (_ScaleHeight * 0.01));
 			}
 
 			float DensityAlongRay(float3 origin, float3 direction, float distance) {
@@ -172,11 +178,6 @@ Shader "My Shaders/Atmosphere Shader"
 				return _SunIntensity * phase * lightIn * _Strength * _ScatterConstant;
 			}
 
-			float SquareDistToCentre(float3 centre, float3 pos) {
-				float3 dir = centre - pos;
-				return dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
-			}
-
             fixed4 frag (v2f i) : SV_Target
             {
 				fixed4 col = tex2D(_MainTex, i.uv);
@@ -203,6 +204,9 @@ Shader "My Shaders/Atmosphere Shader"
 
 				if (depth < _Closeness) {
 					light *= depth / _Closeness;
+				}
+				else if (depth > 10000) {
+					col.rgb *= 1 - saturate(light.g / _StarFade);
 				}
 
 				col.rgb += light;

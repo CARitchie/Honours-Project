@@ -11,6 +11,8 @@ public class CloudRenderer : MonoBehaviour
     [SerializeField] Vector2 weatherSpeed;
 
     static Vector2 offset;
+
+    [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         material.SetVector("_SunPosition", sun.position);
