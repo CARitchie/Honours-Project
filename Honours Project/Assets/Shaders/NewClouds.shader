@@ -46,6 +46,9 @@ Shader "My Shaders/New Cloud Shader"
 		_EndSunSet("Sunset End Angle", float) = 0
 		_StartDarkness("Darkness Start Angle", float) = 0
 		_EndDarkness("Darkness End Angle", float) = 0
+
+		_BlueDrop("Blue Drop", float) = 0
+		_Closeness("Closeness", float) = 10
     }
     SubShader
     {
@@ -142,6 +145,9 @@ Shader "My Shaders/New Cloud Shader"
 			float _EndSunSet;
 			float _StartDarkness;
 			float _EndDarkness;
+
+			float _BlueDrop;
+			float _Closeness;
 
 			float2 SphereToSquare(float3 position) {
 				float3 pos = normalize(position - _PlanetPos);
@@ -390,21 +396,24 @@ Shader "My Shaders/New Cloud Shader"
 				float2 result = SphereCollision(origin, dir, _PlanetPos, _MaxHeight);
 
 				float dstToAtmosphere = result.x;
-				float dstThroughAtmosphere = min(result.y, depth - dstToAtmosphere);
-
-				float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * _BlueNoiseScale), 0);
-				offset *= _BlueNoisePower;
-
-				float3 entry = origin + dir * (dstToAtmosphere + offset);
+				float dstThroughAtmosphere = min(result.y - result.x, depth - dstToAtmosphere);
 
 				if (dstThroughAtmosphere > 0) {
 
-					//float4 map = SampleMap(entry);
-					//return map;
+					float properScale = ((dstToAtmosphere + 1)/ _BlueDrop) * _BlueNoiseScale;
+
+					float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * properScale), 0);
+					offset *= _BlueNoisePower;
+
+					float3 entry = origin + dir * (dstToAtmosphere + offset);
 
 					float4 result = GetColour(entry, dir, dstThroughAtmosphere);
 
 					float3 newColour = result.rgb;
+
+					if (dstThroughAtmosphere < _Closeness) {
+						newColour *= dstThroughAtmosphere / _Closeness;
+					}
 
 					col.rgb *= result.a;
 					col.rgb += newColour.rgb;
