@@ -25,12 +25,9 @@ public class PersonController : MonoBehaviour
         lastVelocity = rb.velocity;
     }
 
-    protected virtual void LateUpdate(){
-        CheckGrounded();
-    }
-
     protected virtual void FixedUpdate(){
         VelocityCheck();
+        CheckGrounded();
     }
 
     protected virtual void Move(){
@@ -58,7 +55,7 @@ public class PersonController : MonoBehaviour
         float deltaV = (lastVelocity - currentVelocity).magnitude;
         lastVelocity = currentVelocity;
 
-        if(deltaV > 15) Debug.LogError(transform.name + " Velocity death: " + deltaV + "m/s",transform);
+        //if(deltaV > 15) Debug.LogError(transform.name + " Velocity death: " + deltaV + "m/s",transform);
     }
 
     protected virtual void CheckGrounded(){

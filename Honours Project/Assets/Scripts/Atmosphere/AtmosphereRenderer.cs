@@ -18,16 +18,22 @@ public class AtmosphereRenderer : MonoBehaviour
         Material mat;
         for(int i = 0; i < atmospheres.Length - 1; i++)
         {
-            mat = atmospheres[i].GetMaterial();
-            mat.SetVector("_LightOrigin", sun.position);
-            Graphics.Blit(source, tempTexture, mat);
+            if (atmospheres[i] != null)
+            {
+                mat = atmospheres[i].GetMaterial();
+                mat.SetVector("_LightOrigin", sun.position);
+                Graphics.Blit(source, tempTexture, mat);
 
-            source = tempTexture;
+                source = tempTexture;
+            }
         }
 
-        mat = atmospheres[atmospheres.Length - 1].GetMaterial();
-        mat.SetVector("_LightOrigin", sun.position);
-        Graphics.Blit(source, destination, mat);
+        if (atmospheres[atmospheres.Length - 1] != null)
+        {
+            mat = atmospheres[atmospheres.Length - 1].GetMaterial();
+            mat.SetVector("_LightOrigin", sun.position);
+            Graphics.Blit(source, destination, mat);
+        }
 
         tempTexture.Release();
 

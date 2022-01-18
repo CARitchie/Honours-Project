@@ -14,7 +14,7 @@ Shader "My Shaders/Atmosphere Shader"
 		_SunIntensity("Sun Intensity", Color) = (1,1,1,1)
 		_InScatterSteps("InScatter Steps", Range(2,200)) = 10
 		_OutScatterSteps("OutScatter Steps", Range(2,200)) = 10
-		_StarFade("Star Fade", float) = 0
+		_StarFade("Star Fade", Range(0.0,1.0)) = 1
     }
     SubShader
     {
