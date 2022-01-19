@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : PersonController
+public class PlayerController : PersonController, Damageable
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
     [SerializeField] Transform dud;
+    [SerializeField] Weapon initialWeapon;
+
+    Weapon weapon;
 
     float verticalLook = 0;
 
@@ -16,6 +19,9 @@ public class PlayerController : PersonController
     InputAction[] movementActions = new InputAction[8];
     InputAction lookAction;
     InputAction sprintAction;
+    InputAction weaponAction;
+    InputAction weaponSecondaryAction;
+
     Transform cam;
     PlayerInput input;
 
@@ -55,11 +61,17 @@ public class PlayerController : PersonController
 
             lookAction = input.actions.FindAction("Look");
             sprintAction = input.actions.FindAction("Sprint");
+            weaponAction = input.actions.FindAction("Primary");
+            weaponSecondaryAction = input.actions.FindAction("Secondary");
+
         }
 
         InputController.Jump += Jump;
 
         fuel = maxFuel;
+
+        SwapWeapon(initialWeapon);
+        initialWeapon = null;
     }
 
     private void OnDestroy()
@@ -75,6 +87,13 @@ public class PlayerController : PersonController
         Move();
 
         Look();
+    }
+    
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        UseWeapon();
     }
 
     protected override void Move()
@@ -221,5 +240,42 @@ public class PlayerController : PersonController
         fuel = Mathf.Clamp(fuel - reduction, 0, maxFuel);
         Debug.Log(fuel);
         return true;
+    }
+
+    void UseWeapon()
+    {
+        if (weapon == null) return;
+
+        weapon.PrimaryAction(weaponAction.ReadValue<float>());
+        weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
+    }
+
+    void SwapWeapon(Weapon newWeapon)
+    {
+        if (weapon != null) weapon.OnUnEquip();
+
+        weapon = newWeapon;
+
+        if (weapon != null) weapon.OnEquip(this);
+    }
+
+    public void Recoil(float strength)
+    {
+        rb.AddForce(strength * -transform.forward, ForceMode.Impulse);
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return rb.velocity;
+    }
+
+    public Transform ProjectileSpawnPoint()
+    {
+        return cam;
+    }
+
+    public void OnShot()
+    {
+        Debug.Log("Ouch");
     }
 }

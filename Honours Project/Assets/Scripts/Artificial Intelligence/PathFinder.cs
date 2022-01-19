@@ -94,6 +94,7 @@ public class PathFinder : MonoBehaviour
             }
             counter--;
             yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
         }
 
         while(currentNode.Parent != null){
@@ -101,7 +102,7 @@ public class PathFinder : MonoBehaviour
             currentNode = currentNode.Parent;
 
             yield return new WaitForEndOfFrame();
-            //yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
         }
     }
 
