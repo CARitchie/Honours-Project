@@ -6,21 +6,28 @@ using UnityEngine.UI;
 public class Compass : MonoBehaviour
 {
     [SerializeField] RectTransform compassImage;
-    [SerializeField] RectTransform shipImage;
     [SerializeField] float fadeSpeed;
-    [SerializeField] Transform ship;
+
+    public static Compass Instance;
 
     PersonController player;
     GravitySource planet;
     Transform playerT;
 
-    Image[] images;
+    List<Image> images = new List<Image>();
+
+    List<CompassItem> items = new List<CompassItem>();
 
     Vector3 targetPos = new Vector3(200, 0, 0);
 
     static bool active = true;
 
     float size = 800;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -29,7 +36,12 @@ public class Compass : MonoBehaviour
         player = PlayerController.Instance;
         playerT = player.transform;
 
-        images = GetComponentsInChildren<Image>();
+        Image[] tempImages = GetComponentsInChildren<Image>();
+        for(int i = 0; i < tempImages.Length; i++)
+        {
+            images.Add(tempImages[i]);
+        }
+
 
         SetAlpha(0);
     }
@@ -47,7 +59,12 @@ public class Compass : MonoBehaviour
 
         FadeIn();
 
-        FindShip();
+        for(int i = 0; i < items.Count; i++)
+        {
+            FindItem(items[i]);
+        }
+
+
         UpdateTarget();
         compassImage.localPosition = targetPos;
     }
@@ -77,36 +94,32 @@ public class Compass : MonoBehaviour
         }
     }
 
-    void FindShip()
+    void FindItem(CompassItem item)
     {
-        Vector3 directToShip = (playerT.position - ship.position).normalized;
-        Vector3 shipPlayerRight = Vector3.Cross(directToShip, playerT.up).normalized;
+        Vector3 directToItem = (playerT.position - item.transform.position).normalized;
+        Vector3 itemPlayerRight = Vector3.Cross(directToItem, playerT.up).normalized;
 
-        Vector3 toShip = Vector3.Cross(shipPlayerRight, playerT.up);
-        float shipAngle = Vector3.Dot(toShip, playerT.forward);
+        Vector3 toItem = Vector3.Cross(itemPlayerRight, playerT.up);
+        float itemAngle = Vector3.Dot(toItem, playerT.forward);
 
-        float rightAngle = Vector3.Dot(toShip, playerT.right);
+        float rightAngle = Vector3.Dot(toItem, playerT.right);
 
-        float angle = Mathf.Acos(shipAngle) * Mathf.Rad2Deg;
+        float angle = Mathf.Acos(itemAngle) * Mathf.Rad2Deg;
 
-        float x = (angle / 360) * size;  
+        float x = (angle / 360) * size;
 
         if (float.IsNaN(x)) return;
-
-        Vector3 shipPos = shipImage.localPosition;
 
         if (rightAngle < 0)
         {
             // East
-            shipPos.x = -x;
+            item.SetPosition(-x);
         }
         else
         {
             // West
-            shipPos.x = x;
+            item.SetPosition(x);
         }
-
-        shipImage.localPosition = shipPos;
     }
 
     void FadeIn()
@@ -131,10 +144,10 @@ public class Compass : MonoBehaviour
 
     void SetAlpha(float percent)
     {
-        Color colour = images[0].color;
-        colour.a = percent;
         foreach(Image image in images)
         {
+            Color colour = image.color;
+            colour.a = percent;
             image.color = colour;
         }
     }
@@ -142,5 +155,21 @@ public class Compass : MonoBehaviour
     public static void SetActive(bool value)
     {
         active = value;
+    }
+
+    public static void AddItem(CompassItem item)
+    {
+        if (Instance == null) return;
+
+        Instance.items.Add(item);
+        Instance.images.Add(item.CreateNewIcon(Instance.transform));
+    }
+
+    public static void RemoveItem(CompassItem item)
+    {
+        if (Instance == null) return;
+
+        Instance.items.Remove(item);
+        item.DestroyIcon();
     }
 }
