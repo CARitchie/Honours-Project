@@ -5,14 +5,24 @@ using UnityEngine;
 public class EnemyController : PersonController
 {
     [Header("Enemy Settings")]
+    [SerializeField] State[] states;
+    [SerializeField] float hostileRange;
+    [SerializeField] Transform projectileHolder;
+    [SerializeField] float hostileResetTime;
     CharacterGravity gravity;
     PathFinder pathFinder;
 
-    [SerializeField] State[] states;
+    float hostileTimer;
+
+    
     State currentState;
 
     Stack<Vector3> nodes;
     Vector3 currentNode;
+
+    Transform player;
+
+    bool hostile = false;
 
     protected override void Awake()
     {
@@ -31,20 +41,30 @@ public class EnemyController : PersonController
         {
             states[i].InitialiseState(this);
         }
+
+        player = PlayerController.Instance.transform;
     }
 
-    private void Update()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         for (int i = 0; i < states.Length; i++)
         {
-            if (states[i] != currentState && states[i].EntryCondition())
+            if (states[i].EntryCondition())
             {
-                ChangeState(states[i]);
+                if(states[i] != currentState ) ChangeState(states[i]);
                 break;
             }
         }
 
         currentState.OnExecute();
+
+        if(hostileTimer > 0)
+        {
+            hostileTimer -= Time.fixedDeltaTime;
+            if (hostileTimer <= 0) hostile = false;
+        }
     }
 
     void ChangeState(State state)
@@ -104,5 +124,48 @@ public class EnemyController : PersonController
     public Vector3 GetCurrentNode()
     {
         return currentNode + nearestSource.transform.position;
+    }
+
+    public bool IsHostile()
+    {
+        return hostile;
+    }
+
+    public Vector3 PlayerPos()
+    {
+        return player.position;
+    }
+
+    public bool PlayerVisible()
+    {
+        Vector3 point1 = transform.position + transform.up * 0.5f;
+        Vector3 point2 = player.position + player.up * 0.5f;
+
+        if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit)){
+            if (hit.transform.CompareTag("Player"))
+            {
+                Debug.DrawLine(point1, point2, Color.cyan);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public override Transform ProjectileSpawnPoint()
+    {
+        return projectileHolder;
+    }
+
+    public void AimAtPlayer()
+    {
+        projectileHolder.LookAt(player);
+    }
+
+    public void SetHostile(bool val)
+    {
+        hostile = val;
+
+        if (hostile) hostileTimer = hostileResetTime;
     }
 }

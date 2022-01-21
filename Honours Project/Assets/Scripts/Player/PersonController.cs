@@ -78,4 +78,19 @@ public class PersonController : MonoBehaviour
     {
         return nearestSource;
     }
+
+    public virtual Transform ProjectileSpawnPoint()
+    {
+        return transform;
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return rb.velocity;
+    }
+
+    public void Recoil(float strength)
+    {
+        rb.AddForce(strength * -transform.forward, ForceMode.VelocityChange);
+    }
 }

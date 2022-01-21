@@ -16,7 +16,7 @@ public class Gun : Weapon
 
     protected Transform projectileOrigin;
 
-    public override void OnEquip(PlayerController controller)
+    public override void OnEquip(PersonController controller)
     {
         base.OnEquip(controller);
         projectileOrigin = controller.ProjectileSpawnPoint();
@@ -59,15 +59,15 @@ public class Gun : Weapon
     public void Fire()
     {
         fired = true;
-        player.Recoil(recoilStrength);
+        controller.Recoil(recoilStrength);
 
         Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();
 
         projectile.transform.position = projectileOrigin.position + projectileOrigin.forward * 1.5f;
 
-        Vector3 velocity = player.GetVelocity() + projectileOrigin.forward * projectileSpeed;
+        Vector3 velocity = controller.GetVelocity() + projectileOrigin.forward * projectileSpeed;
 
-        GravitySource source = player.GetNearestSource();
+        GravitySource source = controller.GetNearestSource();
         Transform body = source != null ? source.transform : null; 
 
         projectile.Fire(velocity, body);

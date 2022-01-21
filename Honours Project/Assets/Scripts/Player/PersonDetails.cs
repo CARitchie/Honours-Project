@@ -7,7 +7,7 @@ public class PersonDetails : MonoBehaviour, Damageable
     [SerializeField] protected float maxHealth = 100;
     protected float health;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         health = maxHealth;
     }

@@ -259,17 +259,7 @@ public class PlayerController : PersonController
         if (weapon != null) weapon.OnEquip(this);
     }
 
-    public void Recoil(float strength)
-    {
-        rb.AddForce(strength * -transform.forward, ForceMode.Impulse);
-    }
-
-    public Vector3 GetVelocity()
-    {
-        return rb.velocity;
-    }
-
-    public Transform ProjectileSpawnPoint()
+    public override Transform ProjectileSpawnPoint()
     {
         return cam;
     }

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    protected PlayerController player;
+    protected PersonController controller;
 
-    public virtual void OnEquip(PlayerController controller)
+    public virtual void OnEquip(PersonController controller)
     {
-        player = controller;
+        this.controller = controller;
         Debug.Log("Equip");
     }
 
     public virtual void OnUnEquip()
     {
-        player = null;
+        controller = null;
     }
 
     public virtual void PrimaryAction(float val)

@@ -5,10 +5,14 @@ using UnityEngine;
 public class EnemyDetails : PersonDetails
 {
     MeshRenderer meshRenderer;
+    EnemyController controller;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
+        controller = GetComponentInChildren<EnemyController>();
+
     }
 
     public override void TakeDamage(float amount)
@@ -17,6 +21,7 @@ public class EnemyDetails : PersonDetails
 
         meshRenderer.material.color = Color.Lerp(Color.red, Color.green, HealthPercent());
 
+        controller.SetHostile(true);
     }
 
     public override void OnDeath()

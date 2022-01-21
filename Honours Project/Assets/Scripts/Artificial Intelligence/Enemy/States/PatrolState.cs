@@ -16,7 +16,7 @@ public class PatrolState : State
 
     public override void OnEnterState()
     {
-        Debug.Log("Enter");
+        Debug.Log("Enter Patrol");
         IncreaseIndex();
     }
 
