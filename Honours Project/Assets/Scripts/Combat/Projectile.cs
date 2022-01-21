@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : PoolObject
 {
     [SerializeField] GameObject hitMarker;
+    [SerializeField] float damage = 10;
     [SerializeField] float despawnTime = 10;
     Rigidbody rb;
     Vector3 lastPos;
@@ -50,9 +51,9 @@ public class Projectile : PoolObject
         marker.transform.position = hit.point;
         marker.transform.parent = hit.collider.transform;
 
-        if(hit.collider.TryGetComponent(out Damageable damageable))
+        if(hit.transform.TryGetComponent(out Damageable damageable))
         {
-            damageable.OnShot();
+            damageable.OnShot(damage);
         }
 
         gameObject.SetActive(false);
@@ -77,5 +78,5 @@ public class Projectile : PoolObject
 
 public interface Damageable
 {
-    void OnShot();
+    void OnShot(float damage);
 }

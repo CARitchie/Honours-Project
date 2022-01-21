@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : PersonController, Damageable
+public class PlayerController : PersonController
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
@@ -96,7 +96,7 @@ public class PlayerController : PersonController, Damageable
         UseWeapon();
     }
 
-    protected override void Move()
+    public override void Move()
     {
         float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
         float sideways = movementActions[1].ReadValue<float>() - movementActions[3].ReadValue<float>();
@@ -272,10 +272,5 @@ public class PlayerController : PersonController, Damageable
     public Transform ProjectileSpawnPoint()
     {
         return cam;
-    }
-
-    public void OnShot()
-    {
-        Debug.Log("Ouch");
     }
 }

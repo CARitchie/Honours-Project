@@ -30,7 +30,7 @@ public class PersonController : MonoBehaviour
         CheckGrounded();
     }
 
-    protected virtual void Move(){
+    public virtual void Move(){
 
     }
 

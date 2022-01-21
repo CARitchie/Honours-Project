@@ -23,13 +23,19 @@ public class PathFinder : MonoBehaviour
     Vector3 originalPos;
 
     void Start(){
+
         if(visualise && targetObject != null){
             StartCoroutine(VisualiseProcess(targetObject.position));
         }
     }
 
-    public Stack<Vector3> FindPath(Vector3 target){
+    public Stack<Vector3> FindPath(Vector3 target, Transform planet){
+
+        if (planet == null) return null;
+
         this.target = target;
+        this.planet = planet;
+
         openList = new List<Node>();
         closedList = new List<Node>();
         originalPos = planet.position;
@@ -196,6 +202,7 @@ public class PathFinder : MonoBehaviour
     }
 
     void OnDrawGizmosSelected(){
+        if(planet == null) return;
         Vector3 offset = planet.position - originalPos;
 
         foreach(Node node in openList){

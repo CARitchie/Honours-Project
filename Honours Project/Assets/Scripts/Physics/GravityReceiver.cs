@@ -37,6 +37,8 @@ public class GravityReceiver : MonoBehaviour
 
         force += GetLocalForce();
 
+        if (float.IsNaN(force.x)) return;
+
         rb.AddForce(force);
     }
 
@@ -83,5 +85,10 @@ public class GravityReceiver : MonoBehaviour
             source.RemoveReceiver(this);
         }
         localGravitySources.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        GravityController.RemoveReceiver(this);
     }
 }

@@ -66,4 +66,32 @@ public class CharacterGravity : GravityReceiver
 
         transform.rotation = rot * transform.rotation;
     }
+
+    public void FindClosest(List<PlanetGravity> sources)
+    {
+        GravitySource closest = null;
+
+        if (localGravitySources.Count > 0)
+        {
+            LocalGravitySource localGravitySource = ClosestLocalSource();
+            closest = localGravitySource;
+            return;
+        }
+
+        float max = 0;
+        for (int i = 0; i < sources.Count; i++)
+        {
+            if (sources[i].transform != transform)
+            {
+                Vector3 direction = sources[i].transform.position - transform.position;
+                float magnitude = direction.sqrMagnitude;
+
+                if (magnitude - sources[i].GetSquareDistance() < max && magnitude < sources[i].Influence)
+                {
+                    max = magnitude;
+                    closest = sources[i];
+                }
+            }
+        }
+    }
 }

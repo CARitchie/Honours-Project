@@ -43,4 +43,18 @@ public class GravityController : MonoBehaviour
     {
         AddForces();
     }
+
+    public static void FindClosest(CharacterGravity character)
+    {
+        if (Instance == null) return;
+
+        character.FindClosest(Instance.sources);
+    }
+
+    public static void RemoveReceiver(GravityReceiver receiver)
+    {
+        if (Instance == null) return;
+
+        Instance.receivers.Remove(receiver);
+    }
 }
