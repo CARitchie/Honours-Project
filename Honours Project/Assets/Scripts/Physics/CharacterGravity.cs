@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterGravity : GravityReceiver
 {
     [SerializeField] float rotationSpeed = 150;
+    [SerializeField] bool player;
     PersonController controller;
 
     protected override void Awake()
@@ -14,7 +15,7 @@ public class CharacterGravity : GravityReceiver
     }
 
 
-    public override void CalculateForce(List<PlanetGravity> sources, float time)
+    public override void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
     {
         Vector3 force = Vector3.zero;
 
@@ -29,15 +30,15 @@ public class CharacterGravity : GravityReceiver
             if (sources[i].transform != transform)
             {
                 Vector3 direction = sources[i].transform.position - transform.position;
-                float magnitude = direction.sqrMagnitude;
+                float distance = direction.sqrMagnitude;
                 direction = direction.normalized;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / magnitude;
+                float strength = (G * rb.mass * sources[i].GetMass()) / distance;
                 force += direction * strength;
 
-                if(magnitude - sources[i].GetSquareDistance() < max && magnitude < sources[i].Influence)
+                if(distance - sources[i].GetSquareDistance() < max && distance < sources[i].Influence)
                 {
-                    max = magnitude;
+                    max = distance;
                     dir = direction * strength;
                     closestSource = sources[i];
                 }
@@ -54,13 +55,21 @@ public class CharacterGravity : GravityReceiver
 
         controller.SetNearestSource(closestSource);
 
+        if (float.IsNaN(force.x)) return;
+
         rb.AddForce(force);
+        if (!player) rb.AddForce(playerVelocity, ForceMode.VelocityChange);
+
+        Rotate(dir, time);
+    }
+
+    void Rotate(Vector3 direction, float time)
+    {
+        if (direction == Vector3.zero) return;
 
         // https://answers.unity.com/questions/395033/quaternionfromtorotation-misunderstanding.html
 
-        if (dir == Vector3.zero) return;
-
-        Quaternion rot = Quaternion.FromToRotation(transform.up, -dir);
+        Quaternion rot = Quaternion.FromToRotation(transform.up, -direction);
 
         rot = Quaternion.RotateTowards(Quaternion.identity, rot, time * rotationSpeed);
 

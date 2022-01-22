@@ -94,6 +94,9 @@ public class PlayerController : PersonController
         base.FixedUpdate();
 
         UseWeapon();
+
+        AddForce(rb.velocity);
+        rb.velocity = Vector3.zero;
     }
 
     public override void Move()
@@ -204,8 +207,7 @@ public class PlayerController : PersonController
             strength *= 1.2f;
         }
 
-        rb.AddForce(transform.up * strength, ForceMode.VelocityChange);
-        
+        AddForce(transform.up * strength);
     }
 
     protected override void CheckGrounded()
@@ -262,5 +264,10 @@ public class PlayerController : PersonController
     public override Transform ProjectileSpawnPoint()
     {
         return cam;
+    }
+
+    public override void AddForce(Vector3 force)
+    {
+        GravityController.AddToPlayerVelocity(force);
     }
 }

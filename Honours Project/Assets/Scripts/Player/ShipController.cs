@@ -57,10 +57,15 @@ public class ShipController : MonoBehaviour
 
         Movement();
         Look();
+
+        AddForce(rb.velocity);
+        rb.velocity = Vector3.zero;
     }
 
     public void Activate()
     {
+        GravityController.SetPlayer(GetComponent<GravityReceiver>());
+
         cam.SetActive(true);
         active = true;
         InputController.SetMap("Ship");
@@ -81,6 +86,8 @@ public class ShipController : MonoBehaviour
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
         Compass.SetActive(true);
+
+        GravityController.SetPlayer(PlayerController.Instance.GetComponentInParent<GravityReceiver>());
     }
 
     void Movement()
@@ -92,7 +99,7 @@ public class ShipController : MonoBehaviour
         move *= engineStrength;
         move *= Time.fixedDeltaTime;
 
-        rb.AddForce(move, ForceMode.VelocityChange);
+        AddForce(move);
     }
 
     void Look()
@@ -118,5 +125,10 @@ public class ShipController : MonoBehaviour
         transform.Rotate(angVel * time);
 
         rb.angularVelocity = Vector3.zero;
+    }
+
+    public void AddForce(Vector3 force)
+    {
+        GravityController.AddToPlayerVelocity(force);
     }
 }

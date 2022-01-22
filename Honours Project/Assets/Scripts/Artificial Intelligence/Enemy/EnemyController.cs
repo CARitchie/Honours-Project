@@ -123,6 +123,7 @@ public class EnemyController : PersonController
 
     public Vector3 GetCurrentNode()
     {
+        // THIS CAN BREAK
         return currentNode + nearestSource.transform.position;
     }
 

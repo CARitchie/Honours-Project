@@ -18,7 +18,17 @@ public class GravityReceiver : MonoBehaviour
         GravityController.AddReceiver(this);
     }
 
-    public virtual void CalculateForce(List<PlanetGravity> sources, float time)
+    public virtual void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
+    {
+        Vector3 force = CalculateForce(sources, time);
+
+        if (float.IsNaN(force.x)) return;
+
+        rb.AddForce(force);
+        rb.AddForce(playerVelocity, ForceMode.VelocityChange);
+    }
+
+    protected Vector3 CalculateForce(List<PlanetGravity> sources, float time)
     {
         Vector3 force = Vector3.zero;
 
@@ -37,9 +47,7 @@ public class GravityReceiver : MonoBehaviour
 
         force += GetLocalForce();
 
-        if (float.IsNaN(force.x)) return;
-
-        rb.AddForce(force);
+        return force;
     }
 
     public void AddLocalGravitySource(LocalGravitySource gravitySource){

@@ -91,6 +91,11 @@ public class PersonController : MonoBehaviour
 
     public void Recoil(float strength)
     {
-        rb.AddForce(strength * -transform.forward, ForceMode.VelocityChange);
+        AddForce(strength * -transform.forward);
+    }
+
+    public virtual void AddForce(Vector3 force)
+    {
+        rb.AddForce(force, ForceMode.VelocityChange);
     }
 }

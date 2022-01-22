@@ -3940,6 +3940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 100
+  player: 1
 --- !u!54 &813592374
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3955,7 +3956,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!4 &813592375
 Transform:
   m_ObjectHideFlags: 0
@@ -9392,6 +9393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 1000
+  player: 0
 --- !u!54 &1547663050
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10107,6 +10109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d6e93d61a2dd746bb52225258ef405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 813592373}
 --- !u!4 &1724342972
 Transform:
   m_ObjectHideFlags: 0
