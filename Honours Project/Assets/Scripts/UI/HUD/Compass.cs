@@ -162,7 +162,15 @@ public class Compass : MonoBehaviour
         if (Instance == null) return;
 
         Instance.items.Add(item);
-        Instance.images.Add(item.CreateNewIcon(Instance.transform));
+
+        Image newImage = item.CreateNewIcon(Instance.transform);
+        Instance.images.Add(newImage);
+
+        if (!active || Instance.planet == null){
+            Color colour = newImage.color;
+            colour.a = 0;
+            newImage.color = colour;
+        }
     }
 
     public static void RemoveItem(CompassItem item)
