@@ -8,7 +8,9 @@ public class ShipController : MonoBehaviour
     [SerializeField] float engineStrength;
     [SerializeField] float sensitivity;
     [SerializeField] float maxRotation = 1000;
-    [SerializeField] GameObject cam;
+    [SerializeField] Transform cameraHolder;
+    [SerializeField] CameraController cam;
+
 
     InputAction[] shipControls = new InputAction[8];
     InputAction lookAction;
@@ -66,7 +68,7 @@ public class ShipController : MonoBehaviour
     {
         GravityController.SetPlayer(GetComponent<GravityReceiver>());
 
-        cam.SetActive(true);
+        cam.MoveToTransform(cameraHolder);
         active = true;
         InputController.SetMap("Ship");
         PlayerController.Instance.Deactivate();
@@ -77,17 +79,18 @@ public class ShipController : MonoBehaviour
     public void Deactivate()
     {
         active = false;
-        cam.SetActive(false);
         InputController.SetMap("Player");
 
         GlobalLightControl.SwitchToPlayer();
         PlayerController.Instance.SetRotation(transform.eulerAngles);
-        PlayerController.Instance.SetPosition(transform.position + transform.up * 3);
+        PlayerController.Instance.SetPosition(cameraHolder.position - transform.up * 0.6f);
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
         Compass.SetActive(true);
 
         GravityController.SetPlayer(PlayerController.Instance.GetComponentInParent<GravityReceiver>());
+
+        cam.MoveToTransform(PlayerController.Instance.GetCameraHolder());
     }
 
     void Movement()

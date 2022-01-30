@@ -22,7 +22,7 @@ public class PlayerController : PersonController
     InputAction weaponAction;
     InputAction weaponSecondaryAction;
 
-    Transform cam;
+    [SerializeField] Transform cam;
     PlayerInput input;
 
     float fuel;
@@ -36,7 +36,6 @@ public class PlayerController : PersonController
         base.Awake();
 
         Instance = this;
-        cam = GetComponentInChildren<Camera>().transform;
     }
 
     protected override void Start()
@@ -269,5 +268,10 @@ public class PlayerController : PersonController
     public override void AddForce(Vector3 force)
     {
         GravityController.AddToPlayerVelocity(force);
+    }
+
+    public Transform GetCameraHolder()
+    {
+        return cam;
     }
 }
