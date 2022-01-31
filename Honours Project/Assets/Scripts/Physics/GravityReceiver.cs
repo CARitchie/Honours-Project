@@ -13,7 +13,7 @@ public class GravityReceiver : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         GravityController.AddReceiver(this);
     }

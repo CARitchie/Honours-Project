@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8913731249310302704, guid: 2f1c91d12db77bf478adf2376e29744a, type: 3}
   radius: 1
-  spawnChance: 1
+  spawnChance: 0.1
   minScale: 0.9
   maxScale: 1.1
