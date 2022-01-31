@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 5073465669912534285}
   - component: {fileID: 8722392163104080160}
   - component: {fileID: 7326411516921092841}
+  - component: {fileID: 5933027869659510996}
   m_Layer: 0
   m_Name: TreeMaple03_LOD0
   m_TagString: Untagged
@@ -306,3 +307,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5933027869659510996
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3644078126342234925}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5126126501384309989, guid: c364b98934fafc84b9dc886fc049877a, type: 3}

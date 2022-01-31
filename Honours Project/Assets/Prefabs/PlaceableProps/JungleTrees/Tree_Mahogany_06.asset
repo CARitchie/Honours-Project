@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e6527233ca8bdb4493db8ef9190d243, type: 3}
-  m_Name: Tree_01
+  m_Name: Tree_Mahogany_06
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2486432117396702844, guid: 8015dd632151d394cac25bc4aed7b2de, type: 3}
+  prefab: {fileID: 8530343607879224522, guid: dcadae904c4ebb04c870bdec40a32baf, type: 3}
   radius: 1
   spawnChance: 1
   minScale: 0.9

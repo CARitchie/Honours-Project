@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8780158199086267433}
   - component: {fileID: 2414874222889335487}
   - component: {fileID: 8255218385497075175}
+  - component: {fileID: 2725796281658311887}
   m_Layer: 0
   m_Name: TreeMaple02_LOD0
   m_TagString: Untagged
@@ -82,6 +83,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2725796281658311887
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47503869654492436}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4439712616718928409, guid: 1b04ad5ffc7252845adcdea99f4de33f, type: 3}
 --- !u!1 &2469647985986966166
 GameObject:
   m_ObjectHideFlags: 0

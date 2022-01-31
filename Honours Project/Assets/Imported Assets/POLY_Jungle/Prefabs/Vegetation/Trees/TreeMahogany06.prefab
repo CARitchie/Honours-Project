@@ -174,6 +174,7 @@ GameObject:
   - component: {fileID: 7249072912529238165}
   - component: {fileID: 8021379752640655704}
   - component: {fileID: 952676349514900886}
+  - component: {fileID: 8021500294583870191}
   m_Layer: 0
   m_Name: TreeMahogany06_LOD0
   m_TagString: Untagged
@@ -245,6 +246,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8021500294583870191
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7709321880126621860}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5153831427379696684, guid: 6847ef4a549c2194fac7880baef68f11, type: 3}
 --- !u!1 &8530343607879224522
 GameObject:
   m_ObjectHideFlags: 0

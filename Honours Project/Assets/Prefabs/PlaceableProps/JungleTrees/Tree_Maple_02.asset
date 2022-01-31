@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e6527233ca8bdb4493db8ef9190d243, type: 3}
-  m_Name: Tree_03
+  m_Name: Tree_Maple_02
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2684738980901947070, guid: b5c92b80293777f419c6d9a48ee36186, type: 3}
+  prefab: {fileID: 2469647985986966166, guid: 0f5bbbb0ec2f4874ba2d0602d56d3d46, type: 3}
   radius: 1
   spawnChance: 1
-  minScale: 1
-  maxScale: 2
+  minScale: 0.9
+  maxScale: 1.1

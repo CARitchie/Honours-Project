@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 234941674922295693}
   - component: {fileID: 4832634233135298824}
   - component: {fileID: 8525072507734969490}
+  - component: {fileID: 5772617440619708574}
   m_Layer: 0
   m_Name: TreeCedar06_LOD0
   m_TagString: Untagged
@@ -163,6 +164,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5772617440619708574
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050329374969323875}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5444268100900860522, guid: e11fee498fe68e84a9829d5cd6678e99, type: 3}
 --- !u!1 &7835505268304192510
 GameObject:
   m_ObjectHideFlags: 0

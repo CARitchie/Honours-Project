@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 6186006024788707854}
   - component: {fileID: 5306081290176341621}
   - component: {fileID: 7448243868929688169}
+  - component: {fileID: 5997999890420315452}
   m_Layer: 0
   m_Name: TreeKapokier05_LOD0
   m_TagString: Untagged
@@ -243,6 +244,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5997999890420315452
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7819230049088153380}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5515810603558872433, guid: 269237b1e21d292408ce8552b26faa98, type: 3}
 --- !u!1 &8913731249310302704
 GameObject:
   m_ObjectHideFlags: 0

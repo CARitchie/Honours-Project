@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 1820669403921187718}
   - component: {fileID: 7450184496006650475}
   - component: {fileID: 302141423034972765}
+  - component: {fileID: 8224161085420085406}
   m_Layer: 0
   m_Name: TreeHiatus06_LOD0
   m_TagString: Untagged
@@ -224,6 +225,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8224161085420085406
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4987604650232766673}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8293095754092496027, guid: e26dff6c6cd651b43b8ad43c1e7b272f, type: 3}
 --- !u!1 &5421993585036835292
 GameObject:
   m_ObjectHideFlags: 0
