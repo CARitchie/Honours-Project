@@ -5,22 +5,37 @@ using UnityEngine;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class CloudRenderer : MonoBehaviour
 {
-    [SerializeField] Material material;
     [SerializeField] Transform sun;
-    [SerializeField] Transform planet;
-    [SerializeField] Vector2 weatherSpeed;
-
-    static Vector2 offset;
+    [SerializeField] Clouds[] clouds;
 
     [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        material.SetVector("_SunPosition", sun.position);
-        material.SetVector("_PlanetPos", planet.position);
+        if (clouds == null || clouds.Length == 0) return;
 
-        offset += weatherSpeed * Time.deltaTime;
-        material.SetVector("_WeatherOffset", offset);
+        RenderTexture tempTexture = RenderTexture.GetTemporary(source.width, source.height, 0, source.format);
 
-        Graphics.Blit(source, destination, material);
+        Material mat;
+        for (int i = 0; i < clouds.Length - 1; i++)
+        {
+            if (clouds[i] != null)
+            {
+                mat = clouds[i].GetMaterial();
+                mat.SetVector("_SunPosition", sun.position);
+                Graphics.Blit(source, tempTexture, mat);
+
+                source = tempTexture;
+            }
+        }
+
+        if (clouds[clouds.Length - 1] != null)
+        {
+            mat = clouds[clouds.Length - 1].GetMaterial();
+            mat.SetVector("_SunPosition", sun.position);
+            Graphics.Blit(source, destination, mat);
+        }
+
+        tempTexture.Release();
+
     }
 }

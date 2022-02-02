@@ -5,11 +5,9 @@ Shader "My Shaders/New Cloud Shader"
         _MainTex ("Texture", 2D) = "white" {}
 		_WeatherMap("Weather Map", 2D) = "white" {}
 
-		_Gc("Global cloud coverage", float) = 0.5
 		_Gd("Global cloud density (0 to infinity)", float) = 1
 
 		_WeatherScale("Weather Scale", float) = 1
-		_NumberOfSteps("Number of steps", Range(1,200)) = 20
 
 		_ShapeNoise("Shape Noise", 3D) = "white" {}
 		_DetailNoise("Detail Noise", 3D) = "white" {}
@@ -29,26 +27,10 @@ Shader "My Shaders/New Cloud Shader"
 		_AMin("Minimum attenuation ambient", Range(0.0,1.0)) = 0.2
 		_DarknessThreshold("Darkness Threshold", Range(0.0,1.0)) = 0.2
 
-		_SunColour("Sun Colour", Color) = (1,1,1,1)
-
-		_MinHeight("Minimum Height", float) = 50
-		_MaxHeight("Maximum Height", float) = 70
-
 		_BlueNoisePower("Blue Noise Power", float) = 5.1
 		_BlueNoiseScale("Blue Noise Scale", float) = 10
 
-		[ShowAsVector2]	_WeatherOffset("Weather Offset", Vector) = (0,0,0,0)
-
-		_PlanetRadius("Planet Radius", float) = 50
-		_PlanetDarkness("Planet Darkness", float) = 20
-		_PlanetDarknessSmallest("Planet Darkness Smallest", float) = 20
-		_StartSunSet("Sunset Start Angle", float) = 0
-		_EndSunSet("Sunset End Angle", float) = 0
-		_StartDarkness("Darkness Start Angle", float) = 0
-		_EndDarkness("Darkness End Angle", float) = 0
-
 		_BlueDrop("Blue Drop", float) = 0
-		_Closeness("Closeness", float) = 10
     }
     SubShader
     {
@@ -137,9 +119,6 @@ Shader "My Shaders/New Cloud Shader"
 			float _BlueNoiseScale;
 
 			float2 _WeatherOffset;
-			float _PlanetRadius;
-			float _PlanetDarkness;
-			float _PlanetDarknessSmallest;
 
 			float _StartSunSet;
 			float _EndSunSet;
@@ -147,7 +126,6 @@ Shader "My Shaders/New Cloud Shader"
 			float _EndDarkness;
 
 			float _BlueDrop;
-			float _Closeness;
 
 			float2 SphereToSquare(float3 position) {
 				float3 pos = normalize(position - _PlanetPos);
@@ -250,10 +228,13 @@ Shader "My Shaders/New Cloud Shader"
 			}
 
 			float Density(float3 pos) {
+
+				float Ph = PercentHeight(pos);
+				if (Ph <= 0) return 0;
+
 				float4 Wc = SampleMap(pos);
 				float WMc = max(Wc.r, (_Gc - 0.5) * Wc.g * 2);
 
-				float Ph = PercentHeight(pos);
 				float Wh = Wc.b;	// Weather map height;
 				float Wd = 1;		// Weather map density, should be Wc.a
 
@@ -351,10 +332,12 @@ Shader "My Shaders/New Cloud Shader"
 			}
 
 			float4 GetColour(float3 origin, float3 direction, float distance) {
-				_NumberOfSteps = 40;
+				_NumberOfSteps = 35;
 				
 				float3 position = origin;
-				float stepSize = distance / (_NumberOfSteps - 1);
+
+				float stepSize = 0;
+				stepSize = distance / (_NumberOfSteps - 1);
 
 				float3 light = 0;
 				float transmittance = 1;
@@ -363,7 +346,9 @@ Shader "My Shaders/New Cloud Shader"
 				float cosAngle = dot(-direction, sunDir);
 				float phaseVal = phase(cosAngle);
 
-				[unroll(40)]
+				float progress = 0;
+
+				[unroll(35)]
 				for(int i = 0 ; i < _NumberOfSteps; i++ ){
 					float density = Density(position);
 					if (density > 0) {
@@ -377,6 +362,7 @@ Shader "My Shaders/New Cloud Shader"
 					}
 					
 					position += direction * stepSize;
+					progress += stepSize;
 				}
 
 				return float4(light.x, light.y, light.z, transmittance);
@@ -405,17 +391,25 @@ Shader "My Shaders/New Cloud Shader"
 					float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * properScale), 0);
 					offset *= _BlueNoisePower;
 
+					float2 innerResult = SphereCollision(origin, dir, _PlanetPos, _MinHeight);
+
+					if (innerResult.x == 0) {
+						float innerDistance = innerResult.y - innerResult.x;
+
+						if (depth < innerDistance) return col;
+
+						dstToAtmosphere = innerDistance;
+						dstThroughAtmosphere = result.y - dstToAtmosphere;
+						dstThroughAtmosphere = min(dstThroughAtmosphere, depth - dstToAtmosphere);
+					}
+					
 					float3 entry = origin + dir * (dstToAtmosphere + offset);
 
-					float4 result = GetColour(entry, dir, dstThroughAtmosphere);
+					float4 colourResult = GetColour(entry, dir, dstThroughAtmosphere);
 
-					float3 newColour = result.rgb;
+					float3 newColour = colourResult.rgb;
 
-					if (dstThroughAtmosphere < _Closeness) {
-						newColour *= dstThroughAtmosphere / _Closeness;
-					}
-
-					col.rgb *= result.a;
+					col.rgb *= colourResult.a;
 					col.rgb += newColour.rgb;
 				}
 
