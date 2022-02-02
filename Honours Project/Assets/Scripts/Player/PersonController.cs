@@ -89,7 +89,7 @@ public class PersonController : MonoBehaviour
         return rb.velocity;
     }
 
-    public void Recoil(float strength)
+    public virtual void Recoil(float strength)
     {
         AddForce(strength * -transform.forward);
     }

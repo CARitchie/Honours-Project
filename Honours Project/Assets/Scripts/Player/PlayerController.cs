@@ -274,4 +274,9 @@ public class PlayerController : PersonController
     {
         return cam;
     }
+
+    public override void Recoil(float strength)
+    {
+        AddForce(strength * -cam.forward);
+    }
 }
