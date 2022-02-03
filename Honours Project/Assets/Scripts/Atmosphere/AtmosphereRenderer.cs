@@ -35,7 +35,7 @@ public class AtmosphereRenderer : MonoBehaviour
             Graphics.Blit(source, destination, mat);
         }
 
-        tempTexture.Release();
+        RenderTexture.ReleaseTemporary(tempTexture);
 
     }
 }

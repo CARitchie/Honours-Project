@@ -67,7 +67,7 @@ public class GravityReceiver : MonoBehaviour
         foreach(LocalGravitySource gravitySource in localGravitySources){
             force += gravitySource.GetForce();
         }
-        return force;
+        return force * rb.mass;
     }
 
     protected LocalGravitySource ClosestLocalSource(){

@@ -125,4 +125,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitMarker: {fileID: 3797914494143917754, guid: 48dc7e3da4ef04b47a7c6b6709869e9b, type: 3}
+  damage: 10
   despawnTime: 15

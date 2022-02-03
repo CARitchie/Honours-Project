@@ -387,6 +387,7 @@ Shader "My Shaders/New Cloud Shader"
 				if (dstThroughAtmosphere > 0) {
 
 					float properScale = ((dstToAtmosphere + 1)/ _BlueDrop) * _BlueNoiseScale;
+					properScale = 3;
 
 					float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * properScale), 0);
 					offset *= _BlueNoisePower;

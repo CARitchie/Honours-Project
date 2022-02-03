@@ -748,7 +748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   influenceRange: 0
-  strength: 98
+  strength: 9.8
 --- !u!65 &6527135466303607866
 BoxCollider:
   m_ObjectHideFlags: 0
