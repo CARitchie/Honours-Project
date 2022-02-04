@@ -234,6 +234,8 @@ public class PlayerController : PersonController
 
     public void Activate()
     {
+        cam.localEulerAngles = Vector3.zero;
+        verticalLook = 0;
         transform.parent.gameObject.SetActive(true);
     }
 

@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float moveSpeed;
     [SerializeField] float rotSpeed;
-
 
     public void MoveToTransform(Transform transform)
     {
@@ -19,13 +17,13 @@ public class CameraController : MonoBehaviour
     {
         float percent = 0;
         Quaternion start = transform.localRotation;
-        while (transform.localPosition.sqrMagnitude > 0.01f || transform.localEulerAngles.sqrMagnitude > 0.01f)
+        Vector3 pos = transform.localPosition;
+        while (percent < 1)
         {
-            yield return new WaitForEndOfFrame();
-
             percent += rotSpeed * Time.deltaTime;
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, Vector3.zero, moveSpeed * Time.deltaTime);
+            transform.localPosition = Vector3.Lerp(pos, Vector3.zero, percent);
             transform.localRotation = Quaternion.Slerp(start, Quaternion.identity, percent);
+            yield return new WaitForEndOfFrame();
         }
 
         transform.localPosition = Vector3.zero;

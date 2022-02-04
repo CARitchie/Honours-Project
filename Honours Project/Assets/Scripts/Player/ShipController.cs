@@ -83,7 +83,7 @@ public class ShipController : MonoBehaviour
 
         GlobalLightControl.SwitchToPlayer();
         PlayerController.Instance.SetRotation(transform.eulerAngles);
-        PlayerController.Instance.SetPosition(cameraHolder.position - transform.up * 0.6f);
+        PlayerController.Instance.SetPosition(cameraHolder.position - (PlayerController.Instance.GetCameraHolder().position - PlayerController.Instance.transform.position));
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
         Compass.SetActive(true);
