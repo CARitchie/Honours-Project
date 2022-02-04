@@ -25,6 +25,7 @@ public class PlayerController : PersonController
 
     [SerializeField] Transform cam;
     PlayerInput input;
+    PlayerDetails details;
 
     float fuel;
     float maxFuel = 200;
@@ -40,6 +41,7 @@ public class PlayerController : PersonController
         base.Awake();
 
         Instance = this;
+        details = GetComponentInParent<PlayerDetails>();
     }
 
     protected override void Start()
@@ -159,7 +161,7 @@ public class PlayerController : PersonController
         }
         else
         {
-            if(UseFuel(velocity)) rb.AddForce(velocity, ForceMode.VelocityChange);
+            if(details.UseEnergy(velocity.magnitude)) rb.AddForce(velocity, ForceMode.VelocityChange);
         }
 
     }
@@ -254,21 +256,6 @@ public class PlayerController : PersonController
         transform.parent.gameObject.SetActive(false);
         transform.localEulerAngles = Vector3.zero;
         cam.localEulerAngles = Vector3.zero;
-    }
-
-    void IncreaseFuel(float amount)
-    {
-        fuel = Mathf.Clamp(fuel + amount, 0, maxFuel);
-    }
-
-    bool UseFuel(Vector3 amount)
-    {
-        if (fuel <= 0) return false;
-
-        float reduction = amount.magnitude;
-        fuel = Mathf.Clamp(fuel - reduction, 0, maxFuel);
-        Debug.Log(fuel);
-        return true;
     }
 
     void UseWeapon()
