@@ -11,6 +11,7 @@ public class InputController : MonoBehaviour
     public static event Action Jump;
     public static event Action Interact;
     public static event Action Exit;
+    public static event Action Pause;
 
     PlayerInput input;
 
@@ -46,6 +47,11 @@ public class InputController : MonoBehaviour
     void OnJump()
     {
         Jump?.Invoke();
+    }
+
+    void OnPause()
+    {
+        Pause?.Invoke();
     }
 
     void OnInteract()

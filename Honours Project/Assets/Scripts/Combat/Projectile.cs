@@ -12,6 +12,8 @@ public class Projectile : PoolObject
     Transform body;
     float timer;
 
+    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11));
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -65,7 +67,7 @@ public class Projectile : PoolObject
         if (body != null) offset = body.position;
 
         lastPos += offset;
-        if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position)))
+        if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position), layerMask))
         {
             HitSuccess(hit);
             return true;

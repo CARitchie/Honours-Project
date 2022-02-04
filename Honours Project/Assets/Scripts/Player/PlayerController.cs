@@ -21,6 +21,7 @@ public class PlayerController : PersonController
     InputAction sprintAction;
     InputAction weaponAction;
     InputAction weaponSecondaryAction;
+    InputAction pauseAction;
 
     [SerializeField] Transform cam;
     PlayerInput input;
@@ -32,6 +33,7 @@ public class PlayerController : PersonController
     bool doubleJumped = false;
 
     bool movementAllowed = false;
+    bool paused = false;
 
     protected override void Awake()
     {
@@ -64,10 +66,10 @@ public class PlayerController : PersonController
             sprintAction = input.actions.FindAction("Sprint");
             weaponAction = input.actions.FindAction("Primary");
             weaponSecondaryAction = input.actions.FindAction("Secondary");
-
         }
 
         InputController.Jump += Jump;
+        InputController.Pause += Pause;
 
         fuel = maxFuel;
 
@@ -75,6 +77,11 @@ public class PlayerController : PersonController
         initialWeapon = null;
 
         StartCoroutine(EnableMovement());
+    }
+
+    void Pause()
+    {
+        paused = PauseMenu.TogglePause();
     }
 
     IEnumerator EnableMovement()
@@ -90,11 +97,14 @@ public class PlayerController : PersonController
     private void OnDestroy()
     {
         InputController.Jump -= Jump;
+        InputController.Pause -= Pause;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (paused) return;
+
         inSpace = nearestSource == null;
 
         Move();
@@ -212,7 +222,7 @@ public class PlayerController : PersonController
 
     void Jump()
     {
-        if (inSpace || (!grounded && doubleJumped)) return;
+        if (inSpace || (!grounded && doubleJumped) || paused) return;
 
         float strength = jumpStrength;
 
