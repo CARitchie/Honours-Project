@@ -31,6 +31,8 @@ public class PlayerController : PersonController
     bool inSpace = false;
     bool doubleJumped = false;
 
+    bool movementAllowed = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -71,6 +73,18 @@ public class PlayerController : PersonController
 
         SwapWeapon(initialWeapon);
         initialWeapon = null;
+
+        StartCoroutine(EnableMovement());
+    }
+
+    IEnumerator EnableMovement()
+    {
+        while (!grounded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        movementAllowed = true;
     }
 
     private void OnDestroy()
@@ -100,6 +114,8 @@ public class PlayerController : PersonController
 
     public override void Move()
     {
+        if (!movementAllowed) return;
+
         float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
         float sideways = movementActions[1].ReadValue<float>() - movementActions[3].ReadValue<float>();
 
