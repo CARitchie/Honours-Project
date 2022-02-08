@@ -75,10 +75,16 @@ public class PlayerController : PersonController
 
         fuel = maxFuel;
 
+        InitialiseWeapons();
         SwapWeapon(initialWeapon);
         initialWeapon = null;
 
         StartCoroutine(EnableMovement());
+    }
+
+    void InitialiseWeapons()
+    {
+        initialWeapon = Instantiate(initialWeapon, transform).GetComponent<Weapon>();
     }
 
     void Pause()

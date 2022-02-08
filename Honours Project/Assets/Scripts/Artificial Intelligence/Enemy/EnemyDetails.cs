@@ -7,12 +7,13 @@ public class EnemyDetails : PersonDetails
     MeshRenderer meshRenderer;
     EnemyController controller;
 
+    EnemyWave wave;
+
     protected override void Awake()
     {
         base.Awake();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         controller = GetComponentInChildren<EnemyController>();
-
     }
 
     public override void TakeDamage(float amount)
@@ -26,6 +27,17 @@ public class EnemyDetails : PersonDetails
 
     public override void OnDeath()
     {
+        if (wave != null) wave.CheckComplete();
         Destroy(gameObject);
+    }
+
+    public bool IsAlive()
+    {
+        return health > 0;
+    }
+
+    public void SetWave(EnemyWave wave)
+    {
+        this.wave = wave;
     }
 }

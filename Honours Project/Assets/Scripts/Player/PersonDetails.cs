@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PersonDetails : MonoBehaviour, Damageable
 {
     [SerializeField] protected float maxHealth = 100;
-    protected float health;
+    protected float health = 100;
 
     protected virtual void Awake()
     {
@@ -20,7 +21,7 @@ public class PersonDetails : MonoBehaviour, Damageable
 
     public virtual void OnDeath()
     {
-
+        SceneManager.LoadScene("Space");
     }
 
     public virtual void OnShot(float damage)

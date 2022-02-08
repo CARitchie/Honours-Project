@@ -28,4 +28,9 @@ public class PlanetReceiver : GravityReceiver
             localBody.AddForce(velocity, ForceMode.VelocityChange);
         }
     }
+
+    public Vector3 GetVelocity()
+    {
+        return velocity;
+    }
 }

@@ -12,4 +12,9 @@ public class GravitySource : MonoBehaviour
     {
         return Vector3.zero;
     }
+
+    public virtual Vector3 GetVelocity()
+    {
+        return GetComponentInChildren<Rigidbody>().velocity;
+    }
 }

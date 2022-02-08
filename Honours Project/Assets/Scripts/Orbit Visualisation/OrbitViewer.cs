@@ -116,6 +116,8 @@ class OrbitObject
     [SerializeField] PlanetGravity source;
     [SerializeField] LineRenderer lineRenderer;
 
+    PlanetReceiver receiver;
+
     List<Vector3> positions = new List<Vector3>();
 
     float mass;
@@ -127,9 +129,10 @@ class OrbitObject
         if (source == null || lineRenderer == null) return;
 
         SetActive(true);
+        receiver = source.GetComponent<PlanetReceiver>();
         mass = source.CalculateMass();
         lastPos = source.transform.position;
-        velocity = source.GetVelocity();
+        velocity = receiver.GetVelocity();
         positions = new List<Vector3>();
     }
 

@@ -7,7 +7,6 @@ public class PlanetGravity : GravitySource
 {
     [SerializeField] float surfaceAcceleration;
     [SerializeField] float distanceToSurface;
-    [SerializeField] Vector3 initialVelocity;
 
     Rigidbody rb;
     float mass;
@@ -26,9 +25,9 @@ public class PlanetGravity : GravitySource
         GravityController.AddSource(this);
     }
 
-    public Vector3 GetVelocity()
+    public override Vector3 GetVelocity()
     {
-        return initialVelocity;
+        return GetComponent<PlanetReceiver>().GetVelocity();
     }
 
     private void OnValidate()

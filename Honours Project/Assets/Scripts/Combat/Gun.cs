@@ -9,12 +9,20 @@ public class Gun : Weapon
     [SerializeField] float recoilStrength;
     [SerializeField] bool automatic = false;
     [SerializeField] float automaticDelay;
-    [SerializeField] ObjectPool projectilePool;
+    [SerializeField] string projectileKey;
+
     bool fired = false;
 
     float delayTimer = 0;
 
     protected Transform projectileOrigin;
+
+    ObjectPool projectilePool;
+
+    private void Start()
+    {
+        projectilePool = ObjectPool.GetPool(projectileKey);
+    }
 
     public override void OnEquip(PersonController controller)
     {
@@ -61,6 +69,8 @@ public class Gun : Weapon
         fired = true;
         controller.Recoil(recoilStrength);
 
+        if (projectilePool == null) return;
+        
         Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();
 
         projectile.transform.position = projectileOrigin.position + projectileOrigin.forward * 1.5f;

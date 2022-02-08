@@ -58,7 +58,7 @@ public class EnemyController : PersonController
             }
         }
 
-        currentState.OnExecute();
+        currentState?.OnExecute();
 
         if(hostileTimer > 0)
         {
