@@ -6,6 +6,24 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] float rotSpeed;
 
+    AtmosphereRenderer atmosphere;
+    CloudRenderer cloud;
+
+    private void Start()
+    {
+        atmosphere = GetComponent<AtmosphereRenderer>();
+        cloud = GetComponent<CloudRenderer>();
+
+        InputController.Cloud += ToggleClouds;
+        InputController.Atmosphere += ToggleAtmospheres;
+    }
+
+    private void OnDestroy()
+    {
+        InputController.Cloud -= ToggleClouds;
+        InputController.Atmosphere -= ToggleAtmospheres;
+    }
+
     public void MoveToTransform(Transform transform)
     {
         StopAllCoroutines();
@@ -28,5 +46,15 @@ public class CameraController : MonoBehaviour
 
         transform.localPosition = Vector3.zero;
         transform.localEulerAngles = Vector3.zero;
+    }
+
+    public void ToggleClouds()
+    {
+        cloud.enabled = !cloud.enabled;
+    }
+
+    public void ToggleAtmospheres()
+    {
+        atmosphere.enabled = !atmosphere.enabled;
     }
 }
