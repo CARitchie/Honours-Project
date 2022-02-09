@@ -14,15 +14,16 @@ public class EnemyController : PersonController
 
     float hostileTimer;
 
-    
     State currentState;
 
     Stack<Vector3> nodes;
     Vector3 currentNode;
 
     Transform player;
+    float playerDistance;
 
     bool hostile = false;
+    EnemyDetails details;
 
     protected override void Awake()
     {
@@ -30,6 +31,7 @@ public class EnemyController : PersonController
 
         pathFinder = GetComponentInParent<PathFinder>();
         gravity = GetComponentInParent<CharacterGravity>();
+        details = GetComponentInParent<EnemyDetails>();
     }
 
     protected override void Start(){
@@ -49,12 +51,17 @@ public class EnemyController : PersonController
     {
         base.FixedUpdate();
 
-        for (int i = 0; i < states.Length; i++)
+        playerDistance = Vector3.Distance(transform.position, player.position);
+
+        if (currentState == null || currentState.ExitCondition())
         {
-            if (states[i].EntryCondition())
+            for (int i = 0; i < states.Length; i++)
             {
-                if(states[i] != currentState ) ChangeState(states[i]);
-                break;
+                if (states[i].EntryCondition())
+                {
+                    if (states[i] != currentState) ChangeState(states[i]);
+                    break;
+                }
             }
         }
 
@@ -137,6 +144,11 @@ public class EnemyController : PersonController
         return player.position;
     }
 
+    public float GetPlayerDistance()
+    {
+        return playerDistance;
+    }
+
     public bool PlayerVisible()
     {
         Vector3 point1 = transform.position + transform.up * 0.5f;
@@ -168,5 +180,10 @@ public class EnemyController : PersonController
         hostile = val;
 
         if (hostile) hostileTimer = hostileResetTime;
+    }
+
+    public EnemyDetails GetDetails()
+    {
+        return details;
     }
 }

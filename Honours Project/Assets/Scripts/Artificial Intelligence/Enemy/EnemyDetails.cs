@@ -16,13 +16,17 @@ public class EnemyDetails : PersonDetails
         controller = GetComponentInChildren<EnemyController>();
     }
 
-    public override void TakeDamage(float amount)
+    public override bool TakeDamage(float amount)
     {
-        base.TakeDamage(amount);
+        if (!base.TakeDamage(amount)) return false;
+
+        controller.SetAnimTrigger("Take Damage");
 
         meshRenderer.material.color = Color.Lerp(Color.red, Color.green, HealthPercent());
 
         controller.SetHostile(true);
+
+        return true;
     }
 
     public override void OnDeath()

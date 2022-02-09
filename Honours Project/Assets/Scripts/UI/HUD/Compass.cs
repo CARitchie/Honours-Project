@@ -177,6 +177,7 @@ public class Compass : MonoBehaviour
     {
         if (Instance == null) return;
 
+        Instance.images.Remove(item.GetIcon());
         Instance.items.Remove(item);
         item.DestroyIcon();
     }

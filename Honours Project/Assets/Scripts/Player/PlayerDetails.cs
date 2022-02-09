@@ -11,7 +11,7 @@ public class PlayerDetails : PersonDetails
 
     private void Start()
     {
-        hud.SetHealthPercent(health / maxHealth);
+        hud.SetHealthPercent(HealthPercent());
 
         energy = maxEnergy;
         hud.SetEnergyPercent(energy / maxEnergy);
@@ -22,11 +22,13 @@ public class PlayerDetails : PersonDetails
         UseEnergy(energyDrainRate * Time.deltaTime);
     }
 
-    public override void TakeDamage(float amount)
+    public override bool TakeDamage(float amount)
     {
-        base.TakeDamage(amount);
+        bool val = base.TakeDamage(amount);
 
-        hud.SetHealthPercent(health / maxHealth);
+        hud.SetHealthPercent(HealthPercent());
+
+        return val;
     }
 
     public bool UseEnergy(float amount)
@@ -36,5 +38,12 @@ public class PlayerDetails : PersonDetails
         energy -= amount;
         hud.SetEnergyPercent(energy / maxEnergy);
         return true;
+    }
+
+    public override bool HealUp(float amount)
+    {
+        bool healed = base.HealUp(amount);
+        hud.SetHealthPercent(HealthPercent());
+        return healed;
     }
 }

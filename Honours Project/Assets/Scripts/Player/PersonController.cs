@@ -15,10 +15,11 @@ public class PersonController : MonoBehaviour
     protected Rigidbody rb;
     protected GravitySource nearestSource;
     Vector3 lastVelocity;
-    
+    Animator animator;
 
     protected virtual void Awake(){
         rb = GetComponentInParent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     protected virtual void Start(){
@@ -97,5 +98,15 @@ public class PersonController : MonoBehaviour
     public virtual void AddForce(Vector3 force)
     {
         rb.AddForce(force, ForceMode.VelocityChange);
+    }
+
+    public void SetAnimBool(string key, bool val)
+    {
+        animator?.SetBool(key, val);
+    }
+
+    public void SetAnimTrigger(string key)
+    {
+        animator?.SetTrigger(key);
     }
 }

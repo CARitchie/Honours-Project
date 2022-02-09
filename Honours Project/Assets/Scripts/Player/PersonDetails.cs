@@ -7,16 +7,23 @@ public class PersonDetails : MonoBehaviour, Damageable
 {
     [SerializeField] protected float maxHealth = 100;
     protected float health = 100;
+    protected bool immune = false;
 
     protected virtual void Awake()
     {
         health = maxHealth;
     }
 
-    public virtual void TakeDamage(float amount)
+    public virtual bool TakeDamage(float amount)
     {
+        if (immune) return false;
         health -= amount;
-        if (health <= 0) OnDeath();
+        if (health <= 0)
+        {
+            OnDeath();
+            return false;
+        }
+        return true;
     }
 
     public virtual void OnDeath()
@@ -32,5 +39,18 @@ public class PersonDetails : MonoBehaviour, Damageable
     public float HealthPercent()
     {
         return health / maxHealth;
+    }
+
+    public void SetImmune(bool val)
+    {
+        immune = val;
+    }
+
+    public virtual bool HealUp(float amount)
+    {
+        if (health >= maxHealth) return false;
+        health += amount;
+        if (health > maxHealth) health = maxHealth;
+        return true;
     }
 }

@@ -6,7 +6,7 @@ public class PatrolState : State
 {
     [SerializeField] Transform[] patrolPoints;
     [SerializeField] float closeness;
-    int currentIndex = -1;
+    int currentIndex = 0;
     bool active = false;
 
     public override bool EntryCondition()
@@ -17,7 +17,7 @@ public class PatrolState : State
     public override void OnEnterState()
     {
         Debug.Log("Enter Patrol");
-        IncreaseIndex();
+        FindPath();
     }
 
     public override void OnExecute()
@@ -60,5 +60,10 @@ public class PatrolState : State
     public override void OnExitState()
     {
         StopAllCoroutines();
+    }
+
+    public override bool ExitCondition()
+    {
+        return true;
     }
 }

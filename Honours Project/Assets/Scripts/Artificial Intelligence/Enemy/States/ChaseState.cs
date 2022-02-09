@@ -8,7 +8,7 @@ public class ChaseState : State
 
     public override bool EntryCondition()
     {
-        return controller.IsHostile() || Useful.Close(controller.transform.position, controller.PlayerPos(), closeness);
+        return controller.IsHostile() || controller.GetPlayerDistance() < closeness;
     }
 
     public override void OnEnterState()
@@ -24,5 +24,10 @@ public class ChaseState : State
 
     public override void OnExitState()
     {
+    }
+
+    public override bool ExitCondition()
+    {
+        return true;
     }
 }

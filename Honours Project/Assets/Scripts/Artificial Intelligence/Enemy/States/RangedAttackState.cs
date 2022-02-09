@@ -10,7 +10,7 @@ public class RangedAttackState : State
 
     public override bool EntryCondition()
     {
-        return Useful.Close(controller.transform.position, controller.PlayerPos(), firingRange);
+        return controller.GetPlayerDistance() < firingRange;
     }
 
     public override void OnEnterState()
@@ -25,7 +25,7 @@ public class RangedAttackState : State
 
         controller.AimAtPlayer();
 
-        if(!Useful.Close(controller.transform.position, controller.PlayerPos(), closeRange))
+        if(controller.GetPlayerDistance() >= closeRange)
         {
             controller.Move();
         }
@@ -36,5 +36,10 @@ public class RangedAttackState : State
     public override void OnExitState()
     {
         gun.OnUnEquip();
+    }
+
+    public override bool ExitCondition()
+    {
+        return true;
     }
 }

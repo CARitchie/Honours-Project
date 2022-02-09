@@ -15,4 +15,5 @@ public abstract class State : MonoBehaviour
     public abstract void OnExitState();
     public abstract void OnExecute();
     public abstract bool EntryCondition();
+    public abstract bool ExitCondition();
 }

@@ -25,6 +25,16 @@ public class CompassItem : MonoBehaviour
         return icon.GetComponent<Image>();
     }
 
+    public Image GetIcon()
+    {
+        Image image = null;
+        if (icon!= null)
+        {
+            image = icon.GetComponent<Image>();
+        }
+        return image;
+    }
+
     public void SetPosition(float x)
     {
         Vector3 pos = icon.localPosition;

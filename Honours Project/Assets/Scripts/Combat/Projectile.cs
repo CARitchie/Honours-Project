@@ -12,7 +12,7 @@ public class Projectile : PoolObject
     Transform body;
     float timer;
 
-    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11));
+    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
 
     private void Awake()
     {
