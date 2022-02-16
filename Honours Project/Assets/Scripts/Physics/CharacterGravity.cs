@@ -8,6 +8,11 @@ public class CharacterGravity : GravityReceiver
     [SerializeField] bool player;
     PersonController controller;
 
+    Vector3 targetDir;
+    Coroutine rotateRoutine;
+    bool routineRunning = false;
+    const float rotateThreshold = -0.95f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,6 +22,8 @@ public class CharacterGravity : GravityReceiver
 
     public override void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
     {
+        if (!gameObject.activeInHierarchy) return;
+
         Vector3 force = Vector3.zero;
 
         float G = GravityController.gravityConstant;
@@ -39,11 +46,13 @@ public class CharacterGravity : GravityReceiver
                 if(distance - sources[i].GetSquareDistance() < max && distance < sources[i].Influence)
                 {
                     max = distance;
-                    dir = direction * strength;
+                    dir = direction;
                     closestSource = sources[i];
                 }
             }
         }
+
+        force *= defaultMultiplier;
 
         if(localGravitySources.Count > 0){
             force += GetLocalForce();
@@ -58,9 +67,30 @@ public class CharacterGravity : GravityReceiver
         if (float.IsNaN(force.x)) return;
 
         rb.AddForce(force);
-        if (!player) rb.AddForce(playerVelocity, ForceMode.VelocityChange);
-
-        Rotate(dir, time);
+        if (!player)
+        {
+            rb.AddForce(playerVelocity, ForceMode.VelocityChange);
+            Rotate(dir, time);
+        }
+        else
+        {
+            targetDir = dir;
+            if (dir != Vector3.zero)
+            {
+                float dot = Vector3.Dot(dir, transform.up);
+                if(dot > rotateThreshold)
+                {
+                    if (!routineRunning)
+                    {
+                        rotateRoutine = StartCoroutine(FasterRotate());
+                    }
+                }
+                else
+                {
+                    Rotate(dir, time);
+                }
+            }
+        }
     }
 
     void Rotate(Vector3 direction, float time)
@@ -102,5 +132,17 @@ public class CharacterGravity : GravityReceiver
                 }
             }
         }
+    }
+
+    IEnumerator FasterRotate()
+    {
+        if (routineRunning) yield return null;
+        routineRunning = true;
+        do
+        {
+            Rotate(targetDir, Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        } while (targetDir != Vector3.zero && Vector3.Dot(targetDir, transform.up) > rotateThreshold);
+        routineRunning = false;
     }
 }

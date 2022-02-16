@@ -46,6 +46,9 @@ public class PlayerController : PersonController
 
     protected override void Start()
     {
+        Application.targetFrameRate = 500;
+        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+
         base.Start();
 
         Cursor.lockState = CursorLockMode.Locked;

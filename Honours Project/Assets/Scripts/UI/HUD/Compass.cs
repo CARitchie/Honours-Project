@@ -20,6 +20,7 @@ public class Compass : MonoBehaviour
 
     Vector3 targetPos = new Vector3(200, 0, 0);
 
+    // This could cause issues
     static bool active = true;
 
     float size = 800;

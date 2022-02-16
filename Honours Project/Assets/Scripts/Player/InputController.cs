@@ -14,6 +14,7 @@ public class InputController : MonoBehaviour
     public static event Action Pause;
     public static event Action Cloud;
     public static event Action Atmosphere;
+    public static event Action GodMode;
 
     PlayerInput input;
 
@@ -74,5 +75,10 @@ public class InputController : MonoBehaviour
     void OnAtmosphere()
     {
         Atmosphere?.Invoke();
+    }
+
+    void OnGodMode()
+    {
+        GodMode?.Invoke();
     }
 }

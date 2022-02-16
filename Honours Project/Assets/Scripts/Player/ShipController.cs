@@ -10,6 +10,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] float maxRotation = 1000;
     [SerializeField] Transform cameraHolder;
     [SerializeField] CameraController cam;
+    [SerializeField] GameObject compassIcon;
 
 
     InputAction[] shipControls = new InputAction[8];
@@ -74,6 +75,7 @@ public class ShipController : MonoBehaviour
         PlayerController.Instance.Deactivate();
         GlobalLightControl.SwitchToShip(transform);
         Compass.SetActive(false);
+        compassIcon.SetActive(true);
     }
 
     public void Deactivate()

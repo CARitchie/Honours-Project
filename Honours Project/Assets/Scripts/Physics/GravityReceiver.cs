@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class GravityReceiver : MonoBehaviour
 {
+    [SerializeField] protected float defaultMultiplier = 1;
+    [SerializeField] protected float localGravityMultiplier = 1;
+
     protected Rigidbody rb;
     protected List<LocalGravitySource> localGravitySources = new List<LocalGravitySource>();
 
@@ -45,6 +48,8 @@ public class GravityReceiver : MonoBehaviour
             }
         }
 
+        force *= defaultMultiplier;
+
         force += GetLocalForce();
 
         return force;
@@ -67,7 +72,7 @@ public class GravityReceiver : MonoBehaviour
         foreach(LocalGravitySource gravitySource in localGravitySources){
             force += gravitySource.GetForce();
         }
-        return force * rb.mass;
+        return force * rb.mass * localGravityMultiplier;
     }
 
     protected LocalGravitySource ClosestLocalSource(){

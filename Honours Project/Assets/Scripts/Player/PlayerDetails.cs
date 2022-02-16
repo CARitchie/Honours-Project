@@ -7,6 +7,7 @@ public class PlayerDetails : PersonDetails
     [SerializeField] float maxEnergy = 200;
     [SerializeField] float energyDrainRate;
     [SerializeField] HUD hud;
+    [Header("Temporary")] [SerializeField] GameObject shipCompass;
     float energy;
 
     private void Start()
@@ -15,6 +16,13 @@ public class PlayerDetails : PersonDetails
 
         energy = maxEnergy;
         hud.SetEnergyPercent(energy / maxEnergy);
+
+        InputController.GodMode += ToggleGodMode;
+    }
+
+    private void OnDestroy()
+    {
+        InputController.GodMode -= ToggleGodMode;
     }
 
     private void Update()
@@ -45,5 +53,11 @@ public class PlayerDetails : PersonDetails
         bool healed = base.HealUp(amount);
         hud.SetHealthPercent(HealthPercent());
         return healed;
+    }
+
+    void ToggleGodMode()
+    {
+        immune = !immune;
+        shipCompass.SetActive(immune);
     }
 }

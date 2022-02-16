@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CombatArea : MonoBehaviour
 {
     [SerializeField] EnemyWave[] waves;
     [SerializeField] GravitySource gravitySource;
     [SerializeField] string areaKey;
+    [SerializeField] UnityEvent completed;
 
     int index;
     bool complete = false;
@@ -74,6 +76,7 @@ public class CombatArea : MonoBehaviour
     public void OnComplete()
     {
         Debug.Log("Yay");
+        completed?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)
