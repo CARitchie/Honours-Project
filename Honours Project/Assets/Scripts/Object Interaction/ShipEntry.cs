@@ -15,6 +15,8 @@ public class ShipEntry : MonoBehaviour, Interact
 
     public void OnEnter()
     {
+        if (ship.IsActive()) return;
+
         message.SetActive(true);
     }
 
@@ -26,5 +28,6 @@ public class ShipEntry : MonoBehaviour, Interact
     public void OnSelect()
     {
         ship.Activate();
+        OnExit();
     }
 }

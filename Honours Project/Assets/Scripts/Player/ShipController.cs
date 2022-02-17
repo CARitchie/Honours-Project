@@ -136,4 +136,9 @@ public class ShipController : MonoBehaviour
     {
         GravityController.AddToPlayerVelocity(force);
     }
+
+    public bool IsActive()
+    {
+        return active;
+    }
 }
