@@ -280,6 +280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5ff8cef5d84f740b74aa941cad5b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultMultiplier: 1
+  localGravityMultiplier: 1
   rotationSpeed: 1000
   player: 0
 --- !u!114 &6772504274151311164
@@ -312,7 +314,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  spawnDelay: 0
 --- !u!1 &5204693593869393729
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,6 +402,7 @@ MonoBehaviour:
   hostileRange: 0
   projectileHolder: {fileID: 4569324777140335008}
   hostileResetTime: 15
+  tempSpeed: 4
 --- !u!1 &6926583669252168826
 GameObject:
   m_ObjectHideFlags: 0

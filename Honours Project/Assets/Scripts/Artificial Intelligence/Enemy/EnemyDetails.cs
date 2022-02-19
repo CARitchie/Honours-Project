@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyDetails : PersonDetails
 {
-    MeshRenderer meshRenderer;
     EnemyController controller;
 
     EnemyWave wave;
@@ -12,7 +11,6 @@ public class EnemyDetails : PersonDetails
     protected override void Awake()
     {
         base.Awake();
-        meshRenderer = GetComponentInChildren<MeshRenderer>();
         controller = GetComponentInChildren<EnemyController>();
     }
 
@@ -21,8 +19,6 @@ public class EnemyDetails : PersonDetails
         if (!base.TakeDamage(amount)) return false;
 
         controller.SetAnimTrigger("Take Damage");
-
-        meshRenderer.material.color = Color.Lerp(Color.red, Color.green, HealthPercent());
 
         controller.SetHostile(true);
 

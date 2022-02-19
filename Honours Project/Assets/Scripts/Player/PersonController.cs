@@ -109,4 +109,9 @@ public class PersonController : MonoBehaviour
     {
         animator?.SetTrigger(key);
     }
+
+    public void SetAnimFloat(string key, float val)
+    {
+        animator?.SetFloat(key, val);
+    }
 }

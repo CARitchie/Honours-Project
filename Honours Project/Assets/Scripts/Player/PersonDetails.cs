@@ -53,4 +53,9 @@ public class PersonDetails : MonoBehaviour, Damageable
         if (health > maxHealth) health = maxHealth;
         return true;
     }
+
+    public void OnMelee(float damage)
+    {
+        TakeDamage(damage);
+    }
 }

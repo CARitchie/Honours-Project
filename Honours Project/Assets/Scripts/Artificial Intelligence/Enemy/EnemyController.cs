@@ -9,6 +9,7 @@ public class EnemyController : PersonController
     [SerializeField] float hostileRange;
     [SerializeField] Transform projectileHolder;
     [SerializeField] float hostileResetTime;
+    [SerializeField] float tempSpeed;
     CharacterGravity gravity;
     PathFinder pathFinder;
 
@@ -86,7 +87,13 @@ public class EnemyController : PersonController
 
     public override void Move()
     {
-        movementSpeed = walkSpeed;
+        movementSpeed = tempSpeed;
+
+        float moveSpeed;
+        if (movementSpeed < walkSpeed) moveSpeed = movementSpeed / walkSpeed;
+        else moveSpeed = ((movementSpeed - walkSpeed) / (sprintSpeed - walkSpeed)) + 1;
+        SetAnimFloat("MoveSpeed", moveSpeed);
+
 
         Vector3 target = rb.position + (transform.forward * movementSpeed * Time.deltaTime);
 

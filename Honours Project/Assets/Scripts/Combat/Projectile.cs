@@ -81,4 +81,5 @@ public class Projectile : PoolObject
 public interface Damageable
 {
     void OnShot(float damage);
+    void OnMelee(float damage);
 }
