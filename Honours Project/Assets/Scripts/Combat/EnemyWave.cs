@@ -65,4 +65,9 @@ public class EnemyWave : MonoBehaviour
     {
         return area.GetVelocity();
     }
+
+    public GravitySource GetSource()
+    {
+        return area.GetSource();
+    }
 }

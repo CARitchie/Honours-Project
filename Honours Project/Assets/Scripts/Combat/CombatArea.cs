@@ -91,4 +91,9 @@ public class CombatArea : MonoBehaviour
     {
         return gravitySource.GetVelocity();
     }
+
+    public GravitySource GetSource()
+    {
+        return gravitySource;
+    }
 }

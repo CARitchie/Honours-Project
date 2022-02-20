@@ -6,7 +6,6 @@ public class EnemyController : PersonController
 {
     [Header("Enemy Settings")]
     [SerializeField] State[] states;
-    [SerializeField] float hostileRange;
     [SerializeField] Transform projectileHolder;
     [SerializeField] float hostileResetTime;
     [SerializeField] float tempSpeed;
@@ -24,7 +23,7 @@ public class EnemyController : PersonController
     float playerDistance;
 
     bool hostile = false;
-    EnemyDetails details;
+    protected EnemyDetails details;
 
     protected override void Awake()
     {
@@ -38,7 +37,7 @@ public class EnemyController : PersonController
     protected override void Start(){
         base.Start();
 
-        GravityController.FindClosest(gravity);
+        if(gravity!=null) GravityController.FindClosest(gravity);
 
         for(int i = 0; i < states.Length; i++)
         {
@@ -100,7 +99,7 @@ public class EnemyController : PersonController
         rb.MovePosition(target);
     }
 
-    public void Look(Vector3 point){
+    public virtual void Look(Vector3 point){
 
         Vector3 direction = point - transform.position;
         Vector3 originalAngles = transform.localEulerAngles;

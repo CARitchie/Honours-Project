@@ -31,11 +31,13 @@ public class EnemySpawnPoint : MonoBehaviour
         if (!inScene)
         {
             enemy = Instantiate(enemy, transform).GetComponent<EnemyDetails>();
+            enemy.GetComponentInChildren<EnemyController>()?.SetNearestSource(wave.GetSource());
+            enemy.gameObject.SetActive(false);
             enemy.transform.localPosition = Vector3.zero;
             enemy.transform.localEulerAngles = Vector3.zero;
         }
-        enemy.gameObject.SetActive(true);
         enemy.SetWave(wave);
+        enemy.gameObject.SetActive(true);
         enemy.GetComponentInChildren<Rigidbody>().AddForce(wave.GetVelocity(), ForceMode.VelocityChange);
     }
 
@@ -47,5 +49,10 @@ public class EnemySpawnPoint : MonoBehaviour
     public bool IsAlive()
     {
         return enemy != null && enemy.IsAlive();
+    }
+
+    public GravitySource GetSource()
+    {
+        return wave.GetSource();
     }
 }

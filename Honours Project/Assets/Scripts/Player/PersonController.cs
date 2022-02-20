@@ -19,6 +19,7 @@ public class PersonController : MonoBehaviour
 
     protected virtual void Awake(){
         rb = GetComponentInParent<Rigidbody>();
+        if (rb == null) rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
     }
 
