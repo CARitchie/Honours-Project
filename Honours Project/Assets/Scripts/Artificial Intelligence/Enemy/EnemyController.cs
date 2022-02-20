@@ -24,6 +24,7 @@ public class EnemyController : PersonController
 
     bool hostile = false;
     protected EnemyDetails details;
+    bool active = true;
 
     protected override void Awake()
     {
@@ -49,6 +50,8 @@ public class EnemyController : PersonController
 
     protected override void FixedUpdate()
     {
+        if (!active) return;
+
         base.FixedUpdate();
 
         playerDistance = Vector3.Distance(transform.position, player.position);
@@ -191,5 +194,10 @@ public class EnemyController : PersonController
     public EnemyDetails GetDetails()
     {
         return details;
+    }
+
+    public void SetActive(bool val)
+    {
+        active = val;
     }
 }
