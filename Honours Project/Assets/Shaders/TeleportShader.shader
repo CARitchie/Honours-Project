@@ -67,7 +67,11 @@ Shader "My Shaders/Teleport Shader"
 			if (n.x > _Threshold || _Threshold == 0) o.Alpha = 0;
 			else o.Alpha = c.a;
 
-			if (n.x + _Offset > _Threshold) o.Albedo = _Colour2;
+			if (n.x + _Offset > _Threshold) {
+				o.Albedo = float3(1,1,1);
+				o.Emission = _Colour2;
+			}
+			
 
         }
         ENDCG
