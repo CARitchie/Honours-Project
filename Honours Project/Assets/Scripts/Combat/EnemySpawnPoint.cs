@@ -119,17 +119,21 @@ public class EnemySpawnPoint : MonoBehaviour
 
             emission.rateOverTime = (1 - percent) * (200 - 60) + 60;
 
-            shape.angle = 3 + (20 - 3) * (percent - 0.2f);
+            shape.angle = 3 + (20 - 3) * (percent - 0.1f);
 
             timer += Time.deltaTime;
 
             particles.transform.up = GetParticleUp(particles.transform);
             yield return new WaitForEndOfFrame();
         }
-        particles.Stop();
-        particles.transform.parent = transform;
 
         Destroy(enemy.gameObject);
+        particles.transform.parent = transform;
+
+        yield return new WaitForSeconds(0.2f);
+
+        particles.Stop();
+        
     }
 
     public void InstantSpawn()
