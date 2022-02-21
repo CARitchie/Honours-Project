@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Material teleportMat;
-    [SerializeField] ParticleSystem teleportFX;
+    [SerializeField] ParticleSystem[] teleportFX;
     public static GameManager Instance;
 
     private void Awake()
@@ -19,9 +19,9 @@ public class GameManager : MonoBehaviour
         return Instance.teleportMat;
     }
 
-    public static ParticleSystem GetTeleportFX()
+    public static ParticleSystem GetTeleportFX(int index)
     {
         if (Instance == null) return null;
-        return Instance.teleportFX;
+        return Instance.teleportFX[index];
     }
 }

@@ -200,4 +200,9 @@ public class EnemyController : PersonController
     {
         active = val;
     }
+
+    public void MatchSourceVelocity()
+    {
+        rb.velocity = nearestSource.GetVelocity();
+    }
 }

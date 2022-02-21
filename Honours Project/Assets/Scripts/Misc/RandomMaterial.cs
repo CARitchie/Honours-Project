@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class RandomMaterial : MonoBehaviour
 {
+    [SerializeField] Renderer[] renderers;
     [SerializeField] Material[] materials;
 
     private void Awake()
     {
         int index = Random.Range(0, materials.Length);
-        GetComponent<SkinnedMeshRenderer>().material = materials[index];
+        foreach(Renderer renderer in renderers)
+        {
+            renderer.material = materials[index];
+        }       
         Destroy(this);
     }
 }

@@ -7,9 +7,10 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] float spawnDelay;
     [SerializeField] EnemyDetails enemy;
     [SerializeField] bool inScene = false;
-    [SerializeField] bool fadeIn = false;
-    [SerializeField] float teleportTime;
+    [SerializeField] bool teleportIn = false;
     EnemyWave wave;
+    Transform centre;
+    float teleportTime;
 
     public void Spawn()
     {
@@ -30,14 +31,11 @@ public class EnemySpawnPoint : MonoBehaviour
 
     IEnumerator FadeIn()
     {
-        EnemyDetails details = enemy.GetComponent<EnemyDetails>();
         EnemyController controller = enemy.GetComponentInChildren<EnemyController>();
-        details.SetImmune(true);
+        enemy.SetImmune(true);
         controller.SetActive(false);
 
-        ParticleSystem particles = GetParticles();
-        particles.transform.parent = enemy.transform;
-        particles.transform.localPosition = Vector3.zero;
+        ParticleSystem particles = GetParticles(0);
         particles.Play();
 
         var emission = particles.emission;
@@ -48,13 +46,7 @@ public class EnemySpawnPoint : MonoBehaviour
         float initialRadius = shape.radius;
         ParticleSystem.MinMaxCurve initialLifetime = main.startLifetime;
 
-        MeshRenderer[] renderers = enemy.GetComponentsInChildren<MeshRenderer>();
-        MeshMaterial[] meshMaterials = new MeshMaterial[renderers.Length];
-        Material mat = GetMaterial();
-        for(int i = 0; i < meshMaterials.Length; i++)
-        {
-            meshMaterials[i] = new MeshMaterial(renderers[i], mat);
-        }
+        List<RendererMaterial> rendererMaterials = GetRendererMaterials(0);
 
         yield return new WaitForSeconds(0.75f);
 
@@ -63,7 +55,7 @@ public class EnemySpawnPoint : MonoBehaviour
         {
             float percent = timer / teleportTime;
 
-            foreach (MeshMaterial renderer in meshMaterials)
+            foreach (RendererMaterial renderer in rendererMaterials)
             {
                 renderer.SetThreshold(percent);
             }
@@ -74,18 +66,70 @@ public class EnemySpawnPoint : MonoBehaviour
 
             ParticleSystem.MinMaxCurve newLifetime = new ParticleSystem.MinMaxCurve(initialLifetime.constantMin * (1 - percent), initialLifetime.constantMax * (1.2f-percent));
             main.startLifetime = newLifetime;
+
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
 
-        foreach (MeshMaterial renderer in meshMaterials)
+        foreach (RendererMaterial renderer in rendererMaterials)
         {
             renderer.Restore();
         }
 
-        details.SetImmune(false);
+        enemy.SetImmune(false);
         controller.SetActive(true);
         particles.Stop();
+    }
+
+    IEnumerator FadeOut()
+    {
+        yield return new WaitForSeconds(1);
+
+        ParticleSystem particles = GetParticles(1);
+        particles.Play();
+
+        var emission = particles.emission;
+        var main = particles.main;
+        var shape = particles.shape;
+        main.customSimulationSpace = transform;
+
+        ParticleSystem.MinMaxCurve initialLifetime = main.startLifetime;
+
+        List<RendererMaterial> rendererMaterials = GetRendererMaterials(1);
+
+        float timer = 0;
+        while(timer < 0.75f)
+        {
+            particles.transform.up = GetParticleUp(particles.transform);
+            timer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        timer = 0;
+
+        if (teleportTime == 0) teleportTime = 1.5f;
+
+        while (timer < teleportTime)
+        {
+            float percent = 1 - timer / teleportTime;
+
+            foreach (RendererMaterial renderer in rendererMaterials)
+            {
+                renderer.SetThreshold(percent);
+            }
+
+            emission.rateOverTime = (1 - percent) * (200 - 60) + 60;
+
+            shape.angle = 3 + (20 - 3) * (percent - 0.2f);
+
+            timer += Time.deltaTime;
+
+            particles.transform.up = GetParticleUp(particles.transform);
+            yield return new WaitForEndOfFrame();
+        }
+        particles.Stop();
+        particles.transform.parent = transform;
+
+        Destroy(enemy.gameObject);
     }
 
     public void InstantSpawn()
@@ -98,16 +142,27 @@ public class EnemySpawnPoint : MonoBehaviour
             enemy.transform.localPosition = Vector3.zero;
             enemy.transform.localEulerAngles = Vector3.zero;
         }
-        enemy.SetWave(wave);
+        enemy.SetWave(wave, this);
         enemy.gameObject.SetActive(true);
         enemy.GetComponentInChildren<Rigidbody>().AddForce(wave.GetVelocity(), ForceMode.VelocityChange);
 
-        if (fadeIn) StartCoroutine(FadeIn());
+        if(enemy.TryGetComponent(out SpawnDetails details))
+        {
+            teleportTime = details.GetTeleportTime();
+        }
+
+        if (teleportIn) StartCoroutine(FadeIn());
+    }
+
+    public Vector3 GetParticleUp(Transform particles)
+    {
+        return particles.position - centre.position;
     }
 
     public void SetWave(EnemyWave wave)
     {
         this.wave = wave;
+        centre = wave.GetSource().transform;
     }
 
     public bool IsAlive()
@@ -125,25 +180,49 @@ public class EnemySpawnPoint : MonoBehaviour
         return GameManager.GetTeleportMaterial();
     }
 
-    ParticleSystem GetParticles()
+    ParticleSystem GetParticles(int index)
     {
-        GameObject particles = Instantiate(GameManager.GetTeleportFX().gameObject);
+        GameObject particles = Instantiate(GameManager.GetTeleportFX(index).gameObject);
+        particles.transform.parent = enemy.transform;
+        particles.transform.localPosition = Vector3.zero;
+        particles.transform.up = GetParticleUp(particles.transform);
         return particles.GetComponent<ParticleSystem>();
+    }
+
+    List<RendererMaterial> GetRendererMaterials(float threshold)
+    {
+        Renderer[] renderers = enemy.GetComponentsInChildren<Renderer>();
+        List<RendererMaterial> rendererMaterials = new List<RendererMaterial>();
+        Material mat = GetMaterial();
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i].GetComponent<MeshRenderer>() || renderers[i].GetComponent<SkinnedMeshRenderer>())
+            {
+                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold));
+            }
+        }
+
+        return rendererMaterials;
+    }
+
+    public void OnDeath()
+    {
+        StartCoroutine(FadeOut());
     }
 }
 
-class MeshMaterial
+class RendererMaterial
 {
-    MeshRenderer renderer;
+    Renderer renderer;
     Material originalMat;
 
-    public MeshMaterial(MeshRenderer renderer, Material newMat)
+    public RendererMaterial(Renderer renderer, Material newMat, float threshold)
     {
         this.renderer = renderer;
         originalMat = renderer.material;
         this.renderer.material = newMat;
         this.renderer.material.mainTexture = originalMat.mainTexture;
-        SetThreshold(0);
+        SetThreshold(threshold);
     }
 
     public void SetThreshold(float value)

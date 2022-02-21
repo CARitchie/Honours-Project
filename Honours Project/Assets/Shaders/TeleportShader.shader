@@ -3,12 +3,14 @@ Shader "My Shaders/Teleport Shader"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
+		[HDR] _Colour2 ("Colour 2", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Noise("Noise Texture", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 		_Threshold("Threshold", Range(0.0, 1.0)) = 0
 		_Scale("Scale", float) = 3
+		_Offset("Offset", float) = 0.1
     }
     SubShader
     {
@@ -39,9 +41,11 @@ Shader "My Shaders/Teleport Shader"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+		fixed4 _Colour2;
 		sampler2D _Noise;
 		float _Threshold;
 		float _Scale;
+		float _Offset;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -62,6 +66,8 @@ Shader "My Shaders/Teleport Shader"
 			fixed4 n = tex2D(_Noise, IN.uv_MainTex * _Scale);
 			if (n.x > _Threshold || _Threshold == 0) o.Alpha = 0;
 			else o.Alpha = c.a;
+
+			if (n.x + _Offset > _Threshold) o.Albedo = _Colour2;
 
         }
         ENDCG

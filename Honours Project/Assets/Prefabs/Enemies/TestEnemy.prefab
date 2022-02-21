@@ -229,6 +229,7 @@ GameObject:
   - component: {fileID: 7573766533829882493}
   - component: {fileID: 6772504274151311164}
   - component: {fileID: 5428479251819888157}
+  - component: {fileID: 3955408688786318587}
   m_Layer: 10
   m_Name: TestEnemy
   m_TagString: Untagged
@@ -314,6 +315,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  Death:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3955408688786318587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4998682516342005414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5e1492f7d128e468e94721aa4de41a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportTime: 1
 --- !u!1 &5204693593869393729
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +416,6 @@ MonoBehaviour:
   states:
   - {fileID: 36732227563745847}
   - {fileID: 1975889314204591113}
-  hostileRange: 0
   projectileHolder: {fileID: 4569324777140335008}
   hostileResetTime: 15
   tempSpeed: 4

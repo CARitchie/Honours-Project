@@ -8,6 +8,7 @@ public class PersonDetails : MonoBehaviour, Damageable
     [SerializeField] protected float maxHealth = 100;
     protected float health = 100;
     protected bool immune = false;
+    protected bool alive = true;
 
     protected virtual void Awake()
     {
