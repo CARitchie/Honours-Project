@@ -31,10 +31,11 @@ public class LocalGravitySource : GravitySource
     }
 
     public Vector3 GetForce(){
-        return strength * GetDirection();
+        return strength * GetGravityDirection(Vector3.zero);
     }
 
-    public Vector3 GetDirection(){
+    public override Vector3 GetGravityDirection(Vector3 point)
+    {
         return -transform.up;
     }
 

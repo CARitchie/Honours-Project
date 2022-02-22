@@ -13,6 +13,11 @@ public class GravitySource : MonoBehaviour
         return Vector3.zero;
     }
 
+    public virtual Vector3 GetGravityDirection(Vector3 point)
+    {
+        return (transform.position - point).normalized;
+    }
+
     public virtual Vector3 GetVelocity()
     {
         return GetComponentInChildren<Rigidbody>().velocity;
