@@ -7,7 +7,6 @@ public class PlayerController : PersonController
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
-    [SerializeField] Transform dud;
     [SerializeField] Weapon initialWeapon;
 
     Weapon weapon;
@@ -189,9 +188,6 @@ public class PlayerController : PersonController
         }
         else
         {
-            //transform.parent.localEulerAngles += new Vector3(-look.y, 0, 0) * lookSensitivity;
-            //transform.Rotate(transform.right, -look.y * lookSensitivity);
-
             verticalLook = 0;
 
             Vector3 camRot = cam.localEulerAngles;
@@ -212,20 +208,18 @@ public class PlayerController : PersonController
 
             float zAngle = (movementActions[4].ReadValue<float>() - movementActions[5].ReadValue<float>()) * Time.deltaTime * 80;
 
-            Quaternion rot = dud.rotation;
-            dud.Rotate(Vector3.up, (look.x * lookSensitivity) + corrector2, Space.Self);
-            dud.Rotate(Vector3.right, (-look.y * lookSensitivity) + corrector1, Space.Self);
-            dud.Rotate(Vector3.forward, -zAngle, Space.Self);
-            Quaternion newRot = dud.rotation;
-            dud.rotation = rot;
+            Vector3 rotation = new Vector3((-look.y * lookSensitivity) + corrector1, (look.x * lookSensitivity) + corrector2, -zAngle);
+
+            Quaternion rot = Quaternion.Euler(rotation);
 
             if (!instant)
             {
-                rb.MoveRotation(newRot);
+                rb.MoveRotation(rb.rotation * rot);
             }
             else
             {
-                rb.transform.rotation = newRot;
+                // Occurs when going from gravity to space, prevents a flash from a strange rotation
+                rb.transform.rotation = rb.transform.rotation * rot;
             }
         }
         

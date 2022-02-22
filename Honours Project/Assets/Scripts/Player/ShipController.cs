@@ -59,10 +59,15 @@ public class ShipController : MonoBehaviour
         if (!active) return;
 
         Movement();
-        Look();
+        //Look();
 
         AddForce(rb.velocity);
         rb.velocity = Vector3.zero;
+    }
+
+    private void Update()
+    {
+        Look();
     }
 
     public void Activate()
@@ -109,7 +114,7 @@ public class ShipController : MonoBehaviour
 
     void Look()
     {
-        float time = Time.fixedDeltaTime;
+        float time = Time.deltaTime;
 
         // 0.5 and 0.1 are necessary to make motion smoother https://forum.unity.com/threads/mouse-delta-input.646606/
         Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f * time;
@@ -127,7 +132,7 @@ public class ShipController : MonoBehaviour
         angVel.y = Mathf.Clamp(angVel.y, -maxRotation, maxRotation);
         angVel.z = Mathf.Clamp(angVel.z, -maxRotation, maxRotation);
 
-        transform.Rotate(angVel * time);
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(angVel * time));
 
         rb.angularVelocity = Vector3.zero;
     }

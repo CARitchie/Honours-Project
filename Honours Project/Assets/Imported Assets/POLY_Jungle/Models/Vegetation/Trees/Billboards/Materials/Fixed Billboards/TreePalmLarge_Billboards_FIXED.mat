@@ -83,7 +83,7 @@ Material:
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0.1
     - _GlossyReflections: 1
     - _GradientFalloff: 2
     - _GradientPosition: 0.5
