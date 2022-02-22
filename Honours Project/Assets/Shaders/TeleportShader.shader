@@ -6,6 +6,7 @@ Shader "My Shaders/Teleport Shader"
 		[HDR] _Colour2 ("Colour 2", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Noise("Noise Texture", 2D) = "white" {}
+		_Emission("Emission Texture", 2D) = "black" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 		_Threshold("Threshold", Range(0.0, 1.0)) = 0
@@ -43,6 +44,7 @@ Shader "My Shaders/Teleport Shader"
         fixed4 _Color;
 		fixed4 _Colour2;
 		sampler2D _Noise;
+		sampler2D _Emission;
 		float _Threshold;
 		float _Scale;
 		float _Offset;
@@ -70,6 +72,9 @@ Shader "My Shaders/Teleport Shader"
 			if (n.x + _Offset > _Threshold) {
 				o.Albedo = float3(1,1,1);
 				o.Emission = _Colour2;
+			}
+			else {
+				o.Emission = tex2D(_Emission, IN.uv_MainTex);
 			}
 			
 

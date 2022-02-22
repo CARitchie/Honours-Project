@@ -225,8 +225,15 @@ class RendererMaterial
         this.renderer = renderer;
         originalMat = renderer.material;
         this.renderer.material = newMat;
-        this.renderer.material.mainTexture = originalMat.mainTexture;
+        CopyMaterialSettings();
         SetThreshold(threshold);
+    }
+
+    void CopyMaterialSettings()
+    {
+        renderer.material.mainTexture = originalMat.mainTexture;
+        renderer.material.SetTexture("_Emission", originalMat.GetTexture("_EmissionMap"));
+        renderer.material.SetFloat("_Glossiness", originalMat.GetFloat("_Glossiness"));
     }
 
     public void SetThreshold(float value)
