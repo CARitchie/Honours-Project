@@ -1,0 +1,300 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerController : PersonController
+{
+    [Header("Player Settings")]
+    [SerializeField] float jumpStrength = 5;
+    [SerializeField] Weapon initialWeapon;
+
+    Weapon weapon;
+
+    float verticalLook = 0;
+
+    public static PlayerController Instance;
+
+    InputAction[] movementActions = new InputAction[8];
+    InputAction lookAction;
+    InputAction sprintAction;
+    InputAction weaponAction;
+    InputAction weaponSecondaryAction;
+    InputAction pauseAction;
+
+    [SerializeField] Transform cam;
+    PlayerInput input;
+    PlayerDetails details;
+
+    float fuel;
+    float maxFuel = 200;
+
+    bool inSpace = false;
+    bool doubleJumped = false;
+
+    bool movementAllowed = false;
+    bool paused = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        Instance = this;
+        details = GetComponentInParent<PlayerDetails>();
+    }
+
+    protected override void Start()
+    {
+        Application.targetFrameRate = 500;
+        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+
+        base.Start();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        input = InputController.GetInput();
+
+        if(input != null)
+        {
+            movementActions[0] = input.actions.FindAction("MoveForward");
+            movementActions[1] = input.actions.FindAction("MoveRight");
+            movementActions[2] = input.actions.FindAction("MoveBack");
+            movementActions[3] = input.actions.FindAction("MoveLeft");
+            movementActions[4] = input.actions.FindAction("RotRight");
+            movementActions[5] = input.actions.FindAction("RotLeft");
+            movementActions[6] = input.actions.FindAction("MoveUp");
+            movementActions[7] = input.actions.FindAction("MoveDown");
+
+            lookAction = input.actions.FindAction("Look");
+            sprintAction = input.actions.FindAction("Sprint");
+            weaponAction = input.actions.FindAction("Primary");
+            weaponSecondaryAction = input.actions.FindAction("Secondary");
+        }
+
+        InputController.Jump += Jump;
+        InputController.Pause += Pause;
+
+        fuel = maxFuel;
+
+        InitialiseWeapons();
+        SwapWeapon(initialWeapon);
+        initialWeapon = null;
+
+        StartCoroutine(EnableMovement());
+    }
+
+    void InitialiseWeapons()
+    {
+        initialWeapon = Instantiate(initialWeapon, transform).GetComponent<Weapon>();
+    }
+
+    void Pause()
+    {
+        paused = PauseMenu.TogglePause();
+    }
+
+    IEnumerator EnableMovement()
+    {
+        while (!grounded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        movementAllowed = true;
+    }
+
+    private void OnDestroy()
+    {
+        InputController.Jump -= Jump;
+        InputController.Pause -= Pause;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (paused) return;
+
+        inSpace = nearestSource == null;
+
+        Move();
+
+        Look();
+    }
+    
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        UseWeapon();
+
+        AddForce(rb.velocity);
+        rb.velocity = Vector3.zero;
+    }
+
+    public override void Move()
+    {
+        if (!movementAllowed) return;
+
+        float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
+        float sideways = movementActions[1].ReadValue<float>() - movementActions[3].ReadValue<float>();
+
+        Vector3 moveDirection = forward * transform.forward + sideways * transform.right;
+
+        if (!inSpace)
+        {
+            if (sprintAction.ReadValue<float>() > 0)
+            {
+                movementSpeed = sprintSpeed;
+            }
+            else
+            {
+                movementSpeed = walkSpeed;
+            }
+        }
+        else
+        {
+            movementSpeed = walkSpeed * 0.8f;
+            float up = movementActions[6].ReadValue<float>() - movementActions[7].ReadValue<float>();
+            moveDirection += up * transform.up;
+        }
+
+        if (moveDirection == Vector3.zero) return;
+
+        Vector3 velocity = moveDirection * movementSpeed * Time.deltaTime;
+
+        if (!inSpace)
+        {
+            rb.MovePosition(rb.position + velocity);
+        }
+        else
+        {
+            if(details.UseEnergy(velocity.magnitude)) rb.AddForce(velocity, ForceMode.VelocityChange);
+        }
+
+    }
+
+    void Look()
+    {
+        Vector2 look = lookAction.ReadValue<Vector2>();
+
+        if(!inSpace)
+        {
+            verticalLook += -look.y * lookSensitivity;
+            verticalLook = Mathf.Clamp(verticalLook, -90, 90);
+
+            transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
+            cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
+        }
+        else
+        {
+            verticalLook = 0;
+
+            Vector3 camRot = cam.localEulerAngles;
+            Vector3 localRot = transform.localEulerAngles;
+            bool instant = false;
+            float corrector1 = 0;
+            float corrector2 = 0;
+            if (camRot.x != 0 || localRot.y != 0)
+            {
+                corrector1 = camRot.x;
+                cam.localEulerAngles = new Vector3(0, camRot.y, camRot.z);
+
+                corrector2 = localRot.y;
+                transform.localEulerAngles = new Vector3(localRot.x, 0, localRot.z);
+
+                instant = true;
+            }
+
+            float zAngle = (movementActions[4].ReadValue<float>() - movementActions[5].ReadValue<float>()) * Time.deltaTime * 80;
+
+            Vector3 rotation = new Vector3((-look.y * lookSensitivity) + corrector1, (look.x * lookSensitivity) + corrector2, -zAngle);
+
+            Quaternion rot = Quaternion.Euler(rotation);
+
+            if (!instant)
+            {
+                rb.MoveRotation(rb.rotation * rot);
+            }
+            else
+            {
+                // Occurs when going from gravity to space, prevents a flash from a strange rotation
+                rb.transform.rotation = rb.transform.rotation * rot;
+            }
+        }
+        
+    }
+
+    void Jump()
+    {
+        if (inSpace || (!grounded && doubleJumped) || paused) return;
+
+        float strength = jumpStrength;
+
+        if (!grounded && !doubleJumped)
+        {
+            doubleJumped = true;
+            strength *= 1.2f;
+        }
+
+        AddForce(transform.up * strength);
+    }
+
+    protected override void CheckGrounded()
+    {
+        base.CheckGrounded();
+
+        if (grounded) doubleJumped = false;
+    }
+
+    public void Activate()
+    {
+        cam.localEulerAngles = Vector3.zero;
+        verticalLook = 0;
+        transform.parent.gameObject.SetActive(true);
+    }
+
+    public void Deactivate()
+    {
+        transform.parent.gameObject.SetActive(false);
+        transform.localEulerAngles = Vector3.zero;
+        cam.localEulerAngles = Vector3.zero;
+    }
+
+    void UseWeapon()
+    {
+        if (weapon == null) return;
+
+        weapon.PrimaryAction(weaponAction.ReadValue<float>());
+        weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
+    }
+
+    void SwapWeapon(Weapon newWeapon)
+    {
+        if (weapon != null) weapon.OnUnEquip();
+
+        weapon = newWeapon;
+
+        if (weapon != null) weapon.OnEquip(this);
+    }
+
+    public override Transform ProjectileSpawnPoint()
+    {
+        return cam;
+    }
+
+    public override void AddForce(Vector3 force)
+    {
+        GravityController.AddToPlayerVelocity(force);
+    }
+
+    public Transform GetCameraHolder()
+    {
+        return cam;
+    }
+
+    public override void Recoil(float strength)
+    {
+        AddForce(strength * -cam.forward);
+    }
+}

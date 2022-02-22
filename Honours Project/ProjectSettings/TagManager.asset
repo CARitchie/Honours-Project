@@ -11,13 +11,13 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Interactive
+  - PostProcessing
+  - Ground
+  - Obstacle
+  - Character
+  - Floater
+  - Item
   - 
   - 
   - 
