@@ -11,6 +11,7 @@ public class EnemySpawnPoint : MonoBehaviour
     EnemyWave wave;
     Transform centre;
     float teleportTime;
+    float noiseScale = 961.1f;
 
     public void Spawn()
     {
@@ -153,6 +154,7 @@ public class EnemySpawnPoint : MonoBehaviour
         if(enemy.TryGetComponent(out SpawnDetails details))
         {
             teleportTime = details.GetTeleportTime();
+            noiseScale = details.GetNoiseScale();
         }
 
         if (teleportIn) StartCoroutine(FadeIn());
@@ -202,7 +204,7 @@ public class EnemySpawnPoint : MonoBehaviour
         {
             if (renderers[i].GetComponent<MeshRenderer>() || renderers[i].GetComponent<SkinnedMeshRenderer>())
             {
-                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold));
+                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold, noiseScale));
             }
         }
 
@@ -220,20 +222,21 @@ class RendererMaterial
     Renderer renderer;
     Material originalMat;
 
-    public RendererMaterial(Renderer renderer, Material newMat, float threshold)
+    public RendererMaterial(Renderer renderer, Material newMat, float threshold, float scale)
     {
         this.renderer = renderer;
         originalMat = renderer.material;
         this.renderer.material = newMat;
-        CopyMaterialSettings();
+        CopyMaterialSettings(scale);
         SetThreshold(threshold);
     }
 
-    void CopyMaterialSettings()
+    void CopyMaterialSettings(float scale)
     {
         renderer.material.mainTexture = originalMat.mainTexture;
         renderer.material.SetTexture("_Emission", originalMat.GetTexture("_EmissionMap"));
         renderer.material.SetFloat("_Glossiness", originalMat.GetFloat("_Glossiness"));
+        renderer.material.SetFloat("_Scale", scale);
     }
 
     public void SetThreshold(float value)

@@ -21,6 +21,15 @@ public class ObjectInteractor : MonoBehaviour
     {
         if(Physics.Raycast(transform.position,transform.forward,out RaycastHit hit, 5, layerMask))
         {
+            if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit2, 5))
+            {
+                if(hit2.collider != hit.collider)
+                {
+                    Deselect();
+                    return;
+                }
+            }
+
             if (hit.collider.TryGetComponent(out Interact newInteract))
             {
                 if (interact != newInteract)

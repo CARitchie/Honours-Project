@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportTime: 3
+  noiseScale: 961
 --- !u!1 &168024496232446457
 GameObject:
   m_ObjectHideFlags: 0

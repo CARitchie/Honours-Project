@@ -98,6 +98,9 @@ public class ShipController : MonoBehaviour
         GravityController.SetPlayer(PlayerController.Instance.GetComponentInParent<GravityReceiver>());
 
         cam.MoveToTransform(PlayerController.Instance.GetCameraHolder());
+
+        angVel = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     void Movement()
