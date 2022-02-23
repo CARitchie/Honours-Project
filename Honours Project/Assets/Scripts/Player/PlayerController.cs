@@ -8,6 +8,9 @@ public class PlayerController : PersonController
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
     [SerializeField] Weapon initialWeapon;
+    [SerializeField] Transform weaponHolder;
+    [SerializeField] float weaponRotSpeed;
+    [SerializeField] float weaponRotSpeed2;
 
     Weapon weapon;
 
@@ -28,6 +31,8 @@ public class PlayerController : PersonController
 
     float fuel;
     float maxFuel = 200;
+    float weaponZ = 0;
+    float weaponSpeed = 0;
 
     bool inSpace = false;
     bool doubleJumped = false;
@@ -77,16 +82,10 @@ public class PlayerController : PersonController
 
         fuel = maxFuel;
 
-        InitialiseWeapons();
         SwapWeapon(initialWeapon);
         initialWeapon = null;
 
         StartCoroutine(EnableMovement());
-    }
-
-    void InitialiseWeapons()
-    {
-        initialWeapon = Instantiate(initialWeapon, transform).GetComponent<Weapon>();
     }
 
     void Pause()
@@ -134,7 +133,9 @@ public class PlayerController : PersonController
 
     public override void Move()
     {
-        if (!movementAllowed) return;
+        if (!movementAllowed) { AdjustWeaponSpeed(0); return; }
+
+        float gunSpeed = 0;
 
         float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
         float sideways = movementActions[1].ReadValue<float>() - movementActions[3].ReadValue<float>();
@@ -146,10 +147,12 @@ public class PlayerController : PersonController
             if (sprintAction.ReadValue<float>() > 0)
             {
                 movementSpeed = sprintSpeed;
+                gunSpeed = 1;
             }
             else
             {
                 movementSpeed = walkSpeed;
+                gunSpeed = 0.5f;
             }
         }
         else
@@ -159,10 +162,12 @@ public class PlayerController : PersonController
             moveDirection += up * transform.up;
         }
 
-        if (moveDirection == Vector3.zero) return;
+        if (moveDirection == Vector3.zero) { AdjustWeaponSpeed(0); return; }
+
+        AdjustWeaponSpeed(gunSpeed);
 
         Vector3 velocity = moveDirection * movementSpeed * Time.deltaTime;
-
+        
         if (!inSpace)
         {
             rb.MovePosition(rb.position + velocity);
@@ -174,17 +179,30 @@ public class PlayerController : PersonController
 
     }
 
+    public void AdjustWeaponSpeed(float val)
+    {
+        if (!grounded) val = 0;
+
+        weaponSpeed = Mathf.MoveTowards(weaponSpeed, val, Time.deltaTime * 2);
+        SetAnimFloat("WalkSpeed", weaponSpeed);
+    }
+
     void Look()
     {
         Vector2 look = lookAction.ReadValue<Vector2>();
+        float yChange = 0;
 
         if(!inSpace)
         {
             verticalLook += -look.y * lookSensitivity;
             verticalLook = Mathf.Clamp(verticalLook, -90, 90);
 
-            transform.localEulerAngles += new Vector3(0, look.x, 0) * lookSensitivity;
+            yChange = look.x * lookSensitivity;
+
+            transform.localEulerAngles += Vector3.up * yChange;
             cam.localEulerAngles = new Vector3(verticalLook, 0, 0);
+
+
         }
         else
         {
@@ -208,7 +226,8 @@ public class PlayerController : PersonController
 
             float zAngle = (movementActions[4].ReadValue<float>() - movementActions[5].ReadValue<float>()) * Time.deltaTime * 80;
 
-            Vector3 rotation = new Vector3((-look.y * lookSensitivity) + corrector1, (look.x * lookSensitivity) + corrector2, -zAngle);
+            yChange = (look.x * lookSensitivity) + corrector2;
+            Vector3 rotation = new Vector3((-look.y * lookSensitivity) + corrector1, yChange, -zAngle);
 
             Quaternion rot = Quaternion.Euler(rotation);
 
@@ -222,7 +241,18 @@ public class PlayerController : PersonController
                 rb.transform.rotation = rb.transform.rotation * rot;
             }
         }
-        
+
+        // Weapon Rotation
+        yChange *= weaponRotSpeed;
+        weaponZ -= yChange;
+        weaponZ = Mathf.Clamp(weaponZ, -10, 10);
+        if (weaponZ != 0 && yChange == 0)
+        {
+            weaponZ = Mathf.MoveTowards(weaponZ, 0, Time.deltaTime * weaponRotSpeed2);
+            if (weaponZ < 0.2f && weaponZ > -0.2f) weaponZ = 0;
+        }
+
+        weaponHolder.transform.localEulerAngles = Vector3.forward * weaponZ;
     }
 
     void Jump()
@@ -278,11 +308,6 @@ public class PlayerController : PersonController
         if (weapon != null) weapon.OnEquip(this);
     }
 
-    public override Transform ProjectileSpawnPoint()
-    {
-        return cam;
-    }
-
     public override void AddForce(Vector3 force)
     {
         GravityController.AddToPlayerVelocity(force);
@@ -296,5 +321,18 @@ public class PlayerController : PersonController
     public override void Recoil(float strength)
     {
         AddForce(strength * -cam.forward);
+    }
+
+    public override Vector3 GetAimDirection(Transform fireHole)
+    {
+        Vector3 newDirection = fireHole.forward;
+
+        Vector3 origin = cam.position + cam.forward * 0.8f;
+        if(Physics.Raycast(origin, cam.forward,out RaycastHit hit, 40))
+        {
+            newDirection = (hit.point - fireHole.position).normalized;
+        }
+
+        return newDirection;
     }
 }

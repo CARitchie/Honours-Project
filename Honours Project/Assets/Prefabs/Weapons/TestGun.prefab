@@ -48,4 +48,7 @@ MonoBehaviour:
   recoilStrength: 0.4
   automatic: 1
   automaticDelay: 0.1
-  projectileKey: TestProjectile
+  spreadSize: 1.5
+  projectileKey: TestProjectile2
+  muzzleFlash: {fileID: 0}
+  firePoint: {fileID: 0}

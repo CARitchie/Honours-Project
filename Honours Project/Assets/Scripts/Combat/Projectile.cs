@@ -10,6 +10,7 @@ public class Projectile : PoolObject
     Rigidbody rb;
     Vector3 lastPos;
     Transform body;
+    TrailRenderer trail;
     float timer;
 
     int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
@@ -17,6 +18,7 @@ public class Projectile : PoolObject
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        trail = GetComponent<TrailRenderer>();
     }
 
     public override void OnExitQueue()
@@ -34,6 +36,7 @@ public class Projectile : PoolObject
         Vector3 offset = Vector3.zero;
         if (body != null) offset = body.position;
         lastPos = transform.position - offset;
+        if(trail != null) trail.Clear();
     }
 
     private void FixedUpdate()

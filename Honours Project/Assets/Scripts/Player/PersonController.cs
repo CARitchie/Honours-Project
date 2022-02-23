@@ -81,11 +81,6 @@ public class PersonController : MonoBehaviour
         return nearestSource;
     }
 
-    public virtual Transform ProjectileSpawnPoint()
-    {
-        return transform;
-    }
-
     public Vector3 GetVelocity()
     {
         return rb.velocity;
@@ -114,5 +109,10 @@ public class PersonController : MonoBehaviour
     public void SetAnimFloat(string key, float val)
     {
         animator?.SetFloat(key, val);
+    }
+
+    public virtual Vector3 GetAimDirection(Transform fireHole)
+    {
+        return fireHole.forward;
     }
 }

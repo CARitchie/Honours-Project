@@ -6,7 +6,6 @@ public class EnemyController : PersonController
 {
     [Header("Enemy Settings")]
     [SerializeField] State[] states;
-    [SerializeField] Transform projectileHolder;
     [SerializeField] float hostileResetTime;
     [SerializeField] float tempSpeed;
     CharacterGravity gravity;
@@ -172,16 +171,6 @@ public class EnemyController : PersonController
         }
 
         return false;
-    }
-
-    public override Transform ProjectileSpawnPoint()
-    {
-        return projectileHolder;
-    }
-
-    public void AimAtPlayer()
-    {
-        projectileHolder.LookAt(player);
     }
 
     public void SetHostile(bool val)

@@ -21,9 +21,11 @@ public class RangedAttackState : State
 
     public override void OnExecute()
     {
-        controller.Look(controller.PlayerPos());
+        Vector3 playerPos = controller.PlayerPos();
 
-        controller.AimAtPlayer();
+        controller.Look(playerPos);
+
+        gun.AimAt(playerPos);
 
         if(controller.GetPlayerDistance() >= closeRange)
         {
