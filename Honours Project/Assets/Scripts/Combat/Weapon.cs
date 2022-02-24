@@ -10,11 +10,13 @@ public class Weapon : MonoBehaviour
     {
         this.controller = controller;
         Debug.Log("Equip");
+        gameObject.SetActive(true);
     }
 
     public virtual void OnUnEquip()
     {
         controller = null;
+        gameObject.SetActive(false);
     }
 
     public virtual void PrimaryAction(float val)

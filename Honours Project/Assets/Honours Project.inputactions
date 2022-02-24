@@ -166,6 +166,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "WeaponWheel",
+                    "type": "Button",
+                    "id": "25037e48-b862-4613-b917-9a36f96742a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -485,6 +494,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "GodMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2d08109-58e6-46f2-8bfc-6ed274390385",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "WeaponWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

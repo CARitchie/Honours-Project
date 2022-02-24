@@ -47,6 +47,11 @@ public class InputController : MonoBehaviour
         Instance.input.SwitchCurrentActionMap(map);
     }
 
+    public InputAction FindAction(string action)
+    {
+        return input.actions.FindAction(action);
+    }
+
     void OnJump()
     {
         Jump?.Invoke();

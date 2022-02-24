@@ -11,7 +11,7 @@ public class PlayerController : PersonController
     [SerializeField] Transform weaponHolder;
     [SerializeField] float weaponRotSpeed;
     [SerializeField] float weaponRotSpeed2;
-
+    [SerializeField] HUD hud;
     Weapon weapon;
 
     float verticalLook = 0;
@@ -24,9 +24,9 @@ public class PlayerController : PersonController
     InputAction weaponAction;
     InputAction weaponSecondaryAction;
     InputAction pauseAction;
+    InputAction weaponWheelAction;
 
     [SerializeField] Transform cam;
-    PlayerInput input;
     PlayerDetails details;
 
     float fuel;
@@ -58,23 +58,24 @@ public class PlayerController : PersonController
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        input = InputController.GetInput();
+        InputController input = InputController.Instance;
 
         if(input != null)
         {
-            movementActions[0] = input.actions.FindAction("MoveForward");
-            movementActions[1] = input.actions.FindAction("MoveRight");
-            movementActions[2] = input.actions.FindAction("MoveBack");
-            movementActions[3] = input.actions.FindAction("MoveLeft");
-            movementActions[4] = input.actions.FindAction("RotRight");
-            movementActions[5] = input.actions.FindAction("RotLeft");
-            movementActions[6] = input.actions.FindAction("MoveUp");
-            movementActions[7] = input.actions.FindAction("MoveDown");
+            movementActions[0] = input.FindAction("MoveForward");
+            movementActions[1] = input.FindAction("MoveRight");
+            movementActions[2] = input.FindAction("MoveBack");
+            movementActions[3] = input.FindAction("MoveLeft");
+            movementActions[4] = input.FindAction("RotRight");
+            movementActions[5] = input.FindAction("RotLeft");
+            movementActions[6] = input.FindAction("MoveUp");
+            movementActions[7] = input.FindAction("MoveDown");
 
-            lookAction = input.actions.FindAction("Look");
-            sprintAction = input.actions.FindAction("Sprint");
-            weaponAction = input.actions.FindAction("Primary");
-            weaponSecondaryAction = input.actions.FindAction("Secondary");
+            lookAction = input.FindAction("Look");
+            sprintAction = input.FindAction("Sprint");
+            weaponAction = input.FindAction("Primary");
+            weaponSecondaryAction = input.FindAction("Secondary");
+            weaponWheelAction = input.FindAction("WeaponWheel");
         }
 
         InputController.Jump += Jump;
@@ -119,6 +120,8 @@ public class PlayerController : PersonController
         Move();
 
         Look();
+
+        HandleWeaponWheel();
     }
     
     protected override void FixedUpdate()
@@ -189,7 +192,7 @@ public class PlayerController : PersonController
 
     void Look()
     {
-        Vector2 look = lookAction.ReadValue<Vector2>();
+        Vector2 look = lookAction.ReadValue<Vector2>() * Time.timeScale;
         float yChange = 0;
 
         if(!inSpace)
@@ -299,8 +302,10 @@ public class PlayerController : PersonController
         weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
     }
 
-    void SwapWeapon(Weapon newWeapon)
+    public void SwapWeapon(Weapon newWeapon)
     {
+        if (newWeapon == weapon) return;
+
         if (weapon != null) weapon.OnUnEquip();
 
         weapon = newWeapon;
@@ -335,4 +340,17 @@ public class PlayerController : PersonController
 
         return newDirection;
     }
+
+    void HandleWeaponWheel()
+    {
+        if(weaponWheelAction.ReadValue<float>() > 0)
+        {
+            hud.SetWeaponWheelActive(1);
+        }
+        else
+        {
+            hud.SetWeaponWheelActive(0);
+        }
+    }
+
 }
