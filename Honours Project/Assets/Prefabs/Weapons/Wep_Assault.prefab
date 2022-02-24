@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2514075366960855523}
   - component: {fileID: 2514075366960855521}
+  - component: {fileID: 1121338944203022659}
   - component: {fileID: 2514075366960855522}
   m_Layer: 0
   m_Name: Wep_Assault
@@ -75,16 +76,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e35be472cf07c4a848d43ccdfcf5c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileSpeed: 50
+  projectileSpeed: 100
   maxAmmo: 10
   recoilStrength: 0.4
   recoilDirection: {x: -2, y: 2, z: 0.35}
   automatic: 1
   automaticDelay: 0.1
   spreadSize: 1.5
-  projectileKey: TestProjectile2
+  projectileKey: Proj_Assault
   muzzleFlash: {fileID: 2514075366970262421}
   firePoint: {fileID: 2514075365751788512}
+--- !u!114 &1121338944203022659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2514075366960855524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28dfc8d5d1c7aef41907be196edfc006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - {fileID: 11400000, guid: bc09676124c722646afcafa24944c57a, type: 2}
 --- !u!95 &2514075366960855522
 Animator:
   serializedVersion: 3

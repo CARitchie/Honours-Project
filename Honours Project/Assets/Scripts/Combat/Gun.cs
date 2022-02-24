@@ -22,11 +22,13 @@ public class Gun : Weapon
 
     ObjectPool projectilePool;
     Animator animator;
+    AudioManager audio;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         recoil = GetComponentInParent<Recoil>();
+        audio = GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -101,6 +103,7 @@ public class Gun : Weapon
         if(muzzleFlash != null) muzzleFlash.Play();
 
         if (recoil != null) recoil.RecoilFire(recoilDirection);
+        if (audio != null) audio.PlaySound("Fire");
     }
 
     public void AimAt(Vector3 point)

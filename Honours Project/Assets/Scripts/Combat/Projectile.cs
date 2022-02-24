@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Projectile : PoolObject
 {
     [SerializeField] GameObject hitMarker;
     [SerializeField] float damage = 10;
     [SerializeField] float despawnTime = 10;
+    [SerializeField] UnityEvent OnHit;
     Rigidbody rb;
     Vector3 lastPos;
     Transform body;
@@ -19,6 +21,7 @@ public class Projectile : PoolObject
     {
         rb = GetComponent<Rigidbody>();
         trail = GetComponent<TrailRenderer>();
+        hitMarker.SetActive(false);
     }
 
     public override void OnExitQueue()
@@ -50,13 +53,16 @@ public class Projectile : PoolObject
         }
     }
 
-    public void HitSuccess(RaycastHit hit)
+    public void HitSuccess(RaycastHit hit, Vector3 direction)
     {
-        GameObject marker = Instantiate(hitMarker);
-        marker.transform.position = hit.point;
-        marker.transform.parent = hit.collider.transform;
+        hitMarker.transform.position = hit.point;
+        //hitMarker.transform.parent = hit.collider.transform;
+        hitMarker.transform.parent = body;
+        hitMarker.transform.up = -direction;
+        hitMarker.SetActive(true);
+        OnHit?.Invoke();
 
-        if(hit.transform.TryGetComponent(out Damageable damageable))
+        if (hit.transform.TryGetComponent(out Damageable damageable))
         {
             damageable.OnShot(damage);
         }
@@ -72,7 +78,7 @@ public class Projectile : PoolObject
         lastPos += offset;
         if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position), layerMask))
         {
-            HitSuccess(hit);
+            HitSuccess(hit, transform.position - lastPos);
             return true;
         }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Taken from https://youtu.be/geieixA4Mqc?t=522
 public class Recoil : MonoBehaviour
 {
     Vector3 currentRot;
