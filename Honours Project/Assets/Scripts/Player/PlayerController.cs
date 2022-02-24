@@ -7,11 +7,8 @@ public class PlayerController : PersonController
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
-    [SerializeField] Weapon initialWeapon;
-    [SerializeField] Transform weaponHolder;
-    [SerializeField] float weaponRotSpeed;
-    [SerializeField] float weaponRotSpeed2;
     [SerializeField] HUD hud;
+    [SerializeField] Transform cam;
     Weapon weapon;
 
     float verticalLook = 0;
@@ -25,13 +22,14 @@ public class PlayerController : PersonController
     InputAction weaponSecondaryAction;
     InputAction pauseAction;
     InputAction weaponWheelAction;
+    InputAction weaponScrollAction;
 
-    [SerializeField] Transform cam;
+    
     PlayerDetails details;
+    WeaponManager weaponManager;
 
     float fuel;
     float maxFuel = 200;
-    float weaponZ = 0;
     float weaponSpeed = 0;
 
     bool inSpace = false;
@@ -46,6 +44,7 @@ public class PlayerController : PersonController
 
         Instance = this;
         details = GetComponentInParent<PlayerDetails>();
+        weaponManager = GetComponentInChildren<WeaponManager>();
     }
 
     protected override void Start()
@@ -76,15 +75,13 @@ public class PlayerController : PersonController
             weaponAction = input.FindAction("Primary");
             weaponSecondaryAction = input.FindAction("Secondary");
             weaponWheelAction = input.FindAction("WeaponWheel");
+            weaponScrollAction = input.FindAction("WeaponScroll");
         }
 
         InputController.Jump += Jump;
         InputController.Pause += Pause;
 
         fuel = maxFuel;
-
-        SwapWeapon(initialWeapon);
-        initialWeapon = null;
 
         StartCoroutine(EnableMovement());
     }
@@ -245,17 +242,7 @@ public class PlayerController : PersonController
             }
         }
 
-        // Weapon Rotation
-        yChange *= weaponRotSpeed;
-        weaponZ -= yChange;
-        weaponZ = Mathf.Clamp(weaponZ, -10, 10);
-        if (weaponZ != 0 && yChange == 0)
-        {
-            weaponZ = Mathf.MoveTowards(weaponZ, 0, Time.deltaTime * weaponRotSpeed2);
-            if (weaponZ < 0.2f && weaponZ > -0.2f) weaponZ = 0;
-        }
-
-        weaponHolder.transform.localEulerAngles = Vector3.forward * weaponZ;
+        weaponManager.Rotate(yChange);
     }
 
     void Jump()
@@ -302,7 +289,14 @@ public class PlayerController : PersonController
         weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
     }
 
-    public void SwapWeapon(Weapon newWeapon)
+    public void EquipWeapon(int index)
+    {
+        if (weaponManager.IsLocked(index)) return;
+
+        SwapWeapon(weaponManager.GetWeapon(index));
+    }
+
+    void SwapWeapon(Weapon newWeapon)
     {
         if (newWeapon == weapon) return;
 
@@ -350,6 +344,8 @@ public class PlayerController : PersonController
         else
         {
             hud.SetWeaponWheelActive(0);
+            float scroll = weaponScrollAction.ReadValue<float>();
+            if (scroll != 0) EquipWeapon(weaponManager.Scroll(scroll));
         }
     }
 

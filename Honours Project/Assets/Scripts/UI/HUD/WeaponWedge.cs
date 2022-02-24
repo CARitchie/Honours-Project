@@ -7,14 +7,15 @@ public class WeaponWedge : MonoBehaviour
 {
     [SerializeField] Color defaultColour;
     [SerializeField] Color highlightColour;
-    [SerializeField] Weapon weapon;
-    [SerializeField] bool locked;
+    [SerializeField] int index;
 
     Image background;
+    AudioManager audio;
 
     private void Awake()
     {
         background = GetComponentInChildren<Image>();
+        audio = GetComponentInParent<AudioManager>();
     }
 
 
@@ -22,6 +23,7 @@ public class WeaponWedge : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(FadeToColour(highlightColour));
+        audio.PlaySound("WeaponHover");
     }
 
     public void Deselect()
@@ -35,7 +37,7 @@ public class WeaponWedge : MonoBehaviour
         bool equal = false;
         while (!equal)
         {
-            float speed = Time.unscaledDeltaTime * 2;
+            float speed = Time.unscaledDeltaTime;
 
             float alpha = background.color.a;
             float r = Mathf.MoveTowards(background.color.r, colour.r, speed);
@@ -53,7 +55,6 @@ public class WeaponWedge : MonoBehaviour
 
     public void Equipped()
     {
-        if (locked) return;
-        PlayerController.Instance.SwapWeapon(weapon);
+        PlayerController.Instance.EquipWeapon(index);
     }
 }
