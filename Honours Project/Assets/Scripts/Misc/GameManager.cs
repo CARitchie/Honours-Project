@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Material teleportMat;
     [SerializeField] ParticleSystem[] teleportFX;
+    [SerializeField] Transform hitMarkerContainer;
     public static GameManager Instance;
 
     private void Awake()
@@ -23,5 +24,10 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) return null;
         return Instance.teleportFX[index];
+    }
+
+    public static Transform GetHitMarkerContainer()
+    {
+        return Instance == null ? null : Instance.hitMarkerContainer;
     }
 }

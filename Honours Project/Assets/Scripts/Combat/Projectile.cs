@@ -56,8 +56,8 @@ public class Projectile : PoolObject
     public void HitSuccess(RaycastHit hit, Vector3 direction)
     {
         hitMarker.transform.position = hit.point;
-        //hitMarker.transform.parent = hit.collider.transform;
-        hitMarker.transform.parent = body;
+        hitMarker.transform.parent = hit.collider.transform;
+        //hitMarker.transform.parent = body;
         hitMarker.transform.up = -direction;
         hitMarker.SetActive(true);
         OnHit?.Invoke();

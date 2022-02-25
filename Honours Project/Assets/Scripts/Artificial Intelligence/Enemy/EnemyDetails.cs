@@ -71,6 +71,17 @@ public class EnemyDetails : PersonDetails
         }
 
         Debug.Log(gameObject + " was despawned");
+        DestroyEnemy();
+    }
+
+    public void DestroyEnemy()
+    {
+        HitMarker[] markers = GetComponentsInChildren<HitMarker>(true);
+        foreach(HitMarker marker in markers)
+        {
+            marker.SaveFromDeath();
+        }
+
         Destroy(gameObject);
     }
 }

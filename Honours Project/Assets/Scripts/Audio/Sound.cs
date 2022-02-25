@@ -30,8 +30,8 @@ public class Sound : PlayableSound
         audioSource.pitch = pitch;
         audioSource.spatialBlend = spatialBlend;
         audioSource.outputAudioMixerGroup = group;
-        audioSource.rolloffMode = AudioRolloffMode.Linear;
-        audioSource.maxDistance = 4;
+        //audioSource.rolloffMode = AudioRolloffMode.Linear;
+        //audioSource.maxDistance = 25;
     }
 
     public override void Play()

@@ -356,3 +356,15 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4543777286152683505, guid: 7f2afc3533141ac4a8575f9cd90badd5, type: 3}
   m_PrefabInstance: {fileID: 4236915946168662509}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1989229301602390929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3212879428008180665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc7a83958faba448aa070f82ed07efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

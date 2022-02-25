@@ -128,7 +128,7 @@ public class EnemySpawnPoint : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Destroy(enemy.gameObject);
+        enemy.DestroyEnemy();
         particles.transform.parent = transform;
 
         yield return new WaitForSeconds(0.2f);
