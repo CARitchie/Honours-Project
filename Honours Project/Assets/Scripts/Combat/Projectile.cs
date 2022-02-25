@@ -6,9 +6,9 @@ using UnityEngine.Events;
 public class Projectile : PoolObject
 {
     [SerializeField] GameObject hitMarker;
-    [SerializeField] float damage = 10;
+    [SerializeField] protected float damage = 10;
     [SerializeField] float despawnTime = 10;
-    [SerializeField] UnityEvent OnHit;
+    [SerializeField] protected UnityEvent OnHit;
     Rigidbody rb;
     Vector3 lastPos;
     Transform body;
@@ -34,6 +34,7 @@ public class Projectile : PoolObject
     public void Fire(Vector3 velocity, Transform body)
     {
         rb.velocity = velocity;
+        transform.forward = velocity;
 
         this.body = body;
         Vector3 offset = Vector3.zero;
@@ -53,13 +54,10 @@ public class Projectile : PoolObject
         }
     }
 
-    public void HitSuccess(RaycastHit hit, Vector3 direction)
+    public virtual void HitSuccess(RaycastHit hit, Vector3 direction)
     {
-        hitMarker.transform.position = hit.point;
-        hitMarker.transform.parent = hit.collider.transform;
-        //hitMarker.transform.parent = body;
-        hitMarker.transform.up = -direction;
-        hitMarker.SetActive(true);
+        PlaceHitMarker(hit, direction);
+
         OnHit?.Invoke();
 
         if (hit.transform.TryGetComponent(out Damageable damageable))
@@ -68,6 +66,15 @@ public class Projectile : PoolObject
         }
 
         gameObject.SetActive(false);
+    }
+
+    protected void PlaceHitMarker(RaycastHit hit, Vector3 direction)
+    {
+        hitMarker.transform.position = hit.point;
+        hitMarker.transform.parent = hit.collider.transform;
+        //hitMarker.transform.parent = body;
+        hitMarker.transform.up = -direction;
+        hitMarker.SetActive(true);
     }
 
     bool DetectCollision()
@@ -91,4 +98,5 @@ public interface Damageable
 {
     void OnShot(float damage);
     void OnMelee(float damage);
+    void OnExplosion(float damage);
 }

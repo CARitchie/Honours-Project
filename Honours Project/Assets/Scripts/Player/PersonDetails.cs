@@ -37,6 +37,11 @@ public class PersonDetails : MonoBehaviour, Damageable
         TakeDamage(damage);
     }
 
+    public virtual void OnExplosion(float damage)
+    {
+        TakeDamage(damage);
+    }
+
     public float HealthPercent()
     {
         return health / maxHealth;
