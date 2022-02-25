@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!244 &-6106770508840239189
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: e4bc9899bf814d141a307c796fdb58cf
+  m_EffectName: Attenuation
+  m_MixLevel: c328e60a9baef4b45970b2e9e046ed14
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -15,12 +29,15 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: f0b45b787ab41cf40a054587e144e2de
+    name: Frequency
   m_AudioMixerGroupViews:
   - guids:
     - e24c2408cdcfedc40a9e68863088d743
     - 7e4e568589c790d428037151621a6076
     - 86097cce9690edc4bacfd0e820eb5cef
+    - c9c8250edb3d8cd438f58851393abd95
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -34,8 +51,8 @@ AudioMixerGroupController:
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: e24c2408cdcfedc40a9e68863088d743
   m_Children:
-  - {fileID: 6847028368278008415}
   - {fileID: 7943112480752462855}
+  - {fileID: 39953726523059655}
   m_Volume: 29396ae291714d84cb321f3ee250dd54
   m_Pitch: e5387fa61958f4c48b0287f1d8601aaf
   m_Send: 00000000000000000000000000000000
@@ -68,8 +85,51 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: d04bdf9d13ece914ba2c65e85cab8286
-  m_FloatValues: {}
+  m_FloatValues:
+    901a1e928b7ab99469b2ea01982091c5: 0.05
+    e2b75ed2fc9446142bac66181989dced: 5
+    d4c68c53b10ffef45aa24004eb91349f: -33.1
+    df4a98c3f7a0c09468713534d52e6490: 2686
+    4039ea84c9d5be34eb730b513ab4248a: 0.976
+    083b92e53c171824faf52428d6fbab2d: 1
+    3109fa3639a5c7248b1a919e5f0bb321: 96
+    3ee959471ba857c4ab71da2907a418b3: 0
+    50b2ea97cea681b46b117547c95995b6: 10.2
+    f0b45b787ab41cf40a054587e144e2de: 1
+    b41d10393ff030146a96de45d592eae2: 0
+    45a6909982402074c9623aff7161d08e: 72
+    2595e33a8174a4449939e3becad157a5: 1
+    25c66f4bd8b71504f9d36699316cf909: 1
+    055fe4ab99958e94eb64d6ed3b9e8d5c: 12.5
+    33e84efca3262c8409e406b4aa3973c0: 1
+    b420206ea01141c47a883f62e83288cf: 1
+    87c1538e7a6ced74680904c4f85045f3: 1
+    99b177aed9f21a54ba78dbd9b332fdbd: 20
+    8c0ab4de4427201499c28fdb91895c6d: 2594
+    01900ddec8ea1c24d973500f842f8a0b: 5
+    46d4db3fd4cc5e74da806a3971afc89d: 0.41900003
   m_TransitionOverrides: {}
+--- !u!243 &39953726523059655
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Game
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: c9c8250edb3d8cd438f58851393abd95
+  m_Children:
+  - {fileID: 6847028368278008415}
+  m_Volume: 7b289c5ffb8303a42a4c311d2e42bd3a
+  m_Pitch: b7afaf0e93c9f6048933d10281750748
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -6106770508840239189}
+  - {fileID: 7731659871704384292}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!244 &6424128546772001431
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -103,6 +163,26 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!244 &7731659871704384292
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 134fe9927f4dde040ba0c320dff7e0b5
+  m_EffectName: ParamEQ
+  m_MixLevel: 31e11f0c16089e44b8e8d74f9246740d
+  m_Parameters:
+  - m_ParameterName: Center freq
+    m_GUID: df4a98c3f7a0c09468713534d52e6490
+  - m_ParameterName: Octave range
+    m_GUID: e2b75ed2fc9446142bac66181989dced
+  - m_ParameterName: Frequency gain
+    m_GUID: f0b45b787ab41cf40a054587e144e2de
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &7793156139018877585
 AudioMixerEffectController:
   m_ObjectHideFlags: 3

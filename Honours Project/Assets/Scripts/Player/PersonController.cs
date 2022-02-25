@@ -71,7 +71,7 @@ public class PersonController : MonoBehaviour
         return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
     }
 
-    public void SetNearestSource(GravitySource source)
+    public virtual void SetNearestSource(GravitySource source)
     {
         nearestSource = source;
     }

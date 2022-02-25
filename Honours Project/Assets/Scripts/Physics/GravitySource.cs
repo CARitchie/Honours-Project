@@ -5,6 +5,8 @@ using UnityEngine;
 public class GravitySource : MonoBehaviour
 {
     [SerializeField] float influenceRange;
+    [SerializeField] bool hasAtmosphere;
+    [SerializeField] float startFade;
 
     public float Influence { get { return influenceRange * influenceRange; } }
 
@@ -21,5 +23,21 @@ public class GravitySource : MonoBehaviour
     public virtual Vector3 GetVelocity()
     {
         return GetComponentInChildren<Rigidbody>().velocity;
+    }
+
+    public bool HasAtmosphere()
+    {
+        return hasAtmosphere;
+    }
+
+    public float SoundPercent(Vector3 point)
+    {
+        if (influenceRange <= 0 && startFade <= 0) return 1;
+
+        float height = (point - transform.position).magnitude;
+        if (height < startFade) return 1;
+
+        height -= startFade;
+        return Mathf.Clamp01(1 - (height / (influenceRange - startFade)));
     }
 }

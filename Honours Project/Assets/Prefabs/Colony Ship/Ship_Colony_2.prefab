@@ -748,6 +748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   influenceRange: 0
+  hasAtmosphere: 1
   strength: 9.8
 --- !u!65 &6527135466303607866
 BoxCollider:

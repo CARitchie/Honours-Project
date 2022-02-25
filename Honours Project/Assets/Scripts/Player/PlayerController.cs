@@ -38,6 +38,8 @@ public class PlayerController : PersonController
     bool movementAllowed = false;
     bool paused = false;
 
+    int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
+
     protected override void Awake()
     {
         base.Awake();
@@ -327,7 +329,7 @@ public class PlayerController : PersonController
         Vector3 newDirection = fireHole.forward;
 
         Vector3 origin = cam.position + cam.forward * 0.8f;
-        if(Physics.Raycast(origin, cam.forward,out RaycastHit hit, 40))
+        if(Physics.Raycast(origin, cam.forward,out RaycastHit hit, 40, aimLayerMask))
         {
             newDirection = (hit.point - fireHole.position).normalized;
         }
@@ -347,6 +349,18 @@ public class PlayerController : PersonController
             float scroll = weaponScrollAction.ReadValue<float>();
             if (scroll != 0) EquipWeapon(weaponManager.Scroll(scroll));
         }
+    }
+
+    public override void SetNearestSource(GravitySource source)
+    {
+        base.SetNearestSource(source);
+
+        float inAtmosphere = 0;
+        if(source != null)
+        {
+            inAtmosphere = source.HasAtmosphere() ? source.SoundPercent(transform.position) : 0;
+        }
+        AudioControl.AtmosphereInterpolation(inAtmosphere);
     }
 
 }

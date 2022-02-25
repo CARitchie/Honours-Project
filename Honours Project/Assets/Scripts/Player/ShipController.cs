@@ -67,6 +67,8 @@ public class ShipController : MonoBehaviour
 
     private void Update()
     {
+        if (!active) return;
+
         Look();
     }
 
@@ -81,6 +83,7 @@ public class ShipController : MonoBehaviour
         GlobalLightControl.SwitchToShip(transform);
         Compass.SetActive(false);
         compassIcon.SetActive(true);
+        AudioControl.AtmosphereInterpolation(1);
     }
 
     public void Deactivate()
