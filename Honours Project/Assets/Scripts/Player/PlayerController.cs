@@ -193,11 +193,14 @@ public class PlayerController : PersonController
     {
         Vector2 look = lookAction.ReadValue<Vector2>() * Time.timeScale;
         float yChange = 0;
+        float xChange = 0;
 
         if(!inSpace)
         {
-            verticalLook += -look.y * lookSensitivity;
+            xChange = -look.y * lookSensitivity;
+            verticalLook += xChange;
             verticalLook = Mathf.Clamp(verticalLook, -90, 90);
+            
 
             yChange = look.x * lookSensitivity;
 
@@ -229,7 +232,8 @@ public class PlayerController : PersonController
             float zAngle = (movementActions[4].ReadValue<float>() - movementActions[5].ReadValue<float>()) * Time.deltaTime * 80;
 
             yChange = (look.x * lookSensitivity) + corrector2;
-            Vector3 rotation = new Vector3((-look.y * lookSensitivity) + corrector1, yChange, -zAngle);
+            xChange = (-look.y * lookSensitivity) + corrector1;
+            Vector3 rotation = new Vector3(xChange, yChange, -zAngle);
 
             Quaternion rot = Quaternion.Euler(rotation);
 
@@ -245,6 +249,7 @@ public class PlayerController : PersonController
         }
 
         weaponManager.Rotate(yChange);
+        hud.Shake(yChange, xChange);
     }
 
     void Jump()
