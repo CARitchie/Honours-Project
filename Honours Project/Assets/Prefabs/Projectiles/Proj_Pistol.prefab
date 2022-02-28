@@ -14882,7 +14882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitMarker: {fileID: 3146831724041930203}
-  damage: 10
+  damage: 18
   despawnTime: 15
   OnHit:
     m_PersistentCalls:

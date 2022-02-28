@@ -15,7 +15,7 @@ public class Projectile : PoolObject
     TrailRenderer trail;
     float timer;
 
-    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
+    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
     private void Awake()
     {

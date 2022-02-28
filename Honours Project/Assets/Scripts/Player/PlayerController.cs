@@ -38,7 +38,7 @@ public class PlayerController : PersonController
     bool movementAllowed = false;
     bool paused = false;
 
-    int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
+    int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
     protected override void Awake()
     {
