@@ -106,6 +106,7 @@ public class EnemyController : PersonController
         Vector3 direction = point - transform.position;
         Vector3 originalAngles = transform.localEulerAngles;
 
+        // This can probably be improved
         direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(direction);
         
