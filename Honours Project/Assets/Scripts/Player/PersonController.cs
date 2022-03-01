@@ -15,7 +15,7 @@ public class PersonController : MonoBehaviour
     protected Rigidbody rb;
     protected GravitySource nearestSource;
     Vector3 lastVelocity;
-    Animator animator;
+    protected Animator animator;
 
     protected virtual void Awake(){
         rb = GetComponentInParent<Rigidbody>();
@@ -109,6 +109,12 @@ public class PersonController : MonoBehaviour
     public void SetAnimFloat(string key, float val)
     {
         animator?.SetFloat(key, val);
+    }
+
+    public float GetAnimFloat(string key)
+    {
+        if (animator == null) return 0;
+        return animator.GetFloat(key);
     }
 
     public virtual Vector3 GetAimDirection(Transform fireHole)

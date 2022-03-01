@@ -12,6 +12,7 @@ public class EnemySpawnPoint : MonoBehaviour
     Transform centre;
     float teleportTime;
     float noiseScale = 961.1f;
+    Vector3 offset = Vector3.zero;
 
     public void Spawn()
     {
@@ -37,6 +38,7 @@ public class EnemySpawnPoint : MonoBehaviour
         controller.SetActive(false);
 
         ParticleSystem particles = GetParticles(0);
+        particles.transform.localPosition += offset;
         particles.Play();
 
         var emission = particles.emission;
@@ -155,6 +157,7 @@ public class EnemySpawnPoint : MonoBehaviour
         {
             teleportTime = details.GetTeleportTime();
             noiseScale = details.GetNoiseScale();
+            offset = details.GetParticleOffset();
         }
 
         if (teleportIn) StartCoroutine(FadeIn());

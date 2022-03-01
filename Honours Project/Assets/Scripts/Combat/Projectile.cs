@@ -11,7 +11,7 @@ public class Projectile : PoolObject
     [SerializeField] protected UnityEvent OnHit;
     Rigidbody rb;
     Vector3 lastPos;
-    Transform body;
+    protected Transform body;
     TrailRenderer trail;
     float timer;
 
@@ -49,9 +49,14 @@ public class Projectile : PoolObject
 
         timer -= Time.fixedDeltaTime;
         if (timer <= 0) {
-            gameObject.SetActive(false);
-            timer = despawnTime;
+            Despawn();
         }
+    }
+
+    protected virtual void Despawn()
+    {
+        gameObject.SetActive(false);
+        timer = despawnTime;
     }
 
     public virtual void HitSuccess(RaycastHit hit, Vector3 direction)
@@ -71,7 +76,7 @@ public class Projectile : PoolObject
     protected void PlaceHitMarker(RaycastHit hit, Vector3 direction)
     {
         hitMarker.transform.position = hit.point;
-        hitMarker.transform.parent = hit.collider.transform;
+        hitMarker.transform.parent = hit.collider != null ? hit.collider.transform : null;
         //hitMarker.transform.parent = body;
         hitMarker.transform.up = -direction;
         hitMarker.SetActive(true);

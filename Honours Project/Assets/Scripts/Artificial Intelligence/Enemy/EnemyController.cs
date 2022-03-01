@@ -93,8 +93,8 @@ public class EnemyController : PersonController
         float moveSpeed;
         if (movementSpeed < walkSpeed) moveSpeed = movementSpeed / walkSpeed;
         else moveSpeed = ((movementSpeed - walkSpeed) / (sprintSpeed - walkSpeed)) + 1;
-        SetAnimFloat("MoveSpeed", moveSpeed);
-
+        //SetAnimFloat("MoveSpeed", moveSpeed);
+        AnimMoveTo(moveSpeed);
 
         Vector3 target = rb.position + (transform.forward * movementSpeed * Time.deltaTime);
 
@@ -194,5 +194,18 @@ public class EnemyController : PersonController
     public void MatchSourceVelocity()
     {
         rb.velocity = nearestSource.GetVelocity();
+    }
+
+    public void AnimatorSlowDown()
+    {
+        float value = GetAnimFloat("MoveSpeed");
+        value = Mathf.MoveTowards(value, 0, Time.deltaTime);
+        SetAnimFloat("MoveSpeed", value);
+    }
+
+    public void AnimMoveTo(float target)
+    {
+        float current = GetAnimFloat("MoveSpeed");
+        SetAnimFloat("MoveSpeed", Mathf.MoveTowards(current, target, Time.deltaTime * 3));
     }
 }

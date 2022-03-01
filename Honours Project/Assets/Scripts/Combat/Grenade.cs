@@ -34,4 +34,11 @@ public class Grenade : Projectile
         gameObject.SetActive(false);
 
     }
+
+    protected override void Despawn()
+    {
+        RaycastHit hit = new RaycastHit();
+        hit.point = transform.position;
+        HitSuccess(hit, Vector3.one);
+    }
 }

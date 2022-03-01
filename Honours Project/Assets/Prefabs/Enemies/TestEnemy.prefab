@@ -302,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportTime: 1
   noiseScale: 2.3
+  particleOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &5204693593869393729
 GameObject:
   m_ObjectHideFlags: 0

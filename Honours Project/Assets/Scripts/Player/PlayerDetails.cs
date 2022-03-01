@@ -32,6 +32,7 @@ public class PlayerDetails : PersonDetails
 
     public override bool TakeDamage(float amount)
     {
+        amount *= Random.Range(0.9f, 1.05f);
         bool val = base.TakeDamage(amount);
 
         hud.SetHealthPercent(HealthPercent());

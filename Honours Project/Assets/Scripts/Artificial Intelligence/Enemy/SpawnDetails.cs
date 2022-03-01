@@ -6,6 +6,7 @@ public class SpawnDetails : MonoBehaviour
 {
     [SerializeField] float teleportTime;
     [SerializeField] float noiseScale;
+    [SerializeField] Vector3 particleOffset;
 
     private void Start()
     {
@@ -20,6 +21,11 @@ public class SpawnDetails : MonoBehaviour
     public float GetNoiseScale()
     {
         return noiseScale;
+    }
+
+    public Vector3 GetParticleOffset()
+    {
+        return particleOffset;
     }
 
 }
