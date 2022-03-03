@@ -11,7 +11,7 @@ public class LocalGravitySource : GravitySource
     private void OnTriggerEnter(Collider other)
     {
         GravityReceiver receiver = other.GetComponentInParent<GravityReceiver>();
-        if(receiver != null){
+        if(receiver != null && receiver.GetComponent<PlanetReceiver>() == null){
             if(!receivers.Contains(receiver)){
                 receivers.Add(receiver);
                 receiver.AddLocalGravitySource(this);
