@@ -30,4 +30,9 @@ public class GameManager : MonoBehaviour
     {
         return Instance == null ? null : Instance.hitMarkerContainer;
     }
+
+    public void LoadScene(string scene)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
+    }
 }
