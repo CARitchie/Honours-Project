@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PersonDetails : MonoBehaviour, Damageable
 {
@@ -29,7 +28,7 @@ public class PersonDetails : MonoBehaviour, Damageable
 
     public virtual void OnDeath()
     {
-        SceneManager.LoadScene("Space");
+        SceneManager.FadeToScene("Space");
     }
 
     public virtual void OnShot(float damage)
