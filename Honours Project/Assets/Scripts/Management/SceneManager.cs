@@ -29,6 +29,7 @@ public class SceneManager : MonoBehaviour
     {
         if (Instance == null) return;
 
+        Instance.StopAllCoroutines();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
 
@@ -36,6 +37,7 @@ public class SceneManager : MonoBehaviour
     {
         if (Instance == null) return;
 
+        Instance.StopAllCoroutines();
         Instance.StartCoroutine(Instance.FadeOut(sceneName));
     }
 
@@ -58,7 +60,7 @@ public class SceneManager : MonoBehaviour
 
     void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (fadeScreen.color.a != 0) StartCoroutine(FadeIn());
+        if (fadeScreen.color.a != 0 && mode != LoadSceneMode.Additive) StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeIn()
@@ -74,6 +76,7 @@ public class SceneManager : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+
     }
 
     public static void SetToBlack()

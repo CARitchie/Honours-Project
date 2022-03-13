@@ -308,8 +308,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeScreen: {fileID: 8773102}
-  fadeOutTime: 1
-  fadeInTime: 4
+  fadeOutTime: 0.8
+  fadeInTime: 2.5
 --- !u!4 &603501700
 Transform:
   m_ObjectHideFlags: 0

@@ -10,13 +10,11 @@ public class WeaponWheel : MonoBehaviour
 {
     [SerializeField] float slowness;
     [SerializeField] float activeTime;
-    [SerializeField] PostProcessVolume volume;
     [SerializeField] RectTransform arrow;
     [SerializeField] WeaponWedge[] wedges;
 
     bool displaying = false;
     float active = 0;
-    DepthOfField dof;
     MaskableGraphic[] graphics;
     InputAction lookAction;
     int lastIndex = 0;
@@ -27,7 +25,6 @@ public class WeaponWheel : MonoBehaviour
 
     private void Awake()
     {
-        dof = volume.profile.GetSetting<DepthOfField>();
         graphics = GetComponentsInChildren<MaskableGraphic>();
         SetGraphicsAlpha(0);
     }
@@ -51,7 +48,7 @@ public class WeaponWheel : MonoBehaviour
         lastVal = active;
 
         Time.timeScale = slowness + (1 - (active / activeTime)) * (1 - slowness);
-        dof.focalLength.Interp(0,10,active/activeTime);
+        PostProcessControl.SetDepth(0,10,active/activeTime);
 
         if(active > 0)
         {

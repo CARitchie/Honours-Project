@@ -90,7 +90,9 @@ public class PlayerController : PersonController
 
     void Pause()
     {
-        paused = PauseMenu.TogglePause();
+        PauseMenu.TogglePause();
+
+        //Need to force all other ui off
     }
 
     IEnumerator EnableMovement()
@@ -368,4 +370,9 @@ public class PlayerController : PersonController
         AudioControl.AtmosphereInterpolation(inAtmosphere);
     }
 
+    public static void SetPaused(bool val)
+    {
+        if (Instance == null) return;
+        Instance.paused = val;
+    }
 }
