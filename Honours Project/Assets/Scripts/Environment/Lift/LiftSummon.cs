@@ -9,10 +9,12 @@ public class LiftSummon : MonoBehaviour, Interact
 
     public void OnEnter()
     {
+        HUD.SetInteractText("Call Lift");
     }
 
     public void OnExit()
     {
+        HUD.ClearInteractText();
     }
 
     public void OnSelect()

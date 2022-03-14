@@ -25,7 +25,7 @@ public class WeaponWheel : MonoBehaviour
 
     private void Awake()
     {
-        graphics = GetComponentsInChildren<MaskableGraphic>();
+        graphics = GetComponentsInChildren<MaskableGraphic>(true);
         SetGraphicsAlpha(0);
     }
 

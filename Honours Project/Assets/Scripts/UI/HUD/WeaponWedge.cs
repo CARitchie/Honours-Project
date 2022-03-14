@@ -7,15 +7,27 @@ public class WeaponWedge : MonoBehaviour
 {
     [SerializeField] Color defaultColour;
     [SerializeField] Color highlightColour;
+    [SerializeField] GameObject weaponImage;
+    [SerializeField] GameObject padlockImage;
     [SerializeField] int index;
 
     Image background;
-    AudioManager audio;
+    AudioManager audioManager;
+
+    private void Start()
+    {
+        WeaponManager.OnWeaponUnlock += Unlock;
+    }
+
+    private void OnDestroy()
+    {
+        WeaponManager.OnWeaponUnlock -= Unlock;
+    }
 
     private void Awake()
     {
         background = GetComponentInChildren<Image>();
-        audio = GetComponentInParent<AudioManager>();
+        audioManager = GetComponentInParent<AudioManager>();
     }
 
 
@@ -23,7 +35,7 @@ public class WeaponWedge : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(FadeToColour(highlightColour));
-        audio.PlaySound("WeaponHover");
+        audioManager.PlaySound("WeaponHover");
     }
 
     public void Deselect()
@@ -56,5 +68,12 @@ public class WeaponWedge : MonoBehaviour
     public void Equipped()
     {
         PlayerController.Instance.EquipWeapon(index);
+    }
+
+    public void Unlock(int index)
+    {
+        if (index != this.index) return;
+        weaponImage.SetActive(true);
+        padlockImage.SetActive(false);
     }
 }

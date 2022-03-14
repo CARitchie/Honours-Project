@@ -305,6 +305,11 @@ public class PlayerController : PersonController
         SwapWeapon(weaponManager.GetWeapon(index));
     }
 
+    public void UnlockWeapon(int index)
+    {
+        weaponManager.UnlockWeapon(index);
+    }
+
     void SwapWeapon(Weapon newWeapon)
     {
         if (newWeapon == weapon) return;

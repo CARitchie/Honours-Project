@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class HUD : MonoBehaviour
 {
+
     [Header("Settings")]
     [SerializeField] float maxOffset;
     [SerializeField] float snappiness;
@@ -13,6 +15,9 @@ public class HUD : MonoBehaviour
     [SerializeField] HealthBar healthBar;
     [SerializeField] HealthBar energyBar;
     [SerializeField] WeaponWheel weaponWheel;
+    [SerializeField] TextMeshProUGUI interactText;
+
+    public static HUD Instance;
 
     Vector3 currentPos;
     Vector3 targetPos;
@@ -20,6 +25,7 @@ public class HUD : MonoBehaviour
     private void Awake()
     {
         weaponWheel.gameObject.SetActive(true);
+        Instance = this;
     }
 
     public void SetHealthPercent(float percent)
@@ -48,5 +54,20 @@ public class HUD : MonoBehaviour
         targetPos = Vector3.Lerp(targetPos, Vector3.zero, returnSpeed * Time.deltaTime);
         currentPos = Vector3.Lerp(currentPos, targetPos, snappiness * Time.deltaTime);
         transform.localPosition = currentPos;
+    }
+
+    public static void SetInteractText(string text)
+    {
+        if (Instance == null) return;
+
+        Instance.interactText.gameObject.SetActive(true);
+        Instance.interactText.text = "[F] " + text;
+    }
+
+    public static void ClearInteractText()
+    {
+        if (Instance == null) return;
+
+        Instance.interactText.gameObject.SetActive(false);
     }
 }

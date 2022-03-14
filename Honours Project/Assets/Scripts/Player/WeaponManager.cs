@@ -12,6 +12,9 @@ public class WeaponManager : MonoBehaviour
     float weaponZ = 0;
     int lastIndex = 0;
 
+    public delegate void WeaponUnlock(int index);
+    public static event WeaponUnlock OnWeaponUnlock;
+
     public bool IsLocked(int index)
     {
         if (index >= weapons.Length) return true;
@@ -63,6 +66,15 @@ public class WeaponManager : MonoBehaviour
         lastIndex--;
         if (lastIndex < 0) lastIndex = weapons.Length - 1;
     }
+
+    public void UnlockWeapon(int index)
+    {
+        if(index < weapons.Length)
+        {
+            weapons[index].Unlock();
+            OnWeaponUnlock?.Invoke(index);
+        }
+    }
 }
 
 [System.Serializable]
@@ -79,5 +91,10 @@ public class WeaponContainer
     public Weapon GetWeapon()
     {
         return weapon;
+    }
+
+    public void Unlock()
+    {
+        locked = false;
     }
 }
