@@ -9,6 +9,7 @@ public class PlayerDetails : PersonDetails
     [SerializeField] HUD hud;
     [Header("Temporary")] [SerializeField] GameObject shipCompass;
     float energy;
+    int powerCells = 0;
 
     private void Start()
     {
@@ -27,7 +28,10 @@ public class PlayerDetails : PersonDetails
 
     private void Update()
     {
-        UseEnergy(energyDrainRate * Time.deltaTime);
+        if(!UseEnergy(energyDrainRate * Time.deltaTime))
+        {
+            TakeDamage(energyDrainRate * Time.deltaTime * 2);
+        }
     }
 
     public override bool TakeDamage(float amount)
@@ -42,7 +46,16 @@ public class PlayerDetails : PersonDetails
 
     public bool UseEnergy(float amount)
     {
-        if (energy <= 0) return false;
+        if (energy <= 0)
+        {
+            if(powerCells <= 0) return false;
+            else
+            {
+                energy += maxEnergy;
+                powerCells--;
+                hud.SetNumberOfPowerCells(powerCells);
+            }
+        }
 
         energy -= amount;
         hud.SetEnergyPercent(energy / maxEnergy);
@@ -60,5 +73,16 @@ public class PlayerDetails : PersonDetails
     {
         immune = !immune;
         shipCompass.SetActive(immune);
+    }
+
+    public void AddPowerCell()
+    {
+        powerCells++;
+        hud.SetNumberOfPowerCells(powerCells);
+    }
+
+    public void Recharge(float amount)
+    {
+        energy = Mathf.Clamp(energy + amount, 0, maxEnergy);
     }
 }

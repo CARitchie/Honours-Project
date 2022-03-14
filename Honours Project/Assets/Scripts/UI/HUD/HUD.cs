@@ -14,6 +14,7 @@ public class HUD : MonoBehaviour
     [Header("References")]
     [SerializeField] HealthBar healthBar;
     [SerializeField] HealthBar energyBar;
+    [SerializeField] TextMeshProUGUI powerCells;
     [SerializeField] WeaponWheel weaponWheel;
     [SerializeField] TextMeshProUGUI interactText;
 
@@ -69,5 +70,10 @@ public class HUD : MonoBehaviour
         if (Instance == null) return;
 
         Instance.interactText.gameObject.SetActive(false);
+    }
+
+    public void SetNumberOfPowerCells(int value)
+    {
+        powerCells.text = value.ToString();
     }
 }
