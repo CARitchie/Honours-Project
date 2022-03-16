@@ -22,6 +22,7 @@ public class MeleeAttack : State
 
     public override void OnEnterState()
     {
+        controller.SetHostile(true);
         timer = Random.Range(minRestTime, maxRestTime);
         controller.SetAnimBool("Attack", true);
         StartCoroutine(SlowDown());

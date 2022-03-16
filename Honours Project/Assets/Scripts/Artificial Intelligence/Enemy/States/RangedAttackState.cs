@@ -17,6 +17,7 @@ public class RangedAttackState : State
     {
         Debug.Log("Enter Ranged Attack");
         gun.OnEquip(controller);
+        controller.SetHostile(true);
     }
 
     public override void OnExecute()

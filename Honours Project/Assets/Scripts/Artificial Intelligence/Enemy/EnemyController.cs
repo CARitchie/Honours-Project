@@ -6,12 +6,9 @@ public class EnemyController : PersonController
 {
     [Header("Enemy Settings")]
     [SerializeField] State[] states;
-    [SerializeField] float hostileResetTime;
     [SerializeField] float tempSpeed;
     CharacterGravity gravity;
     PathFinder pathFinder;
-
-    float hostileTimer;
 
     State currentState;
 
@@ -72,12 +69,6 @@ public class EnemyController : PersonController
         }
 
         currentState?.OnExecute();
-
-        if(hostileTimer > 0)
-        {
-            hostileTimer -= Time.fixedDeltaTime;
-            if (hostileTimer <= 0) hostile = false;
-        }
 
         CheckDespawnDistance();
     }
@@ -183,8 +174,6 @@ public class EnemyController : PersonController
     public void SetHostile(bool val)
     {
         hostile = val;
-
-        if (hostile) hostileTimer = hostileResetTime;
     }
 
     public EnemyDetails GetDetails()
