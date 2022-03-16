@@ -217,6 +217,22 @@ public class EnemyController : PersonController
 
     void CheckDespawnDistance()
     {
-        if (!Useful.Close(details.transform.parent.position + offset, details.transform.position, 500)) details.OnDeath();
+        if (!Useful.Close(Origin, details.transform.position, 500)) details.OnDeath();
+    }
+
+    public Vector3 Origin
+    {
+        get
+        {
+            return details.transform.parent.position + offset;
+        }
+    }
+
+    public float SquareDistanceToOrigin
+    {
+        get
+        {
+            return (details.transform.position - Origin).sqrMagnitude;
+        }
     }
 }
