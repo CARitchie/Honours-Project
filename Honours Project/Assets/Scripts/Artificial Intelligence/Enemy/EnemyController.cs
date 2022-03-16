@@ -25,6 +25,8 @@ public class EnemyController : PersonController
     protected EnemyDetails details;
     bool active = true;
 
+    Vector3 offset;
+
     protected override void Awake()
     {
         base.Awake();
@@ -32,6 +34,8 @@ public class EnemyController : PersonController
         pathFinder = GetComponentInParent<PathFinder>();
         gravity = GetComponentInParent<CharacterGravity>();
         details = GetComponentInParent<EnemyDetails>();
+
+        offset = details.transform.position - details.transform.parent.position;
     }
 
     protected override void Start(){
@@ -74,6 +78,8 @@ public class EnemyController : PersonController
             hostileTimer -= Time.fixedDeltaTime;
             if (hostileTimer <= 0) hostile = false;
         }
+
+        CheckDespawnDistance();
     }
 
     void ChangeState(State state)
@@ -207,5 +213,10 @@ public class EnemyController : PersonController
     {
         float current = GetAnimFloat("MoveSpeed");
         SetAnimFloat("MoveSpeed", Mathf.MoveTowards(current, target, Time.deltaTime * 3));
+    }
+
+    void CheckDespawnDistance()
+    {
+        if (!Useful.Close(details.transform.parent.position + offset, details.transform.position, 500)) details.OnDeath();
     }
 }

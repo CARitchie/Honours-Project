@@ -50,19 +50,25 @@ public class Compass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        planet = player.GetNearestSource();
+        GravitySource tempPlanet = player.GetNearestSource();
 
-        if (planet == null || !active)
+        if (tempPlanet == null || !active)
         {
             FadeOut();
             return;
+        }
+
+        if(tempPlanet != planet)
+        {
+            CheckSamePlanet();
+            planet = tempPlanet;
         }
 
         FadeIn();
 
         for(int i = 0; i < items.Count; i++)
         {
-            FindItem(items[i]);
+            if(items[i].active) FindItem(items[i]);
         }
 
 
@@ -158,6 +164,24 @@ public class Compass : MonoBehaviour
         active = value;
     }
 
+    void CheckSamePlanet()
+    {
+        Transform playerPlanet = player.GetNearestSource().transform;
+
+        foreach(CompassItem item in items)
+        {
+            if (!item.SameParent(playerPlanet))
+            {
+                item.SetIconActive(false);
+            }
+            else
+            {
+                item.SetIconActive(true);
+            }
+            
+        }
+    }
+
     public static void AddItem(CompassItem item)
     {
         if (Instance == null) return;
@@ -172,6 +196,8 @@ public class Compass : MonoBehaviour
             colour.a = 0;
             newImage.color = colour;
         }
+
+        if (!item.SameParent(Instance.planet == null ? null : Instance.planet.transform)) item.SetIconActive(false);
     }
 
     public static void RemoveItem(CompassItem item)

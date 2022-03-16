@@ -5,13 +5,16 @@ using UnityEngine.UI;
 
 public class CompassItem : MonoBehaviour
 {
+    [SerializeField] bool activeOnStart = true;
+    [SerializeField] bool alwaysActive = false;
     [SerializeField] RectTransform itemIcon;
 
     RectTransform icon;
+    [HideInInspector] public bool active = true;
 
     private void Start()
     {
-        Compass.AddItem(this);
+        if(activeOnStart) Compass.AddItem(this);
     }
 
     public Image CreateNewIcon(Transform parent)
@@ -50,5 +53,29 @@ public class CompassItem : MonoBehaviour
     private void OnDestroy()
     {
         Compass.RemoveItem(this);
+    }
+
+    public bool SameParent(Transform parent)
+    {
+        Transform temp = transform.parent;
+        while(temp != null)
+        {
+            if (temp == parent) return true;
+            temp = temp.parent;
+        }
+
+        return false;
+    }
+
+    public void SetIconActive(bool val)
+    {
+        if (!val && alwaysActive) return;
+
+        if(icon != null)
+        {
+            icon.gameObject.SetActive(val);
+        }
+
+        active = val;
     }
 }
