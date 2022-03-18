@@ -7,13 +7,19 @@ public class SnowSurface : MonoBehaviour
 {
     [SerializeField] int resolution = 1024;
     [SerializeField] Shader shader;
+    [SerializeField] Shader snowFallShader;
     [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] float flakeAmount;
+    [SerializeField] float flakeOpacity;
+    [SerializeField] float radius;
 
     Material snowMat;
     Material drawMat;
+    Material fallMat;
     RenderTexture displacementMap;
 
     List<SnowImprinter> imprinters = new List<SnowImprinter>();
+    SnowFall[] fallers;
 
 
     private void Awake()
@@ -21,10 +27,14 @@ public class SnowSurface : MonoBehaviour
         drawMat = new Material(shader);
         drawMat.SetColor("_Color", Color.red);
 
+        fallMat = new Material(snowFallShader);
+
         snowMat = meshRenderer.material;
         displacementMap = new RenderTexture(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
         displacementMap.wrapMode = TextureWrapMode.Repeat;
         snowMat.SetTexture("_DispTex", displacementMap);
+
+        fallers = transform.parent.GetComponentsInChildren<SnowFall>();
     }
 
     // Update is called once per frame
@@ -32,7 +42,15 @@ public class SnowSurface : MonoBehaviour
     {
         snowMat.SetVector("_Origin", transform.position);
 
-        for(int i = 0; i < imprinters.Count; i++)
+        if (fallers != null && fallers.Length > 0)
+        {
+            for (int i = 0; i < fallers.Length; i++)
+            {
+                AddSnow(fallers[i]);
+            }
+        }
+
+        for (int i = 0; i < imprinters.Count; i++)
         {
             if(imprinters[i] != null)
             {
@@ -53,6 +71,21 @@ public class SnowSurface : MonoBehaviour
         RenderTexture temp = RenderTexture.GetTemporary(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
         Graphics.Blit(displacementMap, temp);
         Graphics.Blit(temp, displacementMap, drawMat);
+        RenderTexture.ReleaseTemporary(temp);
+    }
+
+    void AddSnow(SnowFall faller)
+    {
+        Vector3 details = faller.GetDetails();
+
+        fallMat.SetFloat("_RadiusSquare", Mathf.Pow(details.x / radius, 2));
+        fallMat.SetFloat("_FlakeAmount", details.y);
+        fallMat.SetFloat("_FlakeOpacity", details.z);
+        fallMat.SetVector("_Origin", (faller.transform.position - transform.position) / radius);
+
+        RenderTexture temp = RenderTexture.GetTemporary(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
+        Graphics.Blit(displacementMap, temp);
+        Graphics.Blit(temp, displacementMap, fallMat);
         RenderTexture.ReleaseTemporary(temp);
     }
 
