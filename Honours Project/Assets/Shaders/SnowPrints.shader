@@ -1,3 +1,6 @@
+
+// Adapted from https://youtu.be/-yaqhzX-7qo
+
 Shader "Unlit/SnowPrints"
 {
     Properties
@@ -32,6 +35,7 @@ Shader "Unlit/SnowPrints"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 			fixed4 _Coordinate, _Color;
+			float _Size;
 
             v2f vert (appdata v)
             {
@@ -41,27 +45,8 @@ Shader "Unlit/SnowPrints"
                 return o;
             }
 
-			float WrappedDistance(float2 uv) {
-				float distances[9];
-				distances[0] = distance(uv, _Coordinate.xy);
-				distances[1] = distance(uv, float2(_Coordinate.x - 1, _Coordinate.y + 1));
-				distances[2] = distance(uv, float2(_Coordinate.x, _Coordinate.y + 1));
-				distances[3] = distance(uv, float2(_Coordinate.x + 1, _Coordinate.y + 1));
-				distances[4] = distance(uv, float2(_Coordinate.x - 1, _Coordinate.y));
-				distances[5] = distance(uv, float2(_Coordinate.x + 1, _Coordinate.y));
-				distances[6] = distance(uv, float2(_Coordinate.x - 1, _Coordinate.y - 1));
-				distances[7] = distance(uv, float2(_Coordinate.x, _Coordinate.y - 1));
-				distances[8] = distance(uv, float2(_Coordinate.x + 1, _Coordinate.y - 1));
-
-				float min = distances[0];
-				for (int i = 1; i < 9; i++) {
-					if (distances[i] < min) min = distances[i];
-				}
-				return min;
-
-			}
-
-			float3 squareToSphere(float2 pos) {
+			// Taken from https://stackoverflow.com/questions/41661369/smoothly-mapping-a-2d-uv-point-onto-a-3d-xyz-sphere
+			float3 SquareToSphere(float2 pos) {
 				float lat = pos.y * 3.14159 - 3.14159 / 2;
 				float lon = pos.x * 2 * 3.14159 - 3.14159;
 
@@ -72,9 +57,9 @@ Shader "Unlit/SnowPrints"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-				float dist = distance(squareToSphere(i.uv), _Coordinate);
-				float draw = pow(saturate(1 - dist), 100);
-				fixed4 drawCol = _Color * (draw * 1);
+				float dist = distance(SquareToSphere(i.uv), _Coordinate);
+				float draw = pow(saturate(1 - dist), _Size);
+				fixed4 drawCol = _Color * draw;
 				return saturate(col + drawCol);
             }
             ENDCG

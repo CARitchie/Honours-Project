@@ -1,3 +1,6 @@
+
+// Adapted from https://youtu.be/_NfxMMzYwgo
+
 Shader "My Shaders/Snow Surface"
 {
     Properties
@@ -11,7 +14,6 @@ Shader "My Shaders/Snow Surface"
 		_Displacement("Displacement", Range(0, 5.0)) = 0.3
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Origin("Origin",vector) = (0,0,0,0)
-			_Scale("Scale", float) = 1
     }
     SubShader
     {
@@ -43,18 +45,8 @@ Shader "My Shaders/Snow Surface"
 		sampler2D _DispTex;
 		float _Displacement;
 		float3 _Origin;
-		float _Scale;
 
-		float2 SphereToSquare1(float3 pos) {
-			pos = normalize(pos);
-			float lat = asin(pos.y);
-			float lon = asin(pos.z / cos(lat));
-
-			float y = lat / 3.14159 + 0.5;
-			float x = lon / (2 * 3.14159) - 0.5;
-			return float2(x, y);
-		}
-
+		// Adapted form https://en.wikipedia.org/wiki/UV_mapping
 		float2 SphereToSquare(float3 pos) {
 			pos = normalize(pos);
 			float u = 0.5 + (atan2(pos.x, pos.z) / (2 * 3.14159));
@@ -64,7 +56,7 @@ Shader "My Shaders/Snow Surface"
 
 		void disp(inout appdata v)
 		{
-			float3 worldPos = mul(unity_ObjectToWorld, _Scale * float4(v.vertex.xyz, 1)).xyz;
+			float3 worldPos = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)).xyz;
 			float d = tex2Dlod(_DispTex, float4(SphereToSquare(worldPos - _Origin),0,0)).r * _Displacement;
 
 			float3 dir = normalize(worldPos - _Origin);
@@ -95,9 +87,6 @@ Shader "My Shaders/Snow Surface"
         UNITY_INSTANCING_BUFFER_START(Props)
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
-
-
-
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
