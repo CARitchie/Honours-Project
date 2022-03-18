@@ -5,7 +5,7 @@ Shader "My Shaders/Snow Surface"
 {
     Properties
     {
-		_Tess("Tessellation", Range(1,32)) = 4
+		_Tess("Tessellation", Range(1,128)) = 4
         _SnowColor ("Snow Color", Color) = (1,1,1,1)
         _SnowTex ("Snow Texture", 2D) = "white" {}
 		_GroundColor("Ground Color", Color) = (1,1,1,1)

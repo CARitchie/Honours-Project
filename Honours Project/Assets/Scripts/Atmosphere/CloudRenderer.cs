@@ -23,8 +23,7 @@ public class CloudRenderer : MonoBehaviour
                 mat = clouds[i].GetMaterial();
                 mat.SetVector("_SunPosition", sun.position);
                 Graphics.Blit(source, tempTexture, mat);
-
-                source = tempTexture;
+                Graphics.Blit(tempTexture, source);
             }
         }
 

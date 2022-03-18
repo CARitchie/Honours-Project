@@ -23,8 +23,7 @@ public class AtmosphereRenderer : MonoBehaviour
                 mat = atmospheres[i].GetMaterial();
                 mat.SetVector("_LightOrigin", sun.position);
                 Graphics.Blit(source, tempTexture, mat);
-
-                source = tempTexture;
+                Graphics.Blit(tempTexture, source);
             }
         }
 

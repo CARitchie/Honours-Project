@@ -67,7 +67,7 @@ public class SnowSurface : MonoBehaviour
         Vector3 point = (contactPoint - transform.position).normalized;
 
         drawMat.SetVector("_Coordinate", point);
-        drawMat.SetFloat("_Size", size);
+        drawMat.SetFloat("_Size", size * radius / 10);
         RenderTexture temp = RenderTexture.GetTemporary(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
         Graphics.Blit(displacementMap, temp);
         Graphics.Blit(temp, displacementMap, drawMat);

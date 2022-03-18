@@ -32,18 +32,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SnowTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d663d4cbab74e714982366f35292990d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Displacement: 3.14
+    - _Displacement: 0.45
     - _Glossiness: 0.554
     - _Metallic: 1
     - _Scale: 1
-    - _Tess: 32
+    - _Tess: 128
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _GroundColor: {r: 0.77254903, g: 0.49803922, b: 0.51499605, a: 1}
-    - _Origin: {r: -18.8, g: 0, b: -2164.1, a: 0}
-    - _SnowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GroundColor: {r: 0.49803922, g: 0.654902, b: 0.77254903, a: 1}
+    - _Origin: {r: -573, g: 323, b: 3154, a: 0}
+    - _SnowColor: {r: 0.8235294, g: 0.98039216, b: 1, a: 1}
   m_BuildTextureStacks: []
