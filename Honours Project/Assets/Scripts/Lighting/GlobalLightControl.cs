@@ -5,15 +5,24 @@ using UnityEngine;
 public class GlobalLightControl : MonoBehaviour
 {
     [SerializeField] Transform directionalLight;
+    [SerializeField] float angle;
+    [SerializeField] LitObject[] litObjects;
 
     static GlobalLightControl Instance;
 
     Transform[] player = new Transform[2];
     int index = 0;
 
+    Vector3 playerDir;
+
     void Awake()
     {
         Instance = this;
+
+        for(int i = 0; i < litObjects.Length; i++)
+        {
+            litObjects[i].Initialise();
+        }
     }
 
     // Start is called before the first frame update
@@ -26,11 +35,15 @@ public class GlobalLightControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        playerDir = (player[index].position - transform.position).normalized;
+
         LookAtPlayer();
+
+        UpdateObjects();
     }
 
     void LookAtPlayer(){
-        directionalLight.forward = player[index].position - directionalLight.position;
+        directionalLight.forward = playerDir;
     }
 
     public static void SwitchToPlayer(){
@@ -44,5 +57,45 @@ public class GlobalLightControl : MonoBehaviour
 
         Instance.player[1] = ship;
         Instance.index = 1;
+    }
+
+    void UpdateObjects()
+    {
+        for(int i = 0; i < litObjects.Length; i++)
+        {
+            UpdateObject(i);
+        }
+    }
+
+    void UpdateObject(int index)
+    {
+        float dot = Vector3.Dot(playerDir, (litObjects[index].renderer.transform.position - transform.position).normalized);
+
+        if (dot > angle) litObjects[index].RestoreLayer();
+        else litObjects[index].SetLayer(14);
+    }
+
+    [System.Serializable]
+    public struct LitObject
+    {
+        public GameObject renderer;
+        int originalLayer;
+
+        public void Initialise()
+        {
+            originalLayer = renderer.layer;
+        }
+
+        public void SetLayer(int newLayer)
+        {
+            if (newLayer == renderer.layer) return;
+            renderer.layer = newLayer;
+        }
+
+        public void RestoreLayer()
+        {
+            if (renderer.layer == originalLayer) return;
+            renderer.layer = originalLayer;
+        }
     }
 }
