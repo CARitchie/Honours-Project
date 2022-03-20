@@ -58,6 +58,8 @@ public class ShipController : MonoBehaviour
     {
         if (!active) return;
 
+        cam.UpdatePlanetHUD(rb);
+
         Movement();
         //Look();
 

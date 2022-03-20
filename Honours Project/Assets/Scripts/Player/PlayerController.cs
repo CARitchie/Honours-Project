@@ -9,6 +9,7 @@ public class PlayerController : PersonController
     [SerializeField] float jumpStrength = 5;
     [SerializeField] HUD hud;
     [SerializeField] Transform cam;
+    [SerializeField] CameraController camController;
     Weapon weapon;
 
     float verticalLook = 0;
@@ -131,8 +132,22 @@ public class PlayerController : PersonController
 
         UseWeapon();
 
+        CheckPlanetUI();
+
         AddForce(rb.velocity);
         rb.velocity = Vector3.zero;
+    }
+
+    void CheckPlanetUI()
+    {
+        if (inSpace)
+        {
+            camController.UpdatePlanetHUD(rb);
+        }
+        else
+        {
+            HUD.SetPlanetTextActive(false);
+        }
     }
 
     public override void Move()

@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
     AtmosphereRenderer atmosphere;
     CloudRenderer cloud;
 
+    int layerMask = 1 << 8 | 1 << 14;
+
     private void Start()
     {
         atmosphere = GetComponent<AtmosphereRenderer>();
@@ -56,5 +58,26 @@ public class CameraController : MonoBehaviour
     public void ToggleAtmospheres()
     {
         atmosphere.enabled = !atmosphere.enabled;
+    }
+
+    public void UpdatePlanetHUD(Rigidbody rb)
+    {
+
+        Debug.DrawRay(transform.position, transform.forward * 50000, Color.magenta);
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, 50000, layerMask))
+        {
+            Vector3 objectVelocity = hitInfo.rigidbody.velocity;
+
+            float relativeVel = Vector3.Distance(rb.velocity, objectVelocity);
+            float distance = Vector3.Distance(rb.position, hitInfo.rigidbody.position);
+
+            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - hitInfo.rigidbody.position) > 0) relativeVel *= -1;
+
+            HUD.SetPlanetDetails(hitInfo.rigidbody.name, relativeVel, distance);
+        }
+        else
+        {
+            HUD.SetPlanetTextActive(false);
+        }
     }
 }

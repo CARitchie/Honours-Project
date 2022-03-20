@@ -17,6 +17,9 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI powerCells;
     [SerializeField] WeaponWheel weaponWheel;
     [SerializeField] TextMeshProUGUI interactText;
+    [SerializeField] TextMeshProUGUI planetText;
+    [SerializeField] TextMeshProUGUI velocityText;
+    [SerializeField] GameObject planetTextHolder;
 
     public static HUD Instance;
 
@@ -75,5 +78,38 @@ public class HUD : MonoBehaviour
     public void SetNumberOfPowerCells(int value)
     {
         powerCells.text = value.ToString();
+    }
+
+    public static void SetPlanetDetails(string name, float relativeVel, float distance)
+    {
+        if (Instance == null) return;
+
+        SetPlanetTextActive(true);
+
+        Instance.planetText.text = name;
+
+        string subText = "";
+        if (distance > 1000) subText += (distance / 1000).ToString("F1") + "km";
+        else subText += distance.ToString("F0") + "m";
+
+        subText += '\n';
+        subText += relativeVel.ToString("F1") + "m/s";
+
+        Instance.velocityText.text = subText;
+    }
+
+    public static void SetPlanetTextActive(bool val)
+    {
+        if (Instance == null) return;
+
+        Instance.planetText.enabled = val;
+        Instance.velocityText.enabled = val;
+    }
+
+    public static void SetPlanetTextHolderActive(bool val)
+    {
+        if (Instance == null) return;
+
+        Instance.planetTextHolder.SetActive(val);
     }
 }

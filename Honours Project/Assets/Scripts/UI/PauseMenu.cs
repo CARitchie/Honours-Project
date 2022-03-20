@@ -41,6 +41,7 @@ public class PauseMenu : MonoBehaviour
 
         buttons.SetActive(true);
         crosshair.SetActive(false);
+        HUD.SetPlanetTextHolderActive(false);
 
         PlayerController.SetPaused(true);
     }
@@ -58,6 +59,7 @@ public class PauseMenu : MonoBehaviour
 
         buttons.SetActive(false);
         crosshair.SetActive(true);
+        HUD.SetPlanetTextHolderActive(true);
 
         PlayerController.SetPaused(false);
     }
