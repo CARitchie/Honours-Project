@@ -60,7 +60,7 @@ public class CameraController : MonoBehaviour
         atmosphere.enabled = !atmosphere.enabled;
     }
 
-    public void UpdatePlanetHUD(Rigidbody rb)
+    public Vector3 UpdatePlanetHUD(Rigidbody rb)
     {
 
         Debug.DrawRay(transform.position, transform.forward * 50000, Color.magenta);
@@ -74,10 +74,14 @@ public class CameraController : MonoBehaviour
             if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - hitInfo.rigidbody.position) > 0) relativeVel *= -1;
 
             HUD.SetPlanetDetails(hitInfo.rigidbody.name, relativeVel, distance);
+
+            return objectVelocity;
         }
         else
         {
             HUD.SetPlanetTextActive(false);
         }
+
+        return rb.velocity;
     }
 }

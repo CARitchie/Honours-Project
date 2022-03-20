@@ -93,7 +93,7 @@ public class HUD : MonoBehaviour
         else subText += distance.ToString("F0") + "m";
 
         subText += '\n';
-        subText += relativeVel.ToString("F1") + "m/s";
+        subText += relativeVel.ToString("F0") + "m/s";
 
         Instance.velocityText.text = subText;
     }

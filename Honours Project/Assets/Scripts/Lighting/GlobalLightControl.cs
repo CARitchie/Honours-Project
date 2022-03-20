@@ -75,6 +75,20 @@ public class GlobalLightControl : MonoBehaviour
         else litObjects[index].SetLayer(14);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.attachedRigidbody.TryGetComponent(out PersonDetails details))
+        {
+            details.TakeDamage(100000000);
+        }else if(other.attachedRigidbody.TryGetComponent(out ShipController ship))
+        {
+            if (ship.IsActive())
+            {
+                SceneManager.FadeToScene("Space");
+            }
+        }
+    }
+
     [System.Serializable]
     public struct LitObject
     {

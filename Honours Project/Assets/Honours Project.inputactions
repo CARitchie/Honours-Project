@@ -184,6 +184,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "MatchVelo",
+                    "type": "Value",
+                    "id": "668ff84f-4c4b-43ab-adae-67f02a95fbf6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -527,6 +536,17 @@
                     "action": "WeaponScroll",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0683cc16-190e-47e7-95a6-0d52e7035b81",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MatchVelo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -650,6 +670,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ShipMatchVelo",
+                    "type": "Value",
+                    "id": "a39780c9-ab47-45a0-9fec-ab62bb1f3e28",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -903,6 +932,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Cloud",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c97b2450-fa39-4a7a-9cf6-bd2f3ae34a9c",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ShipMatchVelo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

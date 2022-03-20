@@ -7,6 +7,7 @@ public class PlayerController : PersonController
 {
     [Header("Player Settings")]
     [SerializeField] float jumpStrength = 5;
+    [SerializeField] float matchVelocitySpeed = 5;
     [SerializeField] HUD hud;
     [SerializeField] Transform cam;
     [SerializeField] CameraController camController;
@@ -24,6 +25,7 @@ public class PlayerController : PersonController
     InputAction pauseAction;
     InputAction weaponWheelAction;
     InputAction weaponScrollAction;
+    InputAction matchVeloAction;
 
     
     PlayerDetails details;
@@ -79,6 +81,7 @@ public class PlayerController : PersonController
             weaponSecondaryAction = input.FindAction("Secondary");
             weaponWheelAction = input.FindAction("WeaponWheel");
             weaponScrollAction = input.FindAction("WeaponScroll");
+            matchVeloAction = input.FindAction("MatchVelo");
         }
 
         InputController.Jump += Jump;
@@ -142,7 +145,13 @@ public class PlayerController : PersonController
     {
         if (inSpace)
         {
-            camController.UpdatePlanetHUD(rb);
+            Vector3 target = camController.UpdatePlanetHUD(rb);
+            if(matchVeloAction.ReadValue<float>() > 0)
+            {
+                target = Vector3.MoveTowards(rb.velocity, target, Time.fixedDeltaTime * matchVelocitySpeed);
+                target -= rb.velocity;
+                if (details.UseEnergy(target.magnitude)) AddForce(target);
+            }
         }
         else
         {

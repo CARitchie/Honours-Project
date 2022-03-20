@@ -8,6 +8,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] float engineStrength;
     [SerializeField] float sensitivity;
     [SerializeField] float maxRotation = 1000;
+    [SerializeField] float matchVelocitySpeed = 8;
     [SerializeField] Transform cameraHolder;
     [SerializeField] CameraController cam;
     [SerializeField] GameObject compassIcon;
@@ -15,6 +16,7 @@ public class ShipController : MonoBehaviour
 
     InputAction[] shipControls = new InputAction[8];
     InputAction lookAction;
+    InputAction matchVeloAction;
     PlayerInput input;
     Vector3 angVel;
     bool active = false;
@@ -44,6 +46,7 @@ public class ShipController : MonoBehaviour
             shipControls[7] = input.actions.FindAction("ShipRotLeft");
 
             lookAction = input.actions.FindAction("ShipLook");
+            matchVeloAction = input.actions.FindAction("ShipMatchVelo");
         }
 
         InputController.Exit += Deactivate;
@@ -58,13 +61,24 @@ public class ShipController : MonoBehaviour
     {
         if (!active) return;
 
-        cam.UpdatePlanetHUD(rb);
+        MatchVelocity();
 
         Movement();
         //Look();
 
         AddForce(rb.velocity);
         rb.velocity = Vector3.zero;
+    }
+
+    void MatchVelocity()
+    {
+        Vector3 target = cam.UpdatePlanetHUD(rb);
+        if (matchVeloAction.ReadValue<float>() > 0)
+        {
+            target = Vector3.MoveTowards(rb.velocity, target, Time.fixedDeltaTime * matchVelocitySpeed);
+            target -= rb.velocity;
+            AddForce(target);
+        }
     }
 
     private void Update()
