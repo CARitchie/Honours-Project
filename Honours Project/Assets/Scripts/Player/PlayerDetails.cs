@@ -85,4 +85,16 @@ public class PlayerDetails : PersonDetails
     {
         energy = Mathf.Clamp(energy + amount, 0, maxEnergy);
     }
+
+    public override void OnShot(float damage, Transform origin)
+    {
+        base.OnShot(damage, origin);
+        HUD.AddDamageIndicator(origin);
+    }
+
+    public override void OnMelee(float damage, Transform origin)
+    {
+        base.OnMelee(damage, origin);
+        HUD.AddDamageIndicator(origin);
+    }
 }

@@ -20,6 +20,7 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI planetText;
     [SerializeField] TextMeshProUGUI velocityText;
     [SerializeField] GameObject planetTextHolder;
+    [SerializeField] DamageIndicatorController damageIndicator;
 
     public static HUD Instance;
 
@@ -111,5 +112,12 @@ public class HUD : MonoBehaviour
         if (Instance == null) return;
 
         Instance.planetTextHolder.SetActive(val);
+    }
+
+    public static void AddDamageIndicator(Transform target)
+    {
+        if (Instance == null) return;
+
+        Instance.damageIndicator.AddIndicator(target);
     }
 }

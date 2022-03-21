@@ -98,7 +98,7 @@ public class Gun : Weapon
         GravitySource source = controller.GetNearestSource();
         Transform body = source != null ? source.transform : null; 
 
-        projectile.Fire(velocity, body);
+        projectile.Fire(velocity, body, transform.parent);
         if(animator != null) animator.SetTrigger("Fire");
         if(muzzleFlash != null) muzzleFlash.Play();
 

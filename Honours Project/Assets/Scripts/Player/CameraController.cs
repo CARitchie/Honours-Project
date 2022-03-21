@@ -62,8 +62,6 @@ public class CameraController : MonoBehaviour
 
     public Vector3 UpdatePlanetHUD(Rigidbody rb)
     {
-
-        Debug.DrawRay(transform.position, transform.forward * 50000, Color.magenta);
         if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, 50000, layerMask))
         {
             Vector3 objectVelocity = hitInfo.rigidbody.velocity;

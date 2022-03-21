@@ -14,6 +14,7 @@ public class Projectile : PoolObject
     protected Transform body;
     TrailRenderer trail;
     float timer;
+    Transform originator;
 
     int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
@@ -31,12 +32,13 @@ public class Projectile : PoolObject
         base.OnExitQueue();
     }
 
-    public void Fire(Vector3 velocity, Transform body)
+    public void Fire(Vector3 velocity, Transform body, Transform originator)
     {
         rb.velocity = velocity;
         transform.forward = velocity;
 
         this.body = body;
+        this.originator = originator;
         Vector3 offset = Vector3.zero;
         if (body != null) offset = body.position;
         lastPos = transform.position - offset;
@@ -67,7 +69,7 @@ public class Projectile : PoolObject
 
         if (hit.transform.TryGetComponent(out Damageable damageable))
         {
-            damageable.OnShot(damage);
+            damageable.OnShot(damage, originator);
         }
 
         gameObject.SetActive(false);
@@ -101,7 +103,7 @@ public class Projectile : PoolObject
 
 public interface Damageable
 {
-    void OnShot(float damage);
-    void OnMelee(float damage);
+    void OnShot(float damage, Transform origin);
+    void OnMelee(float damage, Transform origin);
     void OnExplosion(float damage);
 }

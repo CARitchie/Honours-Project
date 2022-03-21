@@ -122,6 +122,7 @@ public class PlayerController : PersonController
 
         inSpace = nearestSource == null;
 
+        //TODO: Try this in fixedupdate
         Move();
 
         Look();

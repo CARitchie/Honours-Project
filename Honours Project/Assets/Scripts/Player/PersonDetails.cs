@@ -31,7 +31,7 @@ public class PersonDetails : MonoBehaviour, Damageable
         SceneManager.FadeToScene("Space");
     }
 
-    public virtual void OnShot(float damage)
+    public virtual void OnShot(float damage, Transform origin)
     {
         TakeDamage(damage);
     }
@@ -59,7 +59,7 @@ public class PersonDetails : MonoBehaviour, Damageable
         return true;
     }
 
-    public void OnMelee(float damage)
+    public virtual void OnMelee(float damage, Transform origin)
     {
         TakeDamage(damage);
     }
