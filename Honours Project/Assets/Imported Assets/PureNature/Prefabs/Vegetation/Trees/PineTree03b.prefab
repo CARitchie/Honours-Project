@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2770842601085745811}
   - component: {fileID: 6930508775794314722}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree03b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.19696619
+  - screenRelativeHeight: 0.09416194
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 1455298816623869414}
@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 8008094677317659467}
   - component: {fileID: 1455298816623869414}
   - component: {fileID: 5493408223317931259}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree03b_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,10 +112,11 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e594912756e0b2048b1bdcb2086ed558, type: 2}
+  - {fileID: 2100000, guid: c82762edfd436914a8733833258a0d40, type: 2}
   - {fileID: 2100000, guid: c590ad02365223e458f3fda2ba0d2c99, type: 2}
   - {fileID: 2100000, guid: 17dc31c8099809542afc69db720c9de1, type: 2}
   m_StaticBatchInfo:
@@ -138,6 +139,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &5493408223317931259
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -163,7 +165,7 @@ GameObject:
   - component: {fileID: 1102398022315824115}
   - component: {fileID: 6082493775579324499}
   - component: {fileID: 5940168531360517997}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree03b_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,6 +209,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -231,3 +234,4 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}

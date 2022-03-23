@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3403867357463784692}
   - component: {fileID: 2617758081816721603}
   - component: {fileID: 2531334394133356280}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree02b_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,10 +56,11 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e594912756e0b2048b1bdcb2086ed558, type: 2}
+  - {fileID: 2100000, guid: c82762edfd436914a8733833258a0d40, type: 2}
   - {fileID: 2100000, guid: c590ad02365223e458f3fda2ba0d2c99, type: 2}
   - {fileID: 2100000, guid: 17dc31c8099809542afc69db720c9de1, type: 2}
   m_StaticBatchInfo:
@@ -82,6 +83,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &2531334394133356280
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -107,7 +109,7 @@ GameObject:
   - component: {fileID: 6578263423611824419}
   - component: {fileID: 7105627312267461996}
   - component: {fileID: 2741350613088437571}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree02b_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,6 +153,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -175,6 +178,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8391402115303890315
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9169310627185166129}
   - component: {fileID: 4135976567804833856}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PineTree02b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +226,7 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.20488407
+  - screenRelativeHeight: 0.09416194
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2617758081816721603}
