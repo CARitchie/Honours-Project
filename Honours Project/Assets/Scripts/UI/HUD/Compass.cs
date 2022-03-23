@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Compass : MonoBehaviour
 {
     [SerializeField] RectTransform compassImage;
+    [SerializeField] TextMeshProUGUI distanceText;
     [SerializeField] float fadeSpeed;
 
     public static Compass Instance;
@@ -66,9 +68,44 @@ public class Compass : MonoBehaviour
 
         FadeIn();
 
+        float minDist = 1000;
+        int minIndex = -1;
+
         for(int i = 0; i < items.Count; i++)
         {
-            if(items[i].active) FindItem(items[i]);
+            if (items[i].active)
+            {
+                float distance = FindItem(items[i]);
+
+                if (distance < 0) distance *= -1;
+                if(distance < 30 && distance < minDist)
+                {
+                    minDist = distance;
+                    minIndex = i;
+                }
+            }
+        }
+
+        if(minIndex != -1)
+        {
+            if (!distanceText.enabled)
+            {
+                distanceText.enabled = true;
+                Color colour = distanceText.color;
+                colour.a = 1;
+                distanceText.color = colour;
+            }
+
+            int distance = (int)Vector3.Distance(player.transform.position, items[minIndex].transform.position);
+            distanceText.text = distance.ToString() + "m";
+            
+        }
+        else
+        {
+            if (distanceText.enabled)
+            {
+                distanceText.enabled = false;
+            }
         }
 
 
@@ -101,7 +138,7 @@ public class Compass : MonoBehaviour
         }
     }
 
-    void FindItem(CompassItem item)
+    float FindItem(CompassItem item)
     {
         Vector3 directToItem = (playerT.position - item.transform.position).normalized;
         Vector3 itemPlayerRight = Vector3.Cross(directToItem, playerT.up).normalized;
@@ -115,7 +152,7 @@ public class Compass : MonoBehaviour
 
         float x = (angle / 360) * size;
 
-        if (float.IsNaN(x)) return;
+        if (float.IsNaN(x)) return 1000;
 
         if (rightAngle < 0)
         {
@@ -127,6 +164,8 @@ public class Compass : MonoBehaviour
             // West
             item.SetPosition(x);
         }
+
+        return x;
     }
 
     void FadeIn()

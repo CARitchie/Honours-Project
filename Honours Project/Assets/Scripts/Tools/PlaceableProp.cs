@@ -19,6 +19,7 @@ public class PlaceableProp : ScriptableObject
 
     public void Spawn(Transform parent, Vector3 pos, Vector3 rot)
     {
+#if UNITY_EDITOR
         GameObject gameObject = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
         Transform prop = gameObject.transform;
 
@@ -33,5 +34,8 @@ public class PlaceableProp : ScriptableObject
         prop.localScale = Random.Range(minScale, maxScale) * Vector3.one;
 
         prop.parent = parent;
+
+#endif
+
     }
 }
