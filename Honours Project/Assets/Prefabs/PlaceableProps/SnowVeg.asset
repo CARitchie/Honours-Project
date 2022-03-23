@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d240c393f128e4d4c864836e0c8e779c, type: 3}
+  m_Name: SnowVeg
+  m_EditorClassIdentifier: 
+  props:
+  - {fileID: 11400000, guid: 889abb8154e6cda4d853f612822dcc62, type: 2}
+  - {fileID: 11400000, guid: 5cddf4e89c2a08c4ab6f6df4f758e288, type: 2}
+  - {fileID: 11400000, guid: 1d026568df503554aa0ede54430934e6, type: 2}
+  - {fileID: 11400000, guid: 1bc7faf76c086eb419af4761d1a719ed, type: 2}
+  - {fileID: 11400000, guid: 38f74c691def0164c8f45993e1f7a915, type: 2}
+  - {fileID: 11400000, guid: db27ada259d03934cac224b98b95e4ba, type: 2}
+  - {fileID: 11400000, guid: c9c30382ddfcb264b856a1c15e10c8e1, type: 2}
+  - {fileID: 11400000, guid: a41cd8db7dfc86d4b96163ff6d0d0e0e, type: 2}
+  - {fileID: 11400000, guid: 133d3398cf2296747b319f9c3922ff5a, type: 2}
+  - {fileID: 11400000, guid: 0a3f5b449df66e14e988f217adc93658, type: 2}
+  - {fileID: 11400000, guid: 14b787f0b7e74da4389a48194e2688b7, type: 2}
+  - {fileID: 11400000, guid: 0850f75c2c26d0f4994396fd0dc52b63, type: 2}
+  - {fileID: 11400000, guid: 2893c4af06fa2604a8decbf2c4a4c5d9, type: 2}
+  - {fileID: 11400000, guid: 21a6698a091cbc340baaefb18f682bd0, type: 2}
+  - {fileID: 11400000, guid: 9dfb99f63e3e1b44cb00a7156e9e6a4d, type: 2}
+  - {fileID: 11400000, guid: e7a31197cef20494fb870b707bc77820, type: 2}
+  - {fileID: 11400000, guid: 79142ac93b1798c419012e45a448a097, type: 2}
+  - {fileID: 11400000, guid: 923f9e07c88a2bc4d9c832befe087bf5, type: 2}

@@ -107,7 +107,7 @@ Material:
     - _BumpScale: 1
     - _ChromaticAberration: 0.1
     - _ColorMask: 15
-    - _ColorVariationPower: 0.25
+    - _ColorVariationPower: 0.69
     - _ColorVariationPower1: 0
     - _Cutoff: 0.6
     - _DepositFalloff: 0
@@ -229,3 +229,4 @@ Material:
     - _TreeInstanceScale: {r: 0, g: 0, b: 0, a: 0}
     - _TreeOffset: {r: 0, g: 5, b: 0, a: 0}
     - _windOrientation: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
