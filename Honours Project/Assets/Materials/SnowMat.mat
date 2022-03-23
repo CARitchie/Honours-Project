@@ -37,7 +37,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Displacement: 0.45
-    - _Glossiness: 0.554
+    - _Glossiness: 0.2
+    - _GroundGlossiness: 0.9
     - _Metallic: 1
     - _Scale: 1
     - _Tess: 128

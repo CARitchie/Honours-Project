@@ -84,7 +84,7 @@ Material:
     - _OcclusionStrength: 1
     - _OutScatterSteps: 10
     - _Parallax: 0.02
-    - _ScaleHeight: 10.48
+    - _ScaleHeight: 11.24
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

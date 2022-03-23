@@ -16,7 +16,7 @@ public class Compass : MonoBehaviour
     GravitySource planet;
     Transform playerT;
 
-    List<Image> images = new List<Image>();
+    List<Graphic> images = new List<Graphic>();
 
     List<CompassItem> items = new List<CompassItem>();
 
@@ -39,7 +39,7 @@ public class Compass : MonoBehaviour
         player = PlayerController.Instance;
         playerT = player.transform;
 
-        Image[] tempImages = GetComponentsInChildren<Image>();
+        Graphic[] tempImages = GetComponentsInChildren<Graphic>();
         for(int i = 0; i < tempImages.Length; i++)
         {
             images.Add(tempImages[i]);
@@ -190,7 +190,7 @@ public class Compass : MonoBehaviour
 
     void SetAlpha(float percent)
     {
-        foreach(Image image in images)
+        foreach(Graphic image in images)
         {
             Color colour = image.color;
             colour.a = percent;

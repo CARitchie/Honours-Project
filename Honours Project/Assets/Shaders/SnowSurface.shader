@@ -13,6 +13,7 @@ Shader "My Shaders/Snow Surface"
 		_DispTex("Disp Texture", 2D) = "black" {}
 		_Displacement("Displacement", Range(0, 5.0)) = 0.3
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
+		_GroundGlossiness("Ground Smoothness", Range(0, 1)) = 0.5
 		_Origin("Origin",vector) = (0,0,0,0)
     }
     SubShader
@@ -79,7 +80,8 @@ Shader "My Shaders/Snow Surface"
 			float3 worldPos;
         };
 
-        half _Glossiness;    
+        half _Glossiness;
+		half _GroundGlossiness;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -94,7 +96,7 @@ Shader "My Shaders/Snow Surface"
 			fixed4 c = lerp(tex2D(_SnowTex, IN.uv_SnowTex) * _SnowColor, tex2D(_GroundTex, IN.uv_GroundTex) * _GroundColor, amount);
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
-            o.Smoothness = _Glossiness;
+            o.Smoothness = lerp(_Glossiness, _GroundGlossiness, amount);
             o.Alpha = c.a;
         }
         ENDCG
