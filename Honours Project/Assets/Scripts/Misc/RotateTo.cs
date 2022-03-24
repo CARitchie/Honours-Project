@@ -41,15 +41,20 @@ public class RotateTo : MonoBehaviour
 
         if (angle > maxAngle || angle < minAngle) {
             if(angle > 90) targetRot = Quaternion.LookRotation(origin.forward, origin.up);
+            if (Vector3.Dot(toTarget, origin.forward) > 0 && angle < 90) targetRot = Quaternion.RotateTowards(Quaternion.LookRotation(origin.forward, origin.up), CalculateTargetRot(toTarget), -minAngle);
             lastValid = false;
             return;
         }
-
         lastValid = true;
         
+        targetRot = CalculateTargetRot(toTarget);
+    }
+
+    Quaternion CalculateTargetRot(Vector3 toTarget)
+    {
         Vector3 forward = Vector3.Cross(origin.right, toTarget);
 
-        targetRot = Quaternion.LookRotation(forward, toTarget);
+        return Quaternion.LookRotation(forward, toTarget);
     }
 
 }

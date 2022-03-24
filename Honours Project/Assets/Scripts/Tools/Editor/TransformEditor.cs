@@ -65,8 +65,14 @@ public class TransformEditor : Editor
         if (stick)
         {
             Vector3 direction = (transform.position - source.transform.position).normalized;
-
-            transform.position = source.transform.position + source.GetDistance() * direction;
+            if(Physics.Raycast(source.transform.position + source.GetDistance() * direction, -direction, out RaycastHit hit,100, 1 << 8))
+            {
+                transform.position = hit.point;
+            }
+            else
+            {
+                transform.position = source.transform.position + source.GetDistance() * direction;
+            }
         }
     }
 }
