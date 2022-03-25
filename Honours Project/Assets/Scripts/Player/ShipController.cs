@@ -5,13 +5,17 @@ using UnityEngine.InputSystem;
 
 public class ShipController : MonoBehaviour
 {
-    [SerializeField] float engineStrength;
-    [SerializeField] float sensitivity;
-    [SerializeField] float maxRotation = 1000;
-    [SerializeField] float matchVelocitySpeed = 8;
+    [Header("References")]
     [SerializeField] Transform cameraHolder;
     [SerializeField] CameraController cam;
     [SerializeField] GameObject compassIcon;
+
+    [Header("Settings")]
+    [SerializeField] float engineStrength;
+    [SerializeField] float sensitivity;
+    [SerializeField] float rollSensitivity;
+    [SerializeField] float maxRotation = 1000;
+    [SerializeField] float matchVelocitySpeed = 8;
 
 
     InputAction[] shipControls = new InputAction[8];
@@ -139,12 +143,12 @@ public class ShipController : MonoBehaviour
         float time = Time.deltaTime;
 
         // 0.5 and 0.1 are necessary to make motion smoother https://forum.unity.com/threads/mouse-delta-input.646606/
-        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f * time;
+        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f;
 
         angVel.x -= look.y * sensitivity;
         angVel.y += look.x * sensitivity;
 
-        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * sensitivity * 0.6f * time;
+        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * rollSensitivity * time;
 
         // 0.08 makes rotation fade out rather than instantly stop
         angVel -= angVel.normalized * angVel.sqrMagnitude * 0.08f * time;
