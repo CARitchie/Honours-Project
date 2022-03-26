@@ -65,10 +65,10 @@ public class ShipController : MonoBehaviour
     {
         if (!active) return;
 
-        MatchVelocity();
-
         Movement();
         //Look();
+
+        MatchVelocity();
 
         AddForce(rb.velocity);
         rb.velocity = Vector3.zero;
