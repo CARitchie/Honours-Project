@@ -52,11 +52,11 @@ public class GravityController : MonoBehaviour
         playerVelocity = Vector3.zero;
     }
 
-    public static void FindClosest(CharacterGravity character)
+    public static GravitySource FindClosest(GravityReceiver receiver)
     {
-        if (Instance == null) return;
+        if (Instance == null) return null;
 
-        character.FindClosest(Instance.sources);
+        return receiver.FindClosest(Instance.sources);
     }
 
     public static void RemoveReceiver(GravityReceiver receiver)

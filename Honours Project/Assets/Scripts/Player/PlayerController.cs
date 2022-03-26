@@ -389,18 +389,6 @@ public class PlayerController : PersonController
         }
     }
 
-    public override void SetNearestSource(GravitySource source)
-    {
-        base.SetNearestSource(source);
-
-        float inAtmosphere = 0;
-        if(source != null)
-        {
-            inAtmosphere = source.HasAtmosphere() ? source.SoundPercent(transform.position) : 0;
-        }
-        AudioControl.AtmosphereInterpolation(inAtmosphere);
-    }
-
     public static void SetPaused(bool val)
     {
         if (Instance == null) return;
