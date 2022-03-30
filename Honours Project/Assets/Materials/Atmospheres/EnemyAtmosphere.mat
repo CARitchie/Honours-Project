@@ -84,7 +84,7 @@ Material:
     - _OcclusionStrength: 1
     - _OutScatterSteps: 10
     - _Parallax: 0.02
-    - _ScaleHeight: 14.34
+    - _ScaleHeight: 12.8
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -100,7 +100,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Colour: {r: 0.43529412, g: 0.74689615, b: 0.99215686, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ScatterConstant: {r: 0.29, g: 0.1, b: 0.52, a: 1}
+    - _ScatterConstant: {r: 0.56, g: 0.39, b: 0.08, a: 1}
     - _SunColour: {r: 0, g: 0, b: 0, a: 1}
     - _SunIntensity: {r: 1, g: 1, b: 1, a: 1}
     - _SunsetColour: {r: 1, g: 0.12284151, b: 0, a: 1}
