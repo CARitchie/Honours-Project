@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 5652910047712554682}
   - component: {fileID: 1262532348834045689}
   - component: {fileID: 9047690958941527726}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce07_Snow_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5652910047712554682
 Transform:
@@ -91,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3972329621722704271}
   - component: {fileID: 8177009804636954366}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce07_Snow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,12 +153,12 @@ GameObject:
   - component: {fileID: 3186012869382943461}
   - component: {fileID: 6566029030801902093}
   - component: {fileID: 1395750465687098363}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce07_Snow_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &3186012869382943461
 Transform:
@@ -235,12 +235,12 @@ GameObject:
   - component: {fileID: 6560830306490390403}
   - component: {fileID: 4672964652060149257}
   - component: {fileID: 5367129073183466233}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce07_Snow_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &6560830306490390403
 Transform:

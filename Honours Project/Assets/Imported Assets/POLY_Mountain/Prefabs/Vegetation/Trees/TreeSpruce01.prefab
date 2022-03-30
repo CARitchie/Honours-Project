@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 3988910066197215762}
   - component: {fileID: 9054494986968326525}
   - component: {fileID: 8096929373982788906}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce01_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &3988910066197215762
 Transform:
@@ -92,12 +92,13 @@ GameObject:
   - component: {fileID: 3910715477612583867}
   - component: {fileID: 1052339517655325249}
   - component: {fileID: 1206281895125536261}
-  m_Layer: 0
+  - component: {fileID: 4445635191222790178}
+  m_Layer: 9
   m_Name: TreeSpruce01_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &3910715477612583867
 Transform:
@@ -163,6 +164,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &4445635191222790178
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419545369765373846}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.11
+  m_Height: 4.378781
+  m_Direction: 1
+  m_Center: {x: 0.0006697178, y: 2.1124609, z: -0.049730837}
 --- !u!1 &3950766458191808374
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,12 +189,12 @@ GameObject:
   - component: {fileID: 2595282180730685865}
   - component: {fileID: 1962950239347063160}
   - component: {fileID: 3284595507586294678}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce01_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2595282180730685865
 Transform:
@@ -255,7 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7243033032193751497}
   - component: {fileID: 2512572651811802808}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

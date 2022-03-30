@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1394180816250604586}
   - component: {fileID: 6125809984279591771}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,12 +72,12 @@ GameObject:
   - component: {fileID: 7984055282325454834}
   - component: {fileID: 5000852110298083652}
   - component: {fileID: 5380936426272834185}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce08_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &7984055282325454834
 Transform:
@@ -154,12 +154,12 @@ GameObject:
   - component: {fileID: 4551936599988131498}
   - component: {fileID: 7164780638638987316}
   - component: {fileID: 8963983105008621110}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce08_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4551936599988131498
 Transform:
@@ -235,12 +235,13 @@ GameObject:
   - component: {fileID: 5245478149077073985}
   - component: {fileID: 6624082746708870278}
   - component: {fileID: 3029433809289383795}
-  m_Layer: 0
+  - component: {fileID: 5840724253550142914}
+  m_Layer: 9
   m_Name: TreeSpruce08_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5245478149077073985
 Transform:
@@ -306,3 +307,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &5840724253550142914
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8362887153210258216}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.08
+  m_Height: 4.3781834
+  m_Direction: 1
+  m_Center: {x: 0.028765947, y: 2.1373549, z: 0.0012348592}

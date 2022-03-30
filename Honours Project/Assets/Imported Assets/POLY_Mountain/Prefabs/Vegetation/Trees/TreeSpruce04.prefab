@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3078368423807618288}
   - component: {fileID: 7845992298106829697}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,12 +72,12 @@ GameObject:
   - component: {fileID: 6069894516954646287}
   - component: {fileID: 7566842374602248490}
   - component: {fileID: 5513968914870039939}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce04_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &6069894516954646287
 Transform:
@@ -154,12 +154,13 @@ GameObject:
   - component: {fileID: 6527723910823160381}
   - component: {fileID: 6603265223840996805}
   - component: {fileID: 5440053739109824432}
-  m_Layer: 0
+  - component: {fileID: 7717752282686695993}
+  m_Layer: 9
   m_Name: TreeSpruce04_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &6527723910823160381
 Transform:
@@ -225,6 +226,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &7717752282686695993
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8447063386891902787}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 3.1844347
+  m_Direction: 1
+  m_Center: {x: -0.021234274, y: 1.5391222, z: -0.028049082}
 --- !u!1 &8612469836107665187
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,12 +251,12 @@ GameObject:
   - component: {fileID: 6210492689351528750}
   - component: {fileID: 5862048379787383453}
   - component: {fileID: 883933612901980540}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TreeSpruce04_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &6210492689351528750
 Transform:
