@@ -9,6 +9,8 @@ public class Compass : MonoBehaviour
     [SerializeField] RectTransform compassImage;
     [SerializeField] TextMeshProUGUI distanceText;
     [SerializeField] float fadeSpeed;
+    float pulseDelay;
+    [SerializeField] Color pulseColour;
 
     public static Compass Instance;
 
@@ -17,8 +19,10 @@ public class Compass : MonoBehaviour
     Transform playerT;
 
     List<Graphic> images = new List<Graphic>();
+    Graphic[] pulseImages;
 
     List<CompassItem> items = new List<CompassItem>();
+    List<Transform> nearObjects = new List<Transform>();
 
     Vector3 targetPos = new Vector3(200, 0, 0);
 
@@ -26,10 +30,14 @@ public class Compass : MonoBehaviour
     static bool active = true;
 
     float size = 800;
+    float pulseTime;
+    float pulsePercent = 0;
+
 
     private void Awake()
     {
         Instance = this;
+        pulseImages = GetComponentsInChildren<Graphic>(true);
     }
 
     private void Start()
@@ -39,12 +47,12 @@ public class Compass : MonoBehaviour
         player = PlayerController.Instance;
         playerT = player.transform;
 
-        Graphic[] tempImages = GetComponentsInChildren<Graphic>();
-        for(int i = 0; i < tempImages.Length; i++)
+        for (int i = 0; i < pulseImages.Length; i++)
         {
-            images.Add(tempImages[i]);
+            images.Add(pulseImages[i]);
         }
 
+        pulseTime = pulseDelay;
 
         SetAlpha(0);
     }
@@ -111,6 +119,8 @@ public class Compass : MonoBehaviour
 
         UpdateTarget();
         compassImage.localPosition = targetPos;
+
+        Pulse();
     }
 
     void UpdateTarget()
@@ -188,6 +198,59 @@ public class Compass : MonoBehaviour
         }
     }
 
+    void Pulse()
+    {
+        if(nearObjects.Count > 0)
+        {
+            float distance = NearestDistance();
+            pulseDelay = Mathf.Clamp01((distance - 2) / 500) * 5;
+            if (pulseTime > pulseDelay) pulseTime = pulseDelay;
+        }
+        else
+        {
+            pulseDelay = -1;
+        }
+
+        if(pulseTime < 0)
+        {
+            if(pulseTime != -450 && pulseDelay >= 0)
+            {
+                pulsePercent += Time.deltaTime * 3;
+
+                if (pulsePercent >= 1) pulseTime = -450;
+            }
+            else if (pulsePercent > 0)
+            {
+                pulsePercent -= Time.deltaTime * 3;
+
+                if (pulsePercent <= 0) pulseTime = pulseDelay;
+            }
+
+            foreach (Graphic image in pulseImages)
+            {
+                Color target = Color.Lerp(Color.white, pulseColour, pulsePercent);
+                target.a = image.color.a;
+                image.color = target;
+            }
+        }
+        else if(pulseDelay >= 0)
+        {
+            pulseTime -= Time.deltaTime;
+        }
+    }
+
+    float NearestDistance()
+    {
+        float dist = 10000;
+        foreach(Transform transform in nearObjects)
+        {
+            float newDist = (playerT.position - transform.position).sqrMagnitude;
+            if (newDist < dist) dist = newDist;
+        }
+
+        return dist;
+    }
+
     void SetAlpha(float percent)
     {
         foreach(Graphic image in images)
@@ -246,5 +309,19 @@ public class Compass : MonoBehaviour
         Instance.images.Remove(item.GetIcon());
         Instance.items.Remove(item);
         item.DestroyIcon();
+    }
+
+    public static void AddNearObject(Transform nearObject)
+    {
+        if (Instance == null) return;
+
+        if (!Instance.nearObjects.Contains(nearObject)) Instance.nearObjects.Add(nearObject);
+    }
+
+    public static void RemoveNearObject(Transform nearObject)
+    {
+        if (Instance == null) return;
+
+        if (Instance.nearObjects.Contains(nearObject)) Instance.nearObjects.Remove(nearObject);
     }
 }

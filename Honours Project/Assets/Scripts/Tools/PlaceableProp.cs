@@ -7,7 +7,6 @@ using UnityEditor;
 public class PlaceableProp : ScriptableObject
 {
     [SerializeField] GameObject prefab;
-    [SerializeField] float radius = 1;
     [SerializeField] float spawnChance = 1;
     [SerializeField] float minScale = 1;
     [SerializeField] float maxScale = 1;
