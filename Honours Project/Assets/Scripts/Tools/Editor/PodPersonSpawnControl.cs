@@ -28,6 +28,11 @@ public class PodPersonSpawnControl : EditorWindow
         {
             DeletePodPeople();
         }
+
+        if (GUILayout.Button("Tidy Up"))
+        {
+            TidyUp();
+        }
     }
 
     public void SpawnPodPeople()
@@ -46,6 +51,15 @@ public class PodPersonSpawnControl : EditorWindow
         foreach (PodPersonSpawner spawner in spawners)
         {
             spawner.DestroyPerson();
+        }
+    }
+
+    public void TidyUp()
+    {
+        PodPersonSpawner[] spawners = parent.GetComponentsInChildren<PodPersonSpawner>(true);
+        foreach (PodPersonSpawner spawner in spawners)
+        {
+            spawner.TidyUp();
         }
     }
 }

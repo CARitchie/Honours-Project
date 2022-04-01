@@ -8,6 +8,13 @@ public class AtmosphereRenderer : MonoBehaviour
     [SerializeField] Atmosphere[] atmospheres;
     [SerializeField] Transform sun;
 
+    Transform self;
+
+    private void Start()
+    {
+        self = Camera.main.transform;
+    }
+
     [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -18,7 +25,7 @@ public class AtmosphereRenderer : MonoBehaviour
         Material mat;
         for(int i = 0; i < atmospheres.Length - 1; i++)
         {
-            if (atmospheres[i] != null)
+            if (atmospheres[i] != null && AtmosVisible(atmospheres[i]))
             {
                 mat = atmospheres[i].GetMaterial();
                 mat.SetVector("_LightOrigin", sun.position);
@@ -27,14 +34,24 @@ public class AtmosphereRenderer : MonoBehaviour
             }
         }
 
-        if (atmospheres[atmospheres.Length - 1] != null)
+        if (atmospheres[atmospheres.Length - 1] != null && AtmosVisible(atmospheres[atmospheres.Length - 1]))
         {
             mat = atmospheres[atmospheres.Length - 1].GetMaterial();
             mat.SetVector("_LightOrigin", sun.position);
             Graphics.Blit(source, destination, mat);
+        }else if(atmospheres.Length > 1)
+        {
+            Graphics.Blit(source, destination);
         }
 
         RenderTexture.ReleaseTemporary(tempTexture);
 
+    }
+
+    bool AtmosVisible(Atmosphere atmos)
+    {
+        if (self == null) return true;
+        Vector3 toAtmos = atmos.transform.position - self.position;
+        return Vector3.Dot(self.forward, toAtmos.normalized) > 0 || toAtmos.sqrMagnitude < 60000;
     }
 }

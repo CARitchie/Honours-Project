@@ -42,4 +42,37 @@ public class PodPersonSpawner : MonoBehaviour
 
         return null;
     }
+
+    public void TidyUp()
+    {
+        List<GameObject> objects = FindChildren(transform);
+        for(int i = 0; i < objects.Count; i++)
+        {
+            if (!objects[i].activeSelf) Object.DestroyImmediate(objects[i]);
+            objects[i] = null;
+        }
+    }
+
+    public List<GameObject> FindChildren(Transform parent)
+    {
+        List<GameObject> children = new List<GameObject>();
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            children.Add(parent.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            if (children[i].activeSelf)
+            {
+                List<GameObject> newChildren = FindChildren(children[i].transform);
+                foreach(GameObject child in newChildren)
+                {
+                    children.Add(child);
+                }
+            }
+        }
+
+        return children;
+    }
 }

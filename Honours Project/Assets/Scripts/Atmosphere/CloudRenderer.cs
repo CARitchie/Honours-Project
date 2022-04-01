@@ -8,6 +8,13 @@ public class CloudRenderer : MonoBehaviour
     [SerializeField] Transform sun;
     [SerializeField] Clouds[] clouds;
 
+    Transform self;
+
+    private void Start()
+    {
+        self = Camera.main.transform;
+    }
+
     [ImageEffectOpaque]
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -18,7 +25,7 @@ public class CloudRenderer : MonoBehaviour
         Material mat;
         for (int i = 0; i < clouds.Length - 1; i++)
         {
-            if (clouds[i] != null)
+            if (clouds[i] != null && CloudsVisible(clouds[i]))
             {
                 mat = clouds[i].GetMaterial();
                 mat.SetVector("_SunPosition", sun.position);
@@ -27,14 +34,24 @@ public class CloudRenderer : MonoBehaviour
             }
         }
 
-        if (clouds[clouds.Length - 1] != null)
+        if (clouds[clouds.Length - 1] != null && CloudsVisible(clouds[clouds.Length - 1]))
         {
             mat = clouds[clouds.Length - 1].GetMaterial();
             mat.SetVector("_SunPosition", sun.position);
             Graphics.Blit(source, destination, mat);
+        }else if(clouds.Length > 1)
+        {
+            Graphics.Blit(source, destination);
         }
 
         RenderTexture.ReleaseTemporary(tempTexture);
 
+    }
+
+    bool CloudsVisible(Clouds clouds)
+    {
+        if (self == null) return true;
+        Vector3 toAtmos = clouds.transform.position - self.position;
+        return Vector3.Dot(self.forward, toAtmos.normalized) > 0 || toAtmos.sqrMagnitude < 60000;
     }
 }
