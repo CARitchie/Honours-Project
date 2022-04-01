@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class GravityReceiver : MonoBehaviour
 {
     [SerializeField] protected float defaultMultiplier = 1;
@@ -133,5 +133,10 @@ public class GravityReceiver : MonoBehaviour
         }
 
         return closest;
+    }
+
+    public void SetRigidBody(Rigidbody rb)
+    {
+        this.rb = rb;
     }
 }

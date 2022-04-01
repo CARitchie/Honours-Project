@@ -264,6 +264,10 @@ public class Compass : MonoBehaviour
     public static void SetActive(bool value)
     {
         active = value;
+        if (!active && Instance != null)
+        {
+            Instance.nearObjects.Clear();
+        }
     }
 
     void CheckSamePlanet()

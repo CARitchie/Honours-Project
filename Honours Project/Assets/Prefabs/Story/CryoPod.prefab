@@ -9,7 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6172564561024367178}
-  m_Layer: 9
+  - component: {fileID: 3105990617152595362}
+  - component: {fileID: 2286411976280033530}
+  - component: {fileID: 8330005643366158559}
+  - component: {fileID: 1105941554189746440}
+  m_Layer: 6
   m_Name: CryoPod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,6 +35,63 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &3105990617152595362
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172564561024367179}
+  serializedVersion: 2
+  m_Mass: 10
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &2286411976280033530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172564561024367179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee128c8d82e0ed4fb4e9217bafe8bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMultiplier: 1
+  localGravityMultiplier: 1
+--- !u!114 &8330005643366158559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172564561024367179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4b6d697f12760488067fd5006b3946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  source: {fileID: 0}
+  meshCollider: {fileID: 6172564561457859218}
+--- !u!65 &1105941554189746440
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172564561024367179}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 2.82}
+  m_Center: {x: 0, y: 0.44, z: 0}
 --- !u!1001 &6172564561457859231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90,10 +151,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SinglePod
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4283741415271912107, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 7965743394726790453, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a61f84ebe1463174f9b8550cbfd80fbe, type: 2}
+      objectReference: {fileID: 2100000, guid: 96bbedbd189365d459702a0fd5b00373, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
 --- !u!1 &6442455420208510926 stripped
@@ -104,11 +173,6 @@ GameObject:
 --- !u!4 &5918824743303196020 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
-  m_PrefabInstance: {fileID: 6172564561457859231}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7988175026869573684 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4283741415271912107, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
   m_PrefabInstance: {fileID: 6172564561457859231}
   m_PrefabAsset: {fileID: 0}
 --- !u!64 &6172564561457859218
@@ -122,20 +186,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7219707059168384694, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}
---- !u!64 &6172564561457859219
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7988175026869573684}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2367190379241370092, guid: fbb3f4e57f1913d41a52c6ab9023f0ac, type: 3}

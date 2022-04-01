@@ -7,8 +7,11 @@ public class ObjectInteractor : MonoBehaviour
     Interact interact;
     int layerMask = 1 << 6;
 
+    public static bool podGrabbed = false;
+
     private void Start()
     {
+        podGrabbed = false;
         InputController.Interact += Select;
     }
 
@@ -19,6 +22,8 @@ public class ObjectInteractor : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (podGrabbed) return;
+
         // If an interactive object is hit
         if(Physics.Raycast(transform.position,transform.forward,out RaycastHit hit, 5, layerMask))
         {

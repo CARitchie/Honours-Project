@@ -41,7 +41,7 @@ public class GravityController : MonoBehaviour
 
         foreach(GravityReceiver receiver in receivers)
         {
-            receiver.ApplyForce(sources, time, -playerVelocity);
+            if(receiver.enabled) receiver.ApplyForce(sources, time, -playerVelocity);
         }
     }
 
