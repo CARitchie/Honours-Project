@@ -5,10 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public class SaveFile
 {
-    public PlayerData player = new PlayerData(-450000);
     int state = 0;
-    string gravitySource;
 
+    string gravitySource;
+    float3 position = new float3(-450000);
+    float3 localRot = new float3();
+    float3 parentRot = new float3();
+
+    float3 shipPos = new float3(-450000);
+    float3 shipRot = new float3();
+    string shipSource;
 
     public int GetState()
     {
@@ -28,82 +34,83 @@ public class SaveFile
         return gravitySource;
     }
 
-    public void SetSource(string source)
+    public void CopyFromPlayer(PlayerController player)
     {
-        gravitySource = source;
+        gravitySource = player.GetNearestSource().Key;
+        position.SetData(player.transform.position - player.GetNearestSource().transform.position);
+        parentRot.SetData(player.GetParentRotation());
+        localRot.SetData(player.GetLocalRotation());
+    }
+
+    public void CopyFromShip(ShipController ship)
+    {
+        GravitySource gravitySource = GravityController.FindClosest(ship.GetComponent<GravityReceiver>(), true);
+        shipPos.SetData(ship.transform.position - gravitySource.transform.position);
+        shipRot.SetData(ship.transform.localEulerAngles);
+        shipSource = gravitySource.Key;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return position.GetVector();
+    }
+
+    public Vector3 GetLocalRot()
+    {
+        return localRot.GetVector();
+    }
+
+    public Vector3 GetParentRot()
+    {
+        return parentRot.GetVector();
+    }
+
+    public Vector3 GetShipPos()
+    {
+        return shipPos.GetVector();
+    }
+
+    public Vector3 GetShipRot()
+    {
+        return shipRot.GetVector();
+    }
+
+    public string GetShipSource()
+    {
+        return shipSource;
     }
 
     [System.Serializable]
-    public struct PlayerData{
-        float posX;
-        float posY;
-        float posZ;
+    struct float3
+    {
+        float x;
+        float y;
+        float z;
 
-        float lRotX;
-        float lRotY;
-        float lRotZ;
-
-        float pRotX;
-        float pRotY;
-        float pRotZ;
-
-        public PlayerData(float x)
+        public float3(float x)
         {
-            posX = x;
-            posY = 0;
-            posZ = 0;
-
-            lRotX = 0;
-            lRotY = 0;
-            lRotZ = 0;
-
-            pRotX = 0;
-            pRotY = 0;
-            pRotZ = 0;
+            this.x = x;
+            y = 0;
+            z = 0;
         }
 
-        public Vector3 GetPosition()
+        public void SetData(Vector3 vector)
         {
-            return new Vector3(posX, posY, posZ);
+            x = vector.x;
+            y = vector.y;
+            z = vector.z;
         }
 
-        public Vector3 GetLocalRot()
+        public void SetData(float x, float y, float z)
         {
-            return new Vector3(lRotX, lRotY, lRotZ);
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
-        public Vector3 GetParentRot()
+        public Vector3 GetVector()
         {
-            return new Vector3(pRotX, pRotY, pRotZ);
+            return new Vector3(x, y, z);
         }
-
-        public void SetPosition(Vector3 playerPos)
-        {
-            posX = playerPos.x;
-            posY = playerPos.y;
-            posZ = playerPos.z;
-        }
-
-        public void SetLocalRot(Vector3 localRot)
-        {
-            lRotX = localRot.x;
-            lRotY = localRot.y;
-            lRotZ = localRot.z;
-        }
-
-        public void SetParentRot(Vector3 parentRot)
-        {
-            pRotX = parentRot.x;
-            pRotY = parentRot.y;
-            pRotZ = parentRot.z;
-        }
-
-        public void CopyFromPlayer(PlayerController player)
-        {
-            SetPosition(player.transform.position - player.GetNearestSource().transform.position);
-            SetParentRot(player.GetParentRotation());
-            SetLocalRot(player.GetLocalRotation());
-        }
-
     }
 }

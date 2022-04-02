@@ -26,8 +26,12 @@ public class ShipController : MonoBehaviour
     bool active = false;
     Rigidbody rb;
 
+    public static ShipController Instance;
+
     private void Awake()
     {
+        Instance = this;
+
         rb = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -171,5 +175,10 @@ public class ShipController : MonoBehaviour
     public bool IsActive()
     {
         return active;
+    }
+
+    public void SetVelocity(Vector3 velo)
+    {
+        rb.velocity = velo;
     }
 }

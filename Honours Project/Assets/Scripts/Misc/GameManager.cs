@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Material teleportMat;
     [SerializeField] ParticleSystem[] teleportFX;
     [SerializeField] Transform hitMarkerContainer;
+    [SerializeField] GravitySource junglePlanet;
     public static GameManager Instance;
 
     private void Awake()
@@ -18,26 +19,36 @@ public class GameManager : MonoBehaviour
     {
         InputController.SetMap("Player");
 
-        if(SaveManager.save != null)
+        ShipController ship = ShipController.Instance;
+        ship.SetVelocity(junglePlanet.GetVelocity());
+
+        if (SaveManager.save != null)
         {
             Vector3 playerRelativePos = SaveManager.GetRelativePlayerPos();
             if (playerRelativePos == new Vector3(-450000, 0, 0)) return;
 
-            GravitySource[] sources = FindObjectsOfType<GravitySource>();
+            string key = SaveManager.GetGravitySource();
+            if (key == "null") return;
 
-            string source = SaveManager.GetGravitySource();
-            if (source == "null") return;
-
-            for (int i = 0; i < sources.Length;i++)
+            if(GravityController.FindSource(key, out GravitySource source))
             {
-                if(sources[i].Key == source)
+                PlayerController.Instance.SetPosition(playerRelativePos + source.transform.position);
+                PlayerController.Instance.SetAllRotation(SaveManager.save.GetLocalRot(), SaveManager.save.GetParentRot());
+                PlayerController.Instance.ForceVelocity(source.GetVelocity());
+            }
+
+            Vector3 shipRelativePos = SaveManager.GetRelativeShipPos();
+            if(ship != null && shipRelativePos != new Vector3(-450000, 0, 0))
+            {
+                key = SaveManager.save.GetShipSource();
+                if (key != "null" && GravityController.FindSource(key, out source))
                 {
-                    PlayerController.Instance.SetPosition(playerRelativePos + sources[i].transform.position);
-                    PlayerController.Instance.SetAllRotation(SaveManager.save.player.GetLocalRot(), SaveManager.save.player.GetParentRot());
-                    PlayerController.Instance.ForceVelocity(sources[i].GetVelocity());
-                    break;
+                    ship.transform.position = shipRelativePos + source.transform.position;
+                    ship.transform.localEulerAngles = SaveManager.save.GetShipRot();
+                    ship.SetVelocity(source.GetVelocity());
                 }
-            }     
+            }
+  
         }
     }
 

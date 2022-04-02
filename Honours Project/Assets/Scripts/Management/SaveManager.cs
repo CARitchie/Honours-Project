@@ -103,7 +103,14 @@ public static class SaveManager
     {
         if (!SaveExists()) return new Vector3(-450000,0,0);
 
-        return save.player.GetPosition();
+        return save.GetPosition();
+    }
+
+    public static Vector3 GetRelativeShipPos()
+    {
+        if (!SaveExists()) return new Vector3(-450000, 0, 0);
+
+        return save.GetShipPos();
     }
 
     public static string GetGravitySource()
@@ -123,8 +130,8 @@ public static class SaveManager
     }
 
     static void SaveGame() {
-        save.player.CopyFromPlayer(PlayerController.Instance);
-        save.SetSource(PlayerController.Instance.GetNearestSource().Key);
+        save.CopyFromPlayer(PlayerController.Instance);
+        save.CopyFromShip(ShipController.Instance);
 
         SaveToFile();
     }

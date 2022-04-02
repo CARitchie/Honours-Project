@@ -135,6 +135,36 @@ public class GravityReceiver : MonoBehaviour
         return closest;
     }
 
+    public GravitySource FindGlobalClosest(List<PlanetGravity> sources)
+    {
+        GravitySource closest = null;
+
+        if (localGravitySources.Count > 0)
+        {
+            LocalGravitySource localGravitySource = ClosestLocalSource();
+            closest = localGravitySource;
+            return closest;
+        }
+
+        float max = float.PositiveInfinity;
+        for (int i = 0; i < sources.Count; i++)
+        {
+            if (sources[i].transform != transform)
+            {
+                Vector3 direction = sources[i].transform.position - transform.position;
+                float magnitude = direction.sqrMagnitude;
+
+                if (magnitude - sources[i].GetSquareDistance() < max)
+                {
+                    max = magnitude;
+                    closest = sources[i];
+                }
+            }
+        }
+
+        return closest;
+    }
+
     public void SetRigidBody(Rigidbody rb)
     {
         this.rb = rb;
