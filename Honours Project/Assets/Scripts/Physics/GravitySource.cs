@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GravitySource : MonoBehaviour
 {
+    [SerializeField] string key;
     [SerializeField] float influenceRange;
     [SerializeField] bool hasAtmosphere;
     [SerializeField] float startFade;
@@ -40,4 +41,6 @@ public class GravitySource : MonoBehaviour
         height -= startFade;
         return Mathf.Clamp01(1 - (height / (influenceRange - startFade)));
     }
+
+    public string Key { get { return key; } }
 }

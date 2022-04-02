@@ -64,6 +64,11 @@ public class PauseMenu : MonoBehaviour
         PlayerController.SetPaused(false);
     }
 
+    public void Save()
+    {
+        if(!SaveManager.AttemptSave()) Debug.Log("Could not save");
+    }
+
     public void Restart()
     {
         SetButtonsInteractive(false);

@@ -394,4 +394,25 @@ public class PlayerController : PersonController
         if (Instance == null) return;
         Instance.paused = val;
     }
+
+    public bool Saveable()
+    {
+        return grounded && nearestSource != null && transform.parent.gameObject.activeInHierarchy && nearestSource.Key != "ship_main";
+    }
+
+    public Vector3 GetLocalRotation()
+    {
+        return transform.localEulerAngles;
+    }
+
+    public Vector3 GetParentRotation()
+    {
+        return transform.parent.localEulerAngles;
+    }
+
+    public void SetAllRotation(Vector3 localRot, Vector3 parentRot)
+    {
+        transform.localEulerAngles = localRot;
+        transform.parent.localEulerAngles = parentRot;
+    }
 }

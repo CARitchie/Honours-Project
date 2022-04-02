@@ -48,4 +48,15 @@ public class LocalGravitySource : GravitySource
     {
         receivers.Remove(receiver);
     }
+
+    public override Vector3 GetVelocity()
+    {
+        PlanetGravity planet = GetComponentInParent<PlanetGravity>();
+        if(planet != null)
+        {
+            return planet.GetVelocity();
+        }
+
+        return GetComponentInParent<Rigidbody>().velocity;
+    }
 }

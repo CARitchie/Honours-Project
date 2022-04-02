@@ -21,4 +21,9 @@ public class GameStartReceiver : MonoBehaviour
     {
         OnGameStart?.Invoke();
     }
+
+    public void CutsceneCompleted()
+    {
+        SaveManager.SetGameState(1);
+    }
 }
