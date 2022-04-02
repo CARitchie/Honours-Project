@@ -120,6 +120,12 @@ public static class SaveManager
         return save.GetGravitySource();
     }
 
+    public static List<bool> GetWeaponStates()
+    {
+        if (!SaveExists()) return null;
+        return save.GetWeaponStates();
+    }
+
     public static bool AttemptSave()
     {
         if (save == null || PlayerController.Instance == null || !PlayerController.Instance.Saveable()) return false;
@@ -134,5 +140,12 @@ public static class SaveManager
         save.CopyFromShip(ShipController.Instance);
 
         SaveToFile();
+    }
+
+    public static bool GetWeaponState(int index)
+    {
+        if (!SaveExists()) return false;
+
+        return save.GetWeaponState(index);
     }
 }

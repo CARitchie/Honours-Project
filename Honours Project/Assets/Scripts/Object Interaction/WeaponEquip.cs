@@ -6,6 +6,14 @@ public class WeaponEquip : MonoBehaviour, Interact
 {
     [SerializeField] int weaponIndex;
 
+    private void Start()
+    {
+        if (SaveManager.GetWeaponState(weaponIndex))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void OnEnter()
     {
         HUD.SetInteractText("Pickup");

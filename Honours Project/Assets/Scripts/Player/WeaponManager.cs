@@ -15,6 +15,11 @@ public class WeaponManager : MonoBehaviour
     public delegate void WeaponUnlock(int index);
     public static event WeaponUnlock OnWeaponUnlock;
 
+    private void Start()
+    {
+        LoadStates(SaveManager.GetWeaponStates());
+    }
+
     public bool IsLocked(int index)
     {
         if (index >= weapons.Length) return true;
@@ -73,6 +78,27 @@ public class WeaponManager : MonoBehaviour
         {
             weapons[index].Unlock();
             OnWeaponUnlock?.Invoke(index);
+        }
+    }
+
+    public List<bool> GetWeaponStates()
+    {
+        List<bool> states = new List<bool>();
+        for(int i = 0; i < weapons.Length; i++)
+        {
+            states.Add(!weapons[i].IsLocked());
+        }
+
+        return states;
+    }
+
+    public void LoadStates(List<bool> states)
+    {
+        if (states == null) return;
+        for(int i = 0; i < weapons.Length; i++)
+        {
+            if (i >= states.Count) return;
+            if (states[i]) UnlockWeapon(i);
         }
     }
 }

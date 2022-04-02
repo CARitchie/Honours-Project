@@ -415,4 +415,9 @@ public class PlayerController : PersonController
         transform.localEulerAngles = localRot;
         transform.parent.localEulerAngles = parentRot;
     }
+
+    public WeaponManager GetWeaponManager()
+    {
+        return weaponManager;
+    }
 }

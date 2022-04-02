@@ -15,6 +15,7 @@ public class SaveFile
     float3 shipPos = new float3(-450000);
     float3 shipRot = new float3();
     string shipSource;
+    List<bool> weaponStates;
 
     public int GetState()
     {
@@ -40,6 +41,8 @@ public class SaveFile
         position.SetData(player.transform.position - player.GetNearestSource().transform.position);
         parentRot.SetData(player.GetParentRotation());
         localRot.SetData(player.GetLocalRotation());
+
+        SetWeaponStates(player.GetWeaponManager().GetWeaponStates());
     }
 
     public void CopyFromShip(ShipController ship)
@@ -78,6 +81,23 @@ public class SaveFile
     public string GetShipSource()
     {
         return shipSource;
+    }
+
+    public void SetWeaponStates(List<bool> states)
+    {
+        weaponStates = states;
+    }
+
+    public bool GetWeaponState(int index)
+    {
+        if (weaponStates == null || index >= weaponStates.Count) return false;
+
+        return weaponStates[index];
+    }
+
+    public List<bool> GetWeaponStates()
+    {
+        return weaponStates;
     }
 
     [System.Serializable]
