@@ -18,38 +18,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InputController.SetMap("Player");
-
-        ShipController ship = ShipController.Instance;
-        ship.SetVelocity(junglePlanet.GetVelocity());
-
-        if (SaveManager.save != null)
-        {
-            Vector3 playerRelativePos = SaveManager.GetRelativePlayerPos();
-            if (playerRelativePos == new Vector3(-450000, 0, 0)) return;
-
-            string key = SaveManager.GetGravitySource();
-            if (key == "null") return;
-
-            if(GravityController.FindSource(key, out GravitySource source))
-            {
-                PlayerController.Instance.SetPosition(playerRelativePos + source.transform.position);
-                PlayerController.Instance.SetAllRotation(SaveManager.save.GetLocalRot(), SaveManager.save.GetParentRot());
-                PlayerController.Instance.ForceVelocity(source.GetVelocity());
-            }
-
-            Vector3 shipRelativePos = SaveManager.GetRelativeShipPos();
-            if(ship != null && shipRelativePos != new Vector3(-450000, 0, 0))
-            {
-                key = SaveManager.save.GetShipSource();
-                if (key != "null" && GravityController.FindSource(key, out source))
-                {
-                    ship.transform.position = shipRelativePos + source.transform.position;
-                    ship.transform.localEulerAngles = SaveManager.save.GetShipRot();
-                    ship.SetVelocity(source.GetVelocity());
-                }
-            }
-  
-        }
     }
 
     public static Material GetTeleportMaterial()

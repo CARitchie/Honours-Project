@@ -38,7 +38,6 @@ public class PlayerController : PersonController
     bool inSpace = false;
     bool doubleJumped = false;
 
-    bool movementAllowed = false;
     bool paused = false;
 
     int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
@@ -89,7 +88,25 @@ public class PlayerController : PersonController
 
         fuel = maxFuel;
 
-        StartCoroutine(EnableMovement());
+        LoadData();
+    }
+
+    bool LoadData()
+    {
+        if (!SaveManager.SaveExists()) return false;
+        
+        Vector3 playerRelativePos = SaveManager.GetRelativePlayerPos();
+
+        if (playerRelativePos == new Vector3(-450000, 0, 0)) return false;
+
+        string key = SaveManager.GetGravitySource();
+        if (key == "null" | !GravityController.FindSource(key, out GravitySource source)) return false;
+
+        SetPosition(playerRelativePos + source.transform.position);
+        SetAllRotation(SaveManager.save.GetLocalRot(), SaveManager.save.GetParentRot());
+        ForceVelocity(source.GetVelocity());
+
+        return true;
     }
 
     void Pause()
@@ -97,16 +114,6 @@ public class PlayerController : PersonController
         PauseMenu.TogglePause();
 
         //Need to force all other ui off
-    }
-
-    IEnumerator EnableMovement()
-    {
-        while (!grounded)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        movementAllowed = true;
     }
 
     private void OnDestroy()
@@ -162,8 +169,6 @@ public class PlayerController : PersonController
 
     public override void Move()
     {
-        if (!movementAllowed) { AdjustWeaponSpeed(0); return; }
-
         float gunSpeed = 0;
 
         float forward = movementActions[0].ReadValue<float>() - movementActions[2].ReadValue<float>();
@@ -333,6 +338,7 @@ public class PlayerController : PersonController
 
     public void UnlockWeapon(int index)
     {
+        SaveManager.UnlockWeapon(index);
         weaponManager.UnlockWeapon(index);
     }
 
@@ -414,10 +420,5 @@ public class PlayerController : PersonController
     {
         transform.localEulerAngles = localRot;
         transform.parent.localEulerAngles = parentRot;
-    }
-
-    public WeaponManager GetWeaponManager()
-    {
-        return weaponManager;
     }
 }

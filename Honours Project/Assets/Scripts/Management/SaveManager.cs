@@ -148,4 +148,10 @@ public static class SaveManager
 
         return save.GetWeaponState(index);
     }
+
+    public static void UnlockWeapon(int index)
+    {
+        if (!SaveExists()) return;
+        save.UnlockWeapon(index);
+    }
 }

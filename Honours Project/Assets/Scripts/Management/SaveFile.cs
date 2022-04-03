@@ -41,8 +41,6 @@ public class SaveFile
         position.SetData(player.transform.position - player.GetNearestSource().transform.position);
         parentRot.SetData(player.GetParentRotation());
         localRot.SetData(player.GetLocalRotation());
-
-        SetWeaponStates(player.GetWeaponManager().GetWeaponStates());
     }
 
     public void CopyFromShip(ShipController ship)
@@ -86,6 +84,19 @@ public class SaveFile
     public void SetWeaponStates(List<bool> states)
     {
         weaponStates = states;
+    }
+
+    public void UnlockWeapon(int index)
+    {
+        if (weaponStates == null) weaponStates = new List<bool>();
+        while(index >= weaponStates.Count)
+        {
+            weaponStates.Add(false);
+        }
+
+        weaponStates[index] = true;
+
+
     }
 
     public bool GetWeaponState(int index)

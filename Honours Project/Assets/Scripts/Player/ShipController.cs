@@ -58,6 +58,32 @@ public class ShipController : MonoBehaviour
         }
 
         InputController.Exit += Deactivate;
+
+        if (!LoadData())
+        {
+            if (GravityController.FindSource("planet_jungle", out GravitySource source)) SetVelocity(source.GetVelocity());
+        }
+    }
+
+    bool LoadData()
+    {
+        if (!SaveManager.SaveExists()) return false;
+
+        Vector3 shipRelativePos = SaveManager.GetRelativeShipPos();
+
+        if (shipRelativePos == new Vector3(-450000, 0, 0)) return false;
+        
+        string key = SaveManager.save.GetShipSource();
+
+        if (key == "null" | !GravityController.FindSource(key, out GravitySource source)) return false;
+            
+        transform.position = shipRelativePos + source.transform.position;
+        transform.localEulerAngles = SaveManager.save.GetShipRot();
+        SetVelocity(source.GetVelocity());
+
+        if (SaveManager.GetState() >= 2) compassIcon.SetActive(true);
+
+        return true;
     }
 
     private void OnDestroy()
@@ -108,6 +134,7 @@ public class ShipController : MonoBehaviour
         Compass.SetActive(false);
         compassIcon.SetActive(true);
         AudioControl.AtmosphereInterpolation(1);
+        SaveManager.SetGameState(2);
     }
 
     public void Deactivate()
