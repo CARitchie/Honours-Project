@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GravitySource junglePlanet;
     public static GameManager Instance;
 
+    bool saving = false;
+
     private void Awake()
     {
         Instance = this;
@@ -40,5 +42,23 @@ public class GameManager : MonoBehaviour
     public void LoadScene(string scene)
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
+    }
+
+    public static void Autosave()
+    {
+        if (Instance == null) return;
+
+        Instance.saving = true;
+        Instance.StartCoroutine(Instance.RunAutosave());
+    }
+
+    IEnumerator RunAutosave()
+    {
+        while (!SaveManager.AttemptSave())
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        saving = false;
     }
 }

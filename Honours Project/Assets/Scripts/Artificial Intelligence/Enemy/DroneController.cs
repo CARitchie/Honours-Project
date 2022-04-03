@@ -27,12 +27,13 @@ public class DroneController : EnemyController
         Vector3 toCentre = centre.position - transform.position;
 
         direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
-        Vector3 right = Vector3.Cross(toCentre, direction);
-        Vector3 up = Vector3.Cross(right, direction);
+        Vector3 right = -Vector3.Cross(toCentre, direction);
+        Vector3 up = -Vector3.Cross(right, direction);
 
         if(Physics.Raycast(transform.position, toCentre, hoverHeight))
         {
-            Vector3 forward = Vector3.Cross(-right, -toCentre);
+            // TODO: This needs to look more up rather than straight
+            Vector3 forward = Vector3.Cross(right, -toCentre);
             direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
             
             //transform.position += transform.up * movementSpeed * 0.5f * Time.deltaTime;

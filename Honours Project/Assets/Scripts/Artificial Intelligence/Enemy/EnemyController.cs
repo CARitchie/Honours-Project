@@ -111,9 +111,9 @@ public class EnemyController : PersonController
         transform.localEulerAngles = new Vector3(originalAngles.x,newAngles.y,originalAngles.z);
     }
 
-    public bool FindPath(Vector3 target)
+    public bool FindPath(Vector3 target, bool inViewGoodEnough)
     {
-        nodes = pathFinder.FindPath(target, nearestSource?.transform);
+        nodes = pathFinder.FindPath(target, nearestSource?.transform, inViewGoodEnough);
         if (nodes != null && nodes.Count > 0)
         {
             currentNode = nodes.Pop();
@@ -147,6 +147,7 @@ public class EnemyController : PersonController
 
     public Vector3 PlayerPos()
     {
+        // Could add code to correct for when player is in the ship
         return player.position;
     }
 
@@ -157,8 +158,8 @@ public class EnemyController : PersonController
 
     public bool PlayerVisible()
     {
-        Vector3 point1 = transform.position + transform.up * 0.5f;
-        Vector3 point2 = player.position + player.up * 0.5f;
+        Vector3 point1 = transform.position;
+        Vector3 point2 = player.position;
 
         if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit)){
             if (hit.transform.CompareTag("Player"))

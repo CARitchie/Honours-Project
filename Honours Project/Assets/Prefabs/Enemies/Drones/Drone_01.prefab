@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2752012623717322795}
   - component: {fileID: 4213743484385025776}
   - component: {fileID: 7530575378084211467}
+  - component: {fileID: 7620254739887467114}
   m_Layer: 10
   m_Name: Drone_01
   m_TagString: Untagged
@@ -58,9 +59,8 @@ MonoBehaviour:
   lookSensitivity: 3
   states:
   - {fileID: 5510424172953165449}
-  - {fileID: 168024497783365816}
-  - {fileID: 168024496965034353}
-  hostileResetTime: 5
+  - {fileID: 5683392535585877806}
+  - {fileID: 6739259627566041767}
   tempSpeed: 2
   hoverHeight: 1.5
 --- !u!114 &168024495967484792
@@ -208,6 +208,23 @@ MonoBehaviour:
   teleportTime: 3
   noiseScale: 961
   particleOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &7620254739887467114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168024495967484797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b62d415f57b68f41841db8d9adf691b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  height: 1.5
+  planet: {fileID: 0}
+  targetObject: {fileID: 0}
+  visualise: 0
+  maxIterations: 1000
 --- !u!1 &168024496232446457
 GameObject:
   m_ObjectHideFlags: 0
@@ -4900,7 +4917,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 168024496965034352}
-  - component: {fileID: 168024496965034353}
+  - component: {fileID: 6739259627566041767}
   m_Layer: 10
   m_Name: Chase
   m_TagString: Untagged
@@ -4922,7 +4939,7 @@ Transform:
   m_Father: {fileID: 168024496467320886}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &168024496965034353
+--- !u!114 &6739259627566041767
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4931,7 +4948,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 168024496965034359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7360f97bf9951554c8891631e51afa1f, type: 3}
+  m_Script: {fileID: 11500000, guid: f99d9d1940b7f224f8eb75eb53a9da35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   closeness: 25
@@ -4944,7 +4961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 168024497783365823}
-  - component: {fileID: 168024497783365816}
+  - component: {fileID: 5683392535585877806}
   m_Layer: 10
   m_Name: RangedAttack
   m_TagString: Untagged
@@ -4966,7 +4983,7 @@ Transform:
   m_Father: {fileID: 168024496467320886}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &168024497783365816
+--- !u!114 &5683392535585877806
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4975,7 +4992,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 168024497783365822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40a3a1a760ac9ae4186f16eb5d92feda, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b787579060d13b489029f9482e196db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 9157790247792892650}

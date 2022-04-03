@@ -120,4 +120,11 @@ public class HUD : MonoBehaviour
 
         Instance.damageIndicator.AddIndicator(target);
     }
+
+    public static void SetActive(bool val)
+    {
+        if (Instance == null) return;
+
+        Instance.gameObject.SetActive(val);
+    }
 }

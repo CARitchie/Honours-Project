@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject buttons;
     [SerializeField] GameObject crosshair;
+    [SerializeField] GameObject weaponWheel;
 
     public static PauseMenu Instance;
 
@@ -41,7 +42,8 @@ public class PauseMenu : MonoBehaviour
 
         buttons.SetActive(true);
         crosshair.SetActive(false);
-        HUD.SetPlanetTextHolderActive(false);
+        weaponWheel.SetActive(false);
+        HUD.SetActive(false);
 
         PlayerController.SetPaused(true);
     }
@@ -59,7 +61,8 @@ public class PauseMenu : MonoBehaviour
 
         buttons.SetActive(false);
         crosshair.SetActive(true);
-        HUD.SetPlanetTextHolderActive(true);
+        weaponWheel.SetActive(true);
+        HUD.SetActive(true);
 
         PlayerController.SetPaused(false);
     }
@@ -71,6 +74,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         SetButtonsInteractive(false);
         SceneManager.FadeToScene("Space");
     }

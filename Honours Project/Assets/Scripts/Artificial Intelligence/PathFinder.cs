@@ -13,6 +13,7 @@ public class PathFinder : MonoBehaviour
     List<Node> openList = new List<Node>();
     List<Node> closedList = new List<Node>();
     Vector3 target;
+    bool inViewGoodEnough = false;
 
     float straightCost = 10;
     float diagonalCost = 14;
@@ -29,12 +30,13 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    public Stack<Vector3> FindPath(Vector3 target, Transform planet){
+    public Stack<Vector3> FindPath(Vector3 target, Transform planet, bool inViewGoodEnough){
 
         if (planet == null) return null;
 
         this.target = target;
         this.planet = planet;
+        this.inViewGoodEnough = inViewGoodEnough;
 
         openList = new List<Node>();
         closedList = new List<Node>();
@@ -54,7 +56,7 @@ public class PathFinder : MonoBehaviour
             currentNode = FindSmallestCost();
             if(currentNode == null) return null;
 
-            if(AddToClosed(currentNode) || counter == 0){
+            if(AddToClosed(currentNode) || counter == 0 || (inViewGoodEnough && TargetInView(currentNode.Position))){
                 found = true;
             }else{
                 FindAdjacent(currentNode);
@@ -70,6 +72,11 @@ public class PathFinder : MonoBehaviour
         }
 
         return path;
+    }
+
+    bool TargetInView(Vector3 current)
+    {
+        return !Physics.Raycast(current, target - current, (target - current).magnitude, ~(1 << 10));
     }
 
     IEnumerator VisualiseProcess(Vector3 target){
@@ -92,7 +99,7 @@ public class PathFinder : MonoBehaviour
 
             currentNode = FindSmallestCost();
             if(currentNode == null) yield return null;
-
+            // Add code here to account for first visible node
             if(AddToClosed(currentNode) || counter == 0){
                 found = true;
             }else{
