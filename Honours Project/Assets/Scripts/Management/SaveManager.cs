@@ -106,11 +106,11 @@ public static class SaveManager
         return save.GetPosition();
     }
 
-    public static Vector3 GetRelativeShipPos()
+    public static RelativeTransform GetShipTransform()
     {
-        if (!SaveExists()) return new Vector3(-450000, 0, 0);
+        if (!SaveExists()) return null;
 
-        return save.GetShipPos();
+        return save.GetShipData();
     }
 
     public static string GetGravitySource()
@@ -153,5 +153,19 @@ public static class SaveManager
     {
         if (!SaveExists()) return;
         save.UnlockWeapon(index);
+    }
+
+    public static void CompleteCombatArea(string key)
+    {
+        if (!SaveExists()) return;
+
+        save.CompleteCombatArea(key);
+    }
+
+    public static bool IsCombatAreaComplete(string key)
+    {
+        if (!SaveExists()) return false;
+
+        return save.IsCombatAreaComplete(key);
     }
 }

@@ -28,7 +28,6 @@ public class PersonDetails : MonoBehaviour, Damageable
 
     public virtual void OnDeath()
     {
-        SceneManager.FadeToScene("Space");
     }
 
     public virtual void OnShot(float damage, Transform origin)
@@ -62,5 +61,10 @@ public class PersonDetails : MonoBehaviour, Damageable
     public virtual void OnMelee(float damage, Transform origin)
     {
         TakeDamage(damage);
+    }
+
+    public float GetHealth()
+    {
+        return health;
     }
 }

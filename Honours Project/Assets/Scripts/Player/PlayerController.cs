@@ -37,6 +37,7 @@ public class PlayerController : PersonController
 
     bool inSpace = false;
     bool doubleJumped = false;
+    bool canSave = true;
 
     bool paused = false;
 
@@ -319,6 +320,8 @@ public class PlayerController : PersonController
         transform.parent.gameObject.SetActive(false);
         transform.localEulerAngles = Vector3.zero;
         cam.localEulerAngles = Vector3.zero;
+
+        SetCanSave(true);
     }
 
     void UseWeapon()
@@ -403,7 +406,7 @@ public class PlayerController : PersonController
 
     public bool Saveable()
     {
-        return grounded && nearestSource != null && transform.parent.gameObject.activeInHierarchy && nearestSource.Key != "ship_main";
+        return canSave && details.GetHealth() > 0 && grounded && nearestSource != null && transform.parent.gameObject.activeInHierarchy && nearestSource.Key != "ship_main";
     }
 
     public Vector3 GetLocalRotation()
@@ -420,5 +423,15 @@ public class PlayerController : PersonController
     {
         transform.localEulerAngles = localRot;
         transform.parent.localEulerAngles = parentRot;
+    }
+
+    public PlayerDetails GetDetails()
+    {
+        return details;
+    }
+
+    public void SetCanSave(bool val)
+    {
+        canSave = val;
     }
 }

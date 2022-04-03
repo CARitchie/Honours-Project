@@ -69,17 +69,14 @@ public class ShipController : MonoBehaviour
     {
         if (!SaveManager.SaveExists()) return false;
 
-        Vector3 shipRelativePos = SaveManager.GetRelativeShipPos();
+        RelativeTransform relTransform = SaveManager.GetShipTransform();
 
-        if (shipRelativePos == new Vector3(-450000, 0, 0)) return false;
-        
-        string key = SaveManager.save.GetShipSource();
+        if (relTransform == null) return false;
 
-        if (key == "null" | !GravityController.FindSource(key, out GravitySource source)) return false;
-            
-        transform.position = shipRelativePos + source.transform.position;
-        transform.localEulerAngles = SaveManager.save.GetShipRot();
-        SetVelocity(source.GetVelocity());
+        if(relTransform.LoadIntoTransform(transform, out Vector3 velocity))
+        {
+            SetVelocity(velocity);
+        }
 
         if (SaveManager.GetState() >= 2) compassIcon.SetActive(true);
 

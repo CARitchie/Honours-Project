@@ -12,10 +12,14 @@ public class SaveFile
     float3 localRot = new float3();
     float3 parentRot = new float3();
 
-    float3 shipPos = new float3(-450000);
-    float3 shipRot = new float3();
-    string shipSource;
+    RelativeTransform shipTransform;
     List<bool> weaponStates;
+
+    float currentHealth = 100;
+    float currentEnergy = 200;
+    int numberOfCells = 0;
+
+    Dictionary<string, bool> combatAreas = new Dictionary<string, bool>();
 
     public int GetState()
     {
@@ -41,14 +45,33 @@ public class SaveFile
         position.SetData(player.transform.position - player.GetNearestSource().transform.position);
         parentRot.SetData(player.GetParentRotation());
         localRot.SetData(player.GetLocalRotation());
+
+        PlayerDetails details = player.GetDetails();
+        if (details == null) return;
+        currentHealth = details.GetHealth();
+        currentEnergy = details.GetEnergy();
+        numberOfCells = details.NumberOfCells();
     }
 
     public void CopyFromShip(ShipController ship)
     {
-        GravitySource gravitySource = GravityController.FindClosest(ship.GetComponent<GravityReceiver>(), true);
-        shipPos.SetData(ship.transform.position - gravitySource.transform.position);
-        shipRot.SetData(ship.transform.localEulerAngles);
-        shipSource = gravitySource.Key;
+        shipTransform = new RelativeTransform();
+        shipTransform.CopyFromReceiver(ship.GetComponent<GravityReceiver>());
+    }
+
+    public float GetHealth()
+    {
+        return currentHealth;
+    }
+
+    public float GetEnergy()
+    {
+        return currentEnergy;
+    }
+
+    public int NumberOfCells()
+    {
+        return numberOfCells;
     }
 
     public Vector3 GetPosition()
@@ -66,19 +89,9 @@ public class SaveFile
         return parentRot.GetVector();
     }
 
-    public Vector3 GetShipPos()
+    public RelativeTransform GetShipData()
     {
-        return shipPos.GetVector();
-    }
-
-    public Vector3 GetShipRot()
-    {
-        return shipRot.GetVector();
-    }
-
-    public string GetShipSource()
-    {
-        return shipSource;
+        return shipTransform;
     }
 
     public void SetWeaponStates(List<bool> states)
@@ -95,8 +108,6 @@ public class SaveFile
         }
 
         weaponStates[index] = true;
-
-
     }
 
     public bool GetWeaponState(int index)
@@ -111,8 +122,31 @@ public class SaveFile
         return weaponStates;
     }
 
+    public void CompleteCombatArea(string key)
+    {
+        if (!combatAreas.ContainsKey(key))
+        {
+            combatAreas.Add(key, true);
+        }
+        else
+        {
+            combatAreas[key] = true;
+        }
+    }
+
+    public bool IsCombatAreaComplete(string key)
+    {
+        if (!combatAreas.ContainsKey(key))
+        {
+            combatAreas.Add(key, false);
+            return false;
+        }
+
+        return combatAreas[key];
+    }
+
     [System.Serializable]
-    struct float3
+    public struct float3
     {
         float x;
         float y;
@@ -123,6 +157,13 @@ public class SaveFile
             this.x = x;
             y = 0;
             z = 0;
+        }
+
+        public float3(Vector3 vector)
+        {
+            x = vector.x;
+            y = vector.y;
+            z = vector.z;
         }
 
         public void SetData(Vector3 vector)
@@ -144,4 +185,38 @@ public class SaveFile
             return new Vector3(x, y, z);
         }
     }
+
+}
+
+[System.Serializable]
+public class RelativeTransform
+{
+    SaveFile.float3 position;
+    SaveFile.float3 rotation;
+    string gravitySource = "null";
+
+    public void CopyFromReceiver(GravityReceiver receiver)
+    {
+        GravitySource gravitySource = GravityController.FindClosest(receiver, true);
+        position = new SaveFile.float3(receiver.transform.position - gravitySource.transform.position);
+        rotation = new SaveFile.float3(receiver.transform.localEulerAngles);
+        this.gravitySource = gravitySource.Key;
+    }
+
+    public bool LoadIntoTransform(Transform transform, out Vector3 velocity)
+    {
+        velocity = Vector3.zero;
+
+        if (gravitySource == "null" | !GravityController.FindSource(gravitySource, out GravitySource source)) return false;
+
+        transform.position = position.GetVector() + source.transform.position;
+        transform.localEulerAngles = rotation.GetVector();
+        velocity = source.GetVelocity();
+
+        return true;
+    }
+
+    public Vector3 Position { get { return position.GetVector(); } }
+    public Vector3 Rotation { get { return rotation.GetVector(); } }
+    public string GravitySource { get { return gravitySource; } }
 }

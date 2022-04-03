@@ -13,10 +13,20 @@ public class PlayerDetails : PersonDetails
 
     private void Start()
     {
-        hud.SetHealthPercent(HealthPercent());
+        if (SaveManager.SaveExists())
+        {
+            health = SaveManager.save.GetHealth();
+            energy = SaveManager.save.GetEnergy();
+            powerCells = SaveManager.save.NumberOfCells();
+        }
+        else
+        {
+            energy = maxEnergy;
+        } 
 
-        energy = maxEnergy;
+        hud.SetHealthPercent(HealthPercent());
         hud.SetEnergyPercent(energy / maxEnergy);
+        hud.SetNumberOfPowerCells(powerCells);
 
         InputController.GodMode += ToggleGodMode;
     }
@@ -96,5 +106,21 @@ public class PlayerDetails : PersonDetails
     {
         base.OnMelee(damage, origin);
         HUD.AddDamageIndicator(origin);
+    }
+
+    public float GetEnergy()
+    {
+        return energy;
+    }
+
+    public int NumberOfCells()
+    {
+        return powerCells;
+    }
+
+    public override void OnDeath()
+    {
+        immune = true;
+        SceneManager.FadeToScene("Space");
     }
 }
