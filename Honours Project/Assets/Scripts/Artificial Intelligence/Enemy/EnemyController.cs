@@ -24,6 +24,8 @@ public class EnemyController : PersonController
 
     Vector3 offset;
 
+    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 11 | 1 << 12 | 1 << 13);
+
     protected override void Awake()
     {
         base.Awake();
@@ -161,7 +163,7 @@ public class EnemyController : PersonController
         Vector3 point1 = transform.position;
         Vector3 point2 = player.position;
 
-        if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit)){
+        if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit, Vector3.Distance(point1, point2), layerMask)){
             if (hit.transform.CompareTag("Player"))
             {
                 Debug.DrawLine(point1, point2, Color.cyan);

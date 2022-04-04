@@ -23,6 +23,8 @@ public class PathFinder : MonoBehaviour
 
     Vector3 originalPos;
 
+    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 10 | 1 << 11 | 1 << 12 | 1 << 13);
+
     void Start(){
 
         if(visualise && targetObject != null){
@@ -82,7 +84,7 @@ public class PathFinder : MonoBehaviour
 
     bool TargetInView(Vector3 current)
     {
-        return !Physics.Raycast(current, target - current, (target - current).magnitude, ~(1 << 10));
+        return !Physics.Raycast(current, target - current, (target - current).magnitude, layerMask);
     }
 
     IEnumerator VisualiseProcess(Vector3 target){

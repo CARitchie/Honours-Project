@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject buttons;
     [SerializeField] GameObject crosshair;
     [SerializeField] GameObject weaponWheel;
+    [SerializeField] GameObject saveWarning;
 
     public static PauseMenu Instance;
 
@@ -40,7 +41,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        buttons.SetActive(true);
+        CloseWarning();
         crosshair.SetActive(false);
         weaponWheel.SetActive(false);
         HUD.SetActive(false);
@@ -60,6 +61,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         buttons.SetActive(false);
+        saveWarning.SetActive(false);
         crosshair.SetActive(true);
         weaponWheel.SetActive(true);
         HUD.SetActive(true);
@@ -69,7 +71,12 @@ public class PauseMenu : MonoBehaviour
 
     public void Save()
     {
-        if (!SaveManager.AttemptSave()) Debug.Log("Could not save");
+        if (!SaveManager.AttemptSave())
+        {
+            buttons.SetActive(false);
+            saveWarning.SetActive(true);
+            Debug.Log("Could not save");
+        }
         else HUD.SpinSaveIcon(true);
     }
 
@@ -99,5 +106,11 @@ public class PauseMenu : MonoBehaviour
         {
             btn.interactable = val;
         }
+    }
+
+    public void CloseWarning()
+    {
+        saveWarning.SetActive(false);
+        buttons.SetActive(true);
     }
 }
