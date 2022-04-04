@@ -23,7 +23,7 @@ public class DroneChase : State
     {
         findTime -= Time.deltaTime;
 
-        if (controller.PlayerVisible())
+        if (controller.PlayerVisible() || !PlayerController.IsPlayerActive())
         {
             controller.Look(controller.PlayerPos());
             controller.Move();

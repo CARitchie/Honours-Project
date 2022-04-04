@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) return;
 
+        HUD.SpinSaveIcon(false);
         Instance.saving = true;
         Instance.StartCoroutine(Instance.RunAutosave());
     }
@@ -58,6 +59,8 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+
+        HUD.StopSaving();
 
         saving = false;
     }

@@ -25,7 +25,7 @@ public class DroneRangedAttack : State
     public override void OnExecute()
     {
         findTime -= Time.deltaTime;
-        if (controller.PlayerVisible())
+        if (controller.PlayerVisible() || !PlayerController.IsPlayerActive())
         {
             Vector3 playerPos = controller.PlayerPos();
 

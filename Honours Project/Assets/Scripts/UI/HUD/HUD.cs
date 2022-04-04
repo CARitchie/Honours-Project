@@ -21,6 +21,7 @@ public class HUD : MonoBehaviour
     [SerializeField] TextMeshProUGUI velocityText;
     [SerializeField] GameObject planetTextHolder;
     [SerializeField] DamageIndicatorController damageIndicator;
+    [SerializeField] SaveSymbol saveSymbol;
 
     public static HUD Instance;
 
@@ -126,5 +127,19 @@ public class HUD : MonoBehaviour
         if (Instance == null) return;
 
         Instance.gameObject.SetActive(val);
+    }
+
+    public static void SpinSaveIcon(bool instant)
+    {
+        if (Instance == null) return;
+
+        Instance.saveSymbol.SpinSaveIcon(instant);
+    }
+
+    public static void StopSaving()
+    {
+        if (Instance == null) return;
+
+        Instance.saveSymbol.StopSaving();
     }
 }

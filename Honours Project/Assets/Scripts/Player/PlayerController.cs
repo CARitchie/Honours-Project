@@ -441,4 +441,11 @@ public class PlayerController : PersonController
 
         return Instance.grounded;
     }
+
+    public static bool IsPlayerActive()
+    {
+        if (Instance == null) return false;
+
+        return Instance.transform.parent.gameObject.activeInHierarchy;
+    }
 }

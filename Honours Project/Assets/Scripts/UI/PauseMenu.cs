@@ -69,7 +69,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Save()
     {
-        if(!SaveManager.AttemptSave()) Debug.Log("Could not save");
+        if (!SaveManager.AttemptSave()) Debug.Log("Could not save");
+        else HUD.SpinSaveIcon(true);
     }
 
     public void Restart()
