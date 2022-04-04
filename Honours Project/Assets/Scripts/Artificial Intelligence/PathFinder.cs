@@ -45,6 +45,12 @@ public class PathFinder : MonoBehaviour
         Vector3 start = transform.position;
         Vector3 dir = transform.forward;
 
+        if (inViewGoodEnough)
+        {
+            Vector3[] newTarget = FindPosition(target, transform.forward);
+            if (newTarget != null) this.target = newTarget[0];
+        }
+
         Vector3[] originData = FindPosition(start, dir);
         if(originData == null) return null;
         openList.Add(new Node(null, originData, 0, CalculateHCost(originData[0])));

@@ -121,4 +121,11 @@ public class PersonController : MonoBehaviour
     {
         return fireHole.forward;
     }
+
+    public float GetHeight()
+    {
+        if (nearestSource == null) return -1;
+
+        return Vector3.Distance(nearestSource.transform.position, transform.position);
+    }
 }

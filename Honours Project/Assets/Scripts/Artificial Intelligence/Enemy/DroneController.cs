@@ -18,7 +18,7 @@ public class DroneController : EnemyController
         transform.up = up;
 
         up = up.normalized;
-        transform.position += (hoverHeight + 1) * up;
+        transform.position += (hoverHeight + 1.2f) * up;
     }
 
     public override void Look(Vector3 point)
@@ -32,11 +32,13 @@ public class DroneController : EnemyController
 
         if(Physics.Raycast(transform.position, toCentre, hoverHeight))
         {
-            // TODO: This needs to look more up rather than straight
-            Vector3 forward = Vector3.Cross(right, -toCentre);
-            direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
-            
-            //transform.position += transform.up * movementSpeed * 0.5f * Time.deltaTime;
+            if(Vector3.Dot(direction,toCentre) > 0)
+            {
+                Vector3 forward = Vector3.Cross(right, -toCentre);
+                direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
+                up = -Vector3.Cross(right, direction);
+            }
+
         }
 
         transform.rotation = Quaternion.LookRotation(direction, up);

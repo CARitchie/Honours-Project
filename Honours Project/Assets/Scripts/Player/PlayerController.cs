@@ -434,4 +434,11 @@ public class PlayerController : PersonController
     {
         canSave = val;
     }
+
+    public static bool GetGrounded()
+    {
+        if (Instance == null) return false;
+
+        return Instance.grounded;
+    }
 }

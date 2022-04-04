@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b62d415f57b68f41841db8d9adf691b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 1.5
+  height: 1.7
   planet: {fileID: 0}
   targetObject: {fileID: 0}
   visualise: 0
