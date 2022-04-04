@@ -11,19 +11,21 @@ public class CameraController : MonoBehaviour
 
     int layerMask = 1 << 8 | 1 << 14;
 
-    private void Start()
+    private void Awake()
     {
         atmosphere = GetComponent<AtmosphereRenderer>();
         cloud = GetComponent<CloudRenderer>();
+    }
 
-        InputController.Cloud += ToggleClouds;
-        InputController.Atmosphere += ToggleAtmospheres;
+    private void Start()
+    {
+        SettingsManager.OnChangesMade += LoadAtmosphereSetting;
+        LoadAtmosphereSetting();
     }
 
     private void OnDestroy()
     {
-        InputController.Cloud -= ToggleClouds;
-        InputController.Atmosphere -= ToggleAtmospheres;
+        SettingsManager.OnChangesMade -= LoadAtmosphereSetting;
     }
 
     public void MoveToTransform(Transform transform)
@@ -50,14 +52,14 @@ public class CameraController : MonoBehaviour
         transform.localEulerAngles = Vector3.zero;
     }
 
-    public void ToggleClouds()
+    public void LoadAtmosphereSetting()
     {
-        cloud.enabled = !cloud.enabled;
-    }
-
-    public void ToggleAtmospheres()
-    {
-        atmosphere.enabled = !atmosphere.enabled;
+        if (PlayerPrefs.HasKey("Atmosphere"))
+        {
+            bool active = PlayerPrefs.GetInt("Atmosphere") == 1;
+            atmosphere.enabled = active;
+            cloud.enabled = active;
+        }
     }
 
     public Vector3 UpdatePlanetHUD(Rigidbody rb)

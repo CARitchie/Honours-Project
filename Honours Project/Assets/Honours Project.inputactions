@@ -141,24 +141,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Atmosphere",
-                    "type": "Button",
-                    "id": "b8bd3514-9879-4a49-9eda-068da8993c8b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Cloud",
-                    "type": "Button",
-                    "id": "91bdeae9-85ce-42ca-87b6-6afb02c1c61f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "GodMode",
                     "type": "Button",
                     "id": "b5849710-f2e8-41f3-aa15-00812355f5a4",
@@ -484,28 +466,6 @@
                 },
                 {
                     "name": "",
-                    "id": "4ed817d7-7a6e-40d6-87c7-7f3e4dc80c69",
-                    "path": "<Keyboard>/n",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Atmosphere",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d2505685-32d4-48dd-b1ce-174810d077f9",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cloud",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f363e63f-695d-4563-bef7-abd5c0eed119",
                     "path": "<Keyboard>/b",
                     "interactions": "",
@@ -648,24 +608,6 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "3c7b2085-e5ef-4c1e-98a3-5f910fc89dc5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Atmosphere",
-                    "type": "Button",
-                    "id": "097bdb0b-1ea3-42ad-b6c2-18f1679d5577",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Cloud",
-                    "type": "Button",
-                    "id": "1dceb02e-c031-4f7f-83db-289de8fdaafb",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -910,28 +852,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f83e45ef-dc93-4475-811d-0d771955ae28",
-                    "path": "<Keyboard>/n",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Atmosphere",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "85da8879-a0a9-4c57-9828-b82484de8388",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cloud",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

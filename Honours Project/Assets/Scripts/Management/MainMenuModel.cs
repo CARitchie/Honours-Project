@@ -8,6 +8,7 @@ public class MainMenuModel : MonoBehaviour
     [SerializeField] GameObject continueButton;
     [SerializeField] GameObject primaryButtons;
     [SerializeField] GameObject warning;
+    [SerializeField] OptionsMenu options;
 
     public delegate void GameStarted();
     public static event GameStarted gameStarted;
@@ -66,7 +67,8 @@ public class MainMenuModel : MonoBehaviour
 
     public void OpenSettings()
     {
-
+        primaryButtons.SetActive(false);
+        options.Activate();
     }
 
     public void CloseMenu()

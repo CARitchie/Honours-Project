@@ -32,6 +32,8 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: f0b45b787ab41cf40a054587e144e2de
     name: Frequency
+  - guid: 29396ae291714d84cb321f3ee250dd54
+    name: MasterVolume
   m_AudioMixerGroupViews:
   - guids:
     - e24c2408cdcfedc40a9e68863088d743

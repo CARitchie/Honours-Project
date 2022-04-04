@@ -63,6 +63,9 @@ public class ShipController : MonoBehaviour
         {
             if (GravityController.FindSource("planet_jungle", out GravitySource source)) SetVelocity(source.GetVelocity());
         }
+
+        SettingsManager.OnChangesMade += LoadSensitivity;
+        LoadSensitivity();
     }
 
     bool LoadData()
@@ -83,9 +86,19 @@ public class ShipController : MonoBehaviour
         return true;
     }
 
+    void LoadSensitivity()
+    {
+        if (PlayerPrefs.HasKey("Ship"))
+        {
+            int val = PlayerPrefs.GetInt("Ship");
+            sensitivity = 8 * ((float)val / 5);
+        }
+    }
+
     private void OnDestroy()
     {
         InputController.Exit -= Deactivate;
+        SettingsManager.OnChangesMade -= LoadSensitivity;
     }
 
     private void FixedUpdate()

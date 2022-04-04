@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject crosshair;
     [SerializeField] GameObject weaponWheel;
     [SerializeField] GameObject saveWarning;
+    [SerializeField] OptionsMenu options;
 
     public static PauseMenu Instance;
 
@@ -60,6 +61,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        options.CloseSettings();
+
         buttons.SetActive(false);
         saveWarning.SetActive(false);
         crosshair.SetActive(true);
@@ -90,7 +93,8 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenSettings()
     {
-
+        buttons.SetActive(false);
+        options.Activate();
     }
 
     public void OpenMainMenu()

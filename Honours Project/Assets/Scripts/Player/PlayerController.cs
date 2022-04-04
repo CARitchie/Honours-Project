@@ -55,7 +55,6 @@ public class PlayerController : PersonController
     protected override void Start()
     {
         Application.targetFrameRate = 500;
-        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
 
         base.Start();
 
@@ -90,6 +89,9 @@ public class PlayerController : PersonController
         fuel = maxFuel;
 
         LoadData();
+
+        SettingsManager.OnChangesMade += LoadSensitivity;
+        LoadSensitivity();
     }
 
     bool LoadData()
@@ -110,6 +112,15 @@ public class PlayerController : PersonController
         return true;
     }
 
+    void LoadSensitivity()
+    {
+        if (PlayerPrefs.HasKey("Sensitivity"))
+        {
+            int val = PlayerPrefs.GetInt("Sensitivity");
+            lookSensitivity = 0.2f * ((float)val / 5);
+        }
+    }
+
     void Pause()
     {
         PauseMenu.TogglePause();
@@ -121,6 +132,7 @@ public class PlayerController : PersonController
     {
         InputController.Jump -= Jump;
         InputController.Pause -= Pause;
+        SettingsManager.OnChangesMade -= LoadSensitivity;
     }
 
     // Update is called once per frame

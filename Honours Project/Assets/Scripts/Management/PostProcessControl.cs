@@ -24,6 +24,17 @@ public class PostProcessControl : MonoBehaviour
         depth = volume.profile.GetSetting<DepthOfField>();
     }
 
+    private void Start()
+    {
+        SettingsManager.OnChangesMade += LoadSetting;
+        LoadSetting();
+    }
+
+    private void OnDestroy()
+    {
+        SettingsManager.OnChangesMade -= LoadSetting;
+    }
+
     public static void SetVignette(float val)
     {
         if (Instance == null) return;
@@ -48,5 +59,13 @@ public class PostProcessControl : MonoBehaviour
         if (Instance == null) return;
 
         Instance.depth.focalLength.value = value;
+    }
+
+    public void LoadSetting()
+    {
+        if (PlayerPrefs.HasKey("Processing"))
+        {
+            gameObject.SetActive(PlayerPrefs.GetInt("Processing") == 1);
+        }
     }
 }

@@ -12,8 +12,6 @@ public class InputController : MonoBehaviour
     public static event Action Interact;
     public static event Action Exit;
     public static event Action Pause;
-    public static event Action Cloud;
-    public static event Action Atmosphere;
     public static event Action GodMode;
 
     PlayerInput input;
@@ -70,16 +68,6 @@ public class InputController : MonoBehaviour
     void OnExitShip()
     {
         Exit?.Invoke();
-    }
-
-    void OnCloud()
-    {
-        Cloud?.Invoke();
-    }
-
-    void OnAtmosphere()
-    {
-        Atmosphere?.Invoke();
     }
 
     void OnGodMode()
