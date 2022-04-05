@@ -15,6 +15,10 @@ public class PlayerPlanetProximity : MonoBehaviour
     private void Awake()
     {
         mat = forceField.sharedMaterial;
+
+        Color colour = mat.color;
+        colour.a = 0.43f;
+        mat.color = colour;
     }
 
 

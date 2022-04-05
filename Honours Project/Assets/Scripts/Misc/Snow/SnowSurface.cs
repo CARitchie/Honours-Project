@@ -42,6 +42,8 @@ public class SnowSurface : MonoBehaviour
     {
         snowMat.SetVector("_Origin", transform.position);
 
+        if (QualitySettings.GetQualityLevel() < 2) return;
+
         if (fallers != null && fallers.Length > 0)
         {
             for (int i = 0; i < fallers.Length; i++)

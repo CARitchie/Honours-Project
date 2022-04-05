@@ -7,7 +7,7 @@ public class SettingsManager : MonoBehaviour
 {
     public delegate void ChangesAction();
     public static event ChangesAction OnChangesMade;
-    static bool loaded = false;
+    public static bool loaded = false;
 
     private void Start()
     {

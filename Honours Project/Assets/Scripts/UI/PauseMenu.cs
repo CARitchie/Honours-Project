@@ -61,7 +61,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        options.CloseSettings();
+        if(options.gameObject.activeInHierarchy) options.CloseSettings();
 
         buttons.SetActive(false);
         saveWarning.SetActive(false);
@@ -115,6 +115,12 @@ public class PauseMenu : MonoBehaviour
     public void CloseWarning()
     {
         saveWarning.SetActive(false);
+        EnableButtons();
+    }
+
+    public void EnableButtons()
+    {
+        if (!paused) return;
         buttons.SetActive(true);
     }
 }

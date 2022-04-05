@@ -206,8 +206,12 @@ public class OptionsMenu : MonoBehaviour
 
     void SaveSettings()
     {
-        PlayerPrefs.SetInt("Screen_Width", resolutions[resolutionDrop.value].width);
-        PlayerPrefs.SetInt("Screen_Height", resolutions[resolutionDrop.value].height);
+        if (SettingsManager.loaded)
+        {
+            PlayerPrefs.SetInt("Screen_Width", resolutions[resolutionDrop.value].width);
+            PlayerPrefs.SetInt("Screen_Height", resolutions[resolutionDrop.value].height);
+        }
+
         PlayerPrefs.SetInt("Fullscreen", fullscreenDrop.value);
         PlayerPrefs.SetInt("VSync", vSyncDrop.value);
         PlayerPrefs.SetInt("Audio", (int)audioSlider.value);
