@@ -88,6 +88,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         SetButtonsInteractive(false);
+        SaveManager.LoadGame();
         SceneManager.FadeToScene("Space");
     }
 

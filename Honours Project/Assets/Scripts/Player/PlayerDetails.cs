@@ -121,6 +121,7 @@ public class PlayerDetails : PersonDetails
     public override void OnDeath()
     {
         immune = true;
+        SaveManager.LoadGame();
         SceneManager.FadeToScene("Space");
     }
 }
