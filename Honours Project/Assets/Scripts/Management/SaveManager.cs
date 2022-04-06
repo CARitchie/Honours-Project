@@ -126,6 +126,36 @@ public static class SaveManager
         return save.GetWeaponStates();
     }
 
+    public static SaveFile.Pod GetPod(string key)
+    {
+        if (!SaveExists()) return null;
+        return save.GetPod(key);
+    }
+
+    public static void SetPodTransform(string key, GravityReceiver receiver)
+    {
+        if (!SaveExists()) return;
+        save.SetPodTransform(key, receiver);
+    }
+
+    public static void SetPodState(string key, int state)
+    {
+        if (!SaveExists()) return;
+        save.SetPodState(key, state);
+    }
+
+    public static int GetUpgradeState(string key)
+    {
+        if (!SaveExists()) return -1;
+        return save.GetUpgradeState(key);
+    }
+
+    public static void SetUpgradeState(string key, int state)
+    {
+        if (!SaveExists()) return;
+        save.SetUpgradeState(key, state);
+    }
+
     public static bool AttemptSave()
     {
         if (save == null || PlayerController.Instance == null || !PlayerController.Instance.Saveable()) return false;
@@ -138,7 +168,7 @@ public static class SaveManager
     static void SaveGame() {
         save.CopyFromPlayer(PlayerController.Instance);
         save.CopyFromShip(ShipController.Instance);
-
+        save.CopyCryoPods(CryoPod.allPods);
         SaveToFile();
     }
 

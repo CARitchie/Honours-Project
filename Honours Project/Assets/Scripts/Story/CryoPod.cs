@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class CryoPod : MonoBehaviour, Interact
 {
+    [SerializeField] string key;
     [SerializeField] GravitySource source;
     [SerializeField] MeshCollider meshCollider;
+
+    public static List<CryoPod> allPods = new List<CryoPod>();
 
     Rigidbody rb;
     GravityReceiver gravity;
@@ -39,6 +42,7 @@ public class CryoPod : MonoBehaviour, Interact
 
         if (!grabbed)
         {
+            SaveManager.SetPodState(key, 1);
             HUD.SetInteractText("Drop");
             AttachToTransform(Camera.main.transform);
             meshCollider.enabled = false;
@@ -65,7 +69,33 @@ public class CryoPod : MonoBehaviour, Interact
     // Start is called before the first frame update
     void Start()
     {
-        rb.velocity = source.GetVelocity();
+        bool destroy = false;
+        SaveFile.Pod podData = SaveManager.GetPod(key);
+        if (podData == null)
+        {
+            rb.velocity = source.GetVelocity();
+
+        }
+        else
+        {
+            int state = podData.GetState();
+            if(state >= 4)
+            {
+                destroy = true;
+                Destroy(gameObject);
+            }
+            else if(podData.transform.LoadIntoTransform(transform, out Vector3 velocity))
+            {
+                rb.velocity = velocity;
+            }
+        }
+
+        if(!destroy) allPods.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        if (allPods.Contains(this)) allPods.Remove(this);
     }
 
     public void AttachToTransform(Transform parent)
@@ -119,5 +149,14 @@ public class CryoPod : MonoBehaviour, Interact
     {
         active = false;
     }
+
+    public void PutIntoLift()
+    {
+        SaveManager.SetPodState(key, 4);
+    }
+
+    public string Key { get { return key; } }
+
+    public GravityReceiver Receiver { get { return gravity; } }
 
 }

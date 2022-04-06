@@ -21,6 +21,9 @@ public class PodLift : MonoBehaviour
             pod.Disable();
             pod.AttachToTransform(podHolder);
             pod.StartAlign();
+            pod.PutIntoLift();
+
+            GameManager.Autosave();
 
             lastPod = pod;
 

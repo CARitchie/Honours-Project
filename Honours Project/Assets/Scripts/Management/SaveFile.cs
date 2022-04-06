@@ -20,6 +20,8 @@ public class SaveFile
     int numberOfCells = 0;
 
     Dictionary<string, bool> combatAreas = new Dictionary<string, bool>();
+    Dictionary<string, Pod> cryoPods = new Dictionary<string, Pod>();
+    Dictionary<string, int> upgrades = new Dictionary<string, int>();
 
     public int GetState()
     {
@@ -57,6 +59,14 @@ public class SaveFile
     {
         shipTransform = new RelativeTransform();
         shipTransform.CopyFromReceiver(ship.GetComponent<GravityReceiver>());
+    }
+
+    public void CopyCryoPods(List<CryoPod> cryoPods)
+    {
+        foreach(CryoPod pod in cryoPods)
+        {
+            SetPodTransform(pod.Key, pod.Receiver);
+        }
     }
 
     public float GetHealth()
@@ -145,6 +155,48 @@ public class SaveFile
         return combatAreas[key];
     }
 
+    public Pod GetPod(string key)
+    {
+        if (cryoPods.ContainsKey(key))
+        {
+            return cryoPods[key];
+        }
+        return null;
+    }
+
+    public void SetPodState(string key, int state)
+    {
+        if (!cryoPods.ContainsKey(key))
+        {
+            cryoPods.Add(key, new Pod());
+        }
+        cryoPods[key].SetState(state);
+    }
+
+    public void SetPodTransform(string key, GravityReceiver receiver)
+    {
+        if (receiver == null) return;
+
+        if (!cryoPods.ContainsKey(key))
+        {
+            cryoPods.Add(key, new Pod());
+        }
+
+        cryoPods[key].transform.CopyFromReceiver(receiver);
+    }
+
+    public int GetUpgradeState(string key)
+    {
+        if (!upgrades.ContainsKey(key)) return -1;
+        return upgrades[key];
+    }
+
+    public void SetUpgradeState(string key, int state)
+    {
+        if (!upgrades.ContainsKey(key)) upgrades.Add(key, state);
+        else upgrades[key] = state;
+    }
+
     [System.Serializable]
     public struct float3
     {
@@ -186,6 +238,23 @@ public class SaveFile
         }
     }
 
+
+    [System.Serializable]
+    public class Pod
+    {
+        public RelativeTransform transform = new RelativeTransform();
+        int state = -1;
+
+        public void SetState(int value)
+        {
+            if (value > state) state = value;
+        }
+
+        public int GetState()
+        {
+            return state;
+        }
+    }
 }
 
 [System.Serializable]
