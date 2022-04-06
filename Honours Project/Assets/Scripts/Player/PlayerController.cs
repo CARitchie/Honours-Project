@@ -416,6 +416,12 @@ public class PlayerController : PersonController
         Instance.paused = val;
     }
 
+    public static bool IsPaused()
+    {
+        if(Instance == null) return false;
+        return Instance.paused;
+    }
+
     public bool Saveable()
     {
         return canSave && details.GetHealth() > 0 && grounded && nearestSource != null && transform.parent.gameObject.activeInHierarchy && nearestSource.Key != "ship_main";

@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject weaponWheel;
     [SerializeField] GameObject saveWarning;
     [SerializeField] OptionsMenu options;
+    [SerializeField] SacrificeMenu sacrificeMenu;
 
     public static PauseMenu Instance;
 
@@ -28,6 +29,14 @@ public class PauseMenu : MonoBehaviour
         else Instance.Resume();
 
         return Instance.paused;
+    }
+
+    public static void OpenSacrificeMenu()
+    {
+        if (Instance == null) return;
+        Instance.sacrificeMenu.Activate();
+        Instance.Pause();
+        Instance.buttons.SetActive(false);
     }
 
     public void Pause()
@@ -68,6 +77,7 @@ public class PauseMenu : MonoBehaviour
         crosshair.SetActive(true);
         weaponWheel.SetActive(true);
         HUD.SetActive(true);
+        sacrificeMenu.Hide();
 
         PlayerController.SetPaused(false);
     }

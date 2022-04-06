@@ -21,7 +21,7 @@ public class SaveFile
 
     Dictionary<string, bool> combatAreas = new Dictionary<string, bool>();
     Dictionary<string, Pod> cryoPods = new Dictionary<string, Pod>();
-    Dictionary<string, int> upgrades = new Dictionary<string, int>();
+    Dictionary<string, UpgradeState> upgrades = new Dictionary<string, UpgradeState>();
 
     public int GetState()
     {
@@ -185,16 +185,26 @@ public class SaveFile
         cryoPods[key].transform.CopyFromReceiver(receiver);
     }
 
-    public int GetUpgradeState(string key)
+    public UpgradeState GetUpgradeState(string key)
     {
-        if (!upgrades.ContainsKey(key)) return -1;
+        if (!upgrades.ContainsKey(key)) return UpgradeState.NonExistent;
         return upgrades[key];
     }
 
-    public void SetUpgradeState(string key, int state)
+    public void SetUpgradeState(string key, UpgradeState state)
     {
         if (!upgrades.ContainsKey(key)) upgrades.Add(key, state);
-        else upgrades[key] = state;
+        else if( state > upgrades[key]) upgrades[key] = state;
+    }
+
+    public int NumberOfFoundPods()
+    {
+        int count = 0;
+        foreach(KeyValuePair<string,Pod> pair in cryoPods)
+        {
+            if (pair.Value.GetState() >= 4) count++;
+        }
+        return count;
     }
 
     [System.Serializable]
@@ -243,7 +253,7 @@ public class SaveFile
     public class Pod
     {
         public RelativeTransform transform = new RelativeTransform();
-        int state = -1;
+        int state = -1; // 1 - picked up, 4 - returned
 
         public void SetState(int value)
         {
@@ -254,6 +264,17 @@ public class SaveFile
         {
             return state;
         }
+    }
+
+    [System.Serializable]
+    public enum UpgradeState
+    {
+        NonExistent = -1,
+        NotAvailable = 0,
+        Available = 1,
+        PlayerUnlocked = 5,
+        Sacrificed = 10,
+        Lost = 15
     }
 }
 

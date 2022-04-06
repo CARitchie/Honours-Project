@@ -62,11 +62,13 @@ public class InputController : MonoBehaviour
 
     void OnInteract()
     {
+        if (PlayerController.IsPaused()) return;
         Interact?.Invoke();
     }
 
     void OnExitShip()
     {
+        if (PlayerController.IsPaused()) return;
         Exit?.Invoke();
     }
 

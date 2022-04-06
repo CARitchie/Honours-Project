@@ -144,16 +144,22 @@ public static class SaveManager
         save.SetPodState(key, state);
     }
 
-    public static int GetUpgradeState(string key)
+    public static SaveFile.UpgradeState GetUpgradeState(string key)
     {
-        if (!SaveExists()) return -1;
+        if (!SaveExists()) return SaveFile.UpgradeState.NonExistent;
         return save.GetUpgradeState(key);
     }
 
-    public static void SetUpgradeState(string key, int state)
+    public static void SetUpgradeState(string key, SaveFile.UpgradeState state)
     {
         if (!SaveExists()) return;
         save.SetUpgradeState(key, state);
+    }
+
+    public static int NumberOfFoundPods()
+    {
+        if (!SaveExists()) return 0;
+        return save.NumberOfFoundPods();
     }
 
     public static bool AttemptSave()
