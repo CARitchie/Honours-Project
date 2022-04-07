@@ -16,7 +16,7 @@ public class WeaponEquip : MonoBehaviour, Interact
 
     public void OnEnter()
     {
-        HUD.SetInteractText("Pickup");
+        HUD.SetInteractText("Equip");
     }
 
     public void OnExit()
