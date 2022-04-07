@@ -10,6 +10,9 @@ public class SacrificeMenu : MonoBehaviour
     [SerializeField] Color availableColour;
     [SerializeField] GameObject mainSacrificeMenu;
     [SerializeField] GameObject subMenu;
+    [SerializeField] GameObject sacrificeMenu;
+    [SerializeField] GameObject upgradeMenu;
+    [SerializeField] RectTransform indicator;
     [SerializeField] TextMeshProUGUI sacrificeText;
     [SerializeField] TextMeshProUGUI upgradeText;
     [SerializeField] TextMeshProUGUI sacrificeButton;
@@ -103,5 +106,23 @@ public class SacrificeMenu : MonoBehaviour
         {
             sacrificeBtns[i].SetNewState(foundPods, i);
         }
+    }
+
+    public void OpenSacrifices()
+    {
+        sacrificeMenu.SetActive(true);
+        upgradeMenu.SetActive(false);
+        Vector3 pos = indicator.localPosition;
+        pos.x = -325;
+        indicator.localPosition = pos;
+    }
+
+    public void OpenUpgrades()
+    {
+        sacrificeMenu.SetActive(false);
+        upgradeMenu.SetActive(true);
+        Vector3 pos = indicator.localPosition;
+        pos.x = 325;
+        indicator.localPosition = pos;
     }
 }

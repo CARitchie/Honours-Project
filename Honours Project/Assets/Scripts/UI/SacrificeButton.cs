@@ -7,12 +7,13 @@ public class SacrificeButton : MonoBehaviour
 {
     [SerializeField] string key;
     [SerializeField] bool upgrade;
-    [SerializeField] GameObject padlock;
+    [SerializeField] Image padlock;
     [SerializeField] Image background;
     [SerializeField] string sacrificeText;
     [SerializeField] string upgradeText;
     [SerializeField] GameObject viewButton;
     [SerializeField] GameObject titleText;
+    [SerializeField] Sprite unlockedImage;
 
     SacrificeMenu sacrificeMenu;
     SaveFile.UpgradeState currentState = SaveFile.UpgradeState.NonExistent;
@@ -59,7 +60,7 @@ public class SacrificeButton : MonoBehaviour
 
     void SetNotAvailable()
     {
-        padlock.SetActive(true);
+        padlock.gameObject.SetActive(true);
         background.color = Color.gray;
 
         if (!upgrade)
@@ -93,8 +94,13 @@ public class SacrificeButton : MonoBehaviour
         {
             viewButton.SetActive(true);
             titleText.SetActive(true);
+            padlock.gameObject.SetActive(false);
         }
-        padlock.SetActive(false);
+        else
+        {
+            padlock.gameObject.SetActive(true);
+            padlock.sprite = unlockedImage;
+        }
     }
 
     public void OpenSubMenu()
