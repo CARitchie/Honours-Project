@@ -33,6 +33,9 @@ public class Compass : MonoBehaviour
     float pulseTime;
     float pulsePercent = 0;
 
+    bool pulseActive = true;
+    bool sacrificedCompass = false;
+
 
     private void Awake()
     {
@@ -55,6 +58,34 @@ public class Compass : MonoBehaviour
         pulseTime = pulseDelay;
 
         SetAlpha(0);
+
+        SaveManager.OnUpgradeChanged += LoadSacrifices;
+        LoadSacrifices();
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.OnUpgradeChanged -= LoadSacrifices;
+    }
+
+    void LoadSacrifices()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_pulse"))
+        {
+            pulseActive = false;
+            foreach (Graphic image in pulseImages)
+            {
+                Color target = Color.white;
+                target.a = image.color.a;
+                image.color = target;
+            }
+        }
+
+        if (SaveManager.SacrificeMade("sacrifice_compass"))
+        {
+            sacrificedCompass = true;
+            if (!pulseActive) gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -75,6 +106,8 @@ public class Compass : MonoBehaviour
         }
 
         FadeIn();
+
+        if (sacrificedCompass) return;
 
         float minDist = 1000;
         int minIndex = -1;
@@ -200,6 +233,8 @@ public class Compass : MonoBehaviour
 
     void Pulse()
     {
+        if (!pulseActive) return;
+
         if(nearObjects.Count > 0)
         {
             float distance = NearestDistance();
@@ -290,7 +325,7 @@ public class Compass : MonoBehaviour
 
     public static void AddItem(CompassItem item)
     {
-        if (Instance == null) return;
+        if (Instance == null || Instance.sacrificedCompass) return;
 
         Instance.items.Add(item);
 
@@ -317,7 +352,7 @@ public class Compass : MonoBehaviour
 
     public static void AddNearObject(Transform nearObject)
     {
-        if (Instance == null) return;
+        if (Instance == null || !Instance.pulseActive) return;
 
         if (!Instance.nearObjects.Contains(nearObject)) Instance.nearObjects.Add(nearObject);
     }

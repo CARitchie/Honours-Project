@@ -15,7 +15,7 @@ public class SacrificeButton : MonoBehaviour
     [SerializeField] GameObject titleText;
 
     SacrificeMenu sacrificeMenu;
-    SaveFile.UpgradeState currentState;
+    SaveFile.UpgradeState currentState = SaveFile.UpgradeState.NonExistent;
 
     public string SacrificeText { get { return sacrificeText.Replace("\\n", "\n"); } }
     public string UpgradeText { get { return upgradeText.Replace("\\n", "\n"); } }
@@ -114,6 +114,7 @@ public class SacrificeButton : MonoBehaviour
 
     public void SetNewState(int numberOfFoundPods, int index)
     {
+        if (currentState == SaveFile.UpgradeState.NonExistent) UpdateState();
         if(index < numberOfFoundPods && (int)currentState < 5)
         {         
             if(index +2 < numberOfFoundPods)
@@ -137,6 +138,7 @@ public class SacrificeButton : MonoBehaviour
 
     public bool OptionsAvailable()
     {
+        if (currentState == SaveFile.UpgradeState.NonExistent) UpdateState();
         return (int)currentState >= 0 && (int)currentState < 5; 
     }
 }

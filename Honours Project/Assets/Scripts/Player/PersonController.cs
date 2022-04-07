@@ -67,7 +67,7 @@ public class PersonController : MonoBehaviour
         }
     }
 
-    public bool IsGrounded(){
+    public virtual bool IsGrounded(){
         return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
     }
 

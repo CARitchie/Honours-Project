@@ -34,10 +34,13 @@ public class PlayerController : PersonController
     float fuel;
     float maxFuel = 200;
     float weaponSpeed = 0;
+    float evaSpeed;
 
     bool inSpace = false;
     bool doubleJumped = false;
     bool canSave = true;
+    bool walkOnLava = true;
+    bool canDoubleJump = true;
 
     bool paused = false;
 
@@ -87,11 +90,15 @@ public class PlayerController : PersonController
         InputController.Pause += Pause;
 
         fuel = maxFuel;
+        evaSpeed = walkSpeed * 0.8f;
 
         LoadData();
 
         SettingsManager.OnChangesMade += LoadSensitivity;
         LoadSensitivity();
+
+        SaveManager.OnUpgradeChanged += LoadUpgrades;
+        LoadUpgrades();
     }
 
     bool LoadData()
@@ -121,6 +128,25 @@ public class PlayerController : PersonController
         }
     }
 
+    void LoadUpgrades()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_lava"))
+        {
+            walkOnLava = false;
+        }
+
+        if (SaveManager.SacrificeMade("sacrifice_speed"))
+        {
+            walkSpeed = walkSpeed * 0.7f;
+            sprintSpeed = sprintSpeed * 0.7f;
+        }
+
+        if (SaveManager.SacrificeMade("sacrifice_jump"))
+        {
+            canDoubleJump = false;
+        }
+    }
+
     void Pause()
     {
         PauseMenu.TogglePause();
@@ -133,6 +159,7 @@ public class PlayerController : PersonController
         InputController.Jump -= Jump;
         InputController.Pause -= Pause;
         SettingsManager.OnChangesMade -= LoadSensitivity;
+        SaveManager.OnUpgradeChanged -= LoadUpgrades;
     }
 
     // Update is called once per frame
@@ -204,7 +231,7 @@ public class PlayerController : PersonController
         }
         else
         {
-            movementSpeed = walkSpeed * 0.8f;
+            movementSpeed = evaSpeed;
             float up = movementActions[6].ReadValue<float>() - movementActions[7].ReadValue<float>();
             moveDirection += up * transform.up;
         }
@@ -299,7 +326,7 @@ public class PlayerController : PersonController
 
     void Jump()
     {
-        if (inSpace || (!grounded && doubleJumped) || paused) return;
+        if (inSpace || (!grounded && (doubleJumped||!canDoubleJump)) || paused) return;
 
         float strength = jumpStrength;
 
@@ -465,5 +492,18 @@ public class PlayerController : PersonController
         if (Instance == null) return false;
 
         return Instance.transform.parent.gameObject.activeInHierarchy;
+    }
+
+    public override bool IsGrounded()
+    {
+        bool contact = Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, out RaycastHit hit, transform.rotation, 1);
+        if (contact && !walkOnLava && hit.collider.CompareTag("Lava")) LavaDamage();
+        return contact;
+    }
+
+    void LavaDamage()
+    {
+        details.TakeDamage(20 * Time.fixedDeltaTime);
+        details.UseEnergy(10 * Time.fixedDeltaTime);
     }
 }

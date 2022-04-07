@@ -40,7 +40,7 @@ public class PersonDetails : MonoBehaviour, Damageable
         TakeDamage(damage);
     }
 
-    public float HealthPercent()
+    public virtual float HealthPercent()
     {
         return health / maxHealth;
     }

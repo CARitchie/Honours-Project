@@ -9,10 +9,15 @@ public class PlayerDetails : PersonDetails
     [SerializeField] HUD hud;
     [Header("Temporary")] [SerializeField] GameObject shipCompass;
     float energy;
+    float fullMaxHealth;
+    float fullMaxEnergy;
     int powerCells = 0;
 
     private void Start()
     {
+        fullMaxHealth = maxHealth;
+        fullMaxEnergy = maxEnergy;
+
         if (SaveManager.SaveExists())
         {
             health = SaveManager.save.GetHealth();
@@ -25,15 +30,19 @@ public class PlayerDetails : PersonDetails
         } 
 
         hud.SetHealthPercent(HealthPercent());
-        hud.SetEnergyPercent(energy / maxEnergy);
+        hud.SetEnergyPercent(EnergyPercent);
         hud.SetNumberOfPowerCells(powerCells);
 
         InputController.GodMode += ToggleGodMode;
+
+        SaveManager.OnUpgradeChanged += LoadUpgrades;
+        LoadUpgrades();
     }
 
     private void OnDestroy()
     {
         InputController.GodMode -= ToggleGodMode;
+        SaveManager.OnUpgradeChanged -= LoadUpgrades;
     }
 
     private void Update()
@@ -68,7 +77,7 @@ public class PlayerDetails : PersonDetails
         }
 
         energy -= amount;
-        hud.SetEnergyPercent(energy / maxEnergy);
+        hud.SetEnergyPercent(EnergyPercent);
         return true;
     }
 
@@ -124,4 +133,36 @@ public class PlayerDetails : PersonDetails
         SaveManager.LoadGame();
         SceneManager.FadeToScene("Space");
     }
+
+    void LoadUpgrades()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_health"))
+        {
+            maxHealth = 0.7f * fullMaxHealth;
+            if (health > maxHealth)
+            {
+                health = maxHealth;
+                hud.SetHealthPercent(HealthPercent());
+            }
+            HUD.SetReducedMaxHealth();
+        }
+
+        if (SaveManager.SacrificeMade("sacrifice_energy"))
+        {
+            maxEnergy = 0.7f * fullMaxEnergy;
+            if (energy > maxEnergy)
+            {
+                energy = maxEnergy;
+                hud.SetEnergyPercent(EnergyPercent);
+            }
+            HUD.SetReducedMaxEnergy();
+        }
+    }
+
+    public override float HealthPercent()
+    {
+        return health / fullMaxHealth;
+    }
+
+    float EnergyPercent { get { return energy / fullMaxEnergy; } }
 }

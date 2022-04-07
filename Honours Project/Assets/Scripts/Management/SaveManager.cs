@@ -7,6 +7,9 @@ using System.Runtime.Serialization;
 
 public static class SaveManager
 {
+    public delegate void UpgradeChanged();
+    public static event UpgradeChanged OnUpgradeChanged;
+
     public static SaveFile save;
     static string filePath = Application.persistentDataPath + Path.DirectorySeparatorChar + "Saves" + Path.DirectorySeparatorChar + "SaveData.dat";
 
@@ -86,12 +89,12 @@ public static class SaveManager
         return save.GetState();
     }
 
-    public static void SetGameState(int state)
+    public static void SetGameState(int state, bool forceSave = false)
     {
         if (save == null) return;
 
         save.SetState(state);
-        SaveToFile();
+        if(forceSave) SaveToFile();
     }
 
     public static bool SaveExists()
@@ -154,6 +157,14 @@ public static class SaveManager
     {
         if (!SaveExists()) return;
         save.SetUpgradeState(key, state);
+        OnUpgradeChanged?.Invoke();
+    }
+
+    public static bool SacrificeMade(string key)
+    {
+        if (!SaveExists()) return false;
+        SaveFile.UpgradeState state = save.GetUpgradeState(key);
+        return state == SaveFile.UpgradeState.Sacrificed;
     }
 
     public static int NumberOfFoundPods()

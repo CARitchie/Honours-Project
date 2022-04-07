@@ -28,10 +28,31 @@ public class HUD : MonoBehaviour
     Vector3 currentPos;
     Vector3 targetPos;
 
+    bool damageIndicatorsActive = true;
+
     private void Awake()
     {
         weaponWheel.gameObject.SetActive(true);
         Instance = this;
+    }
+
+    private void Start()
+    {
+        SaveManager.OnUpgradeChanged += LoadSacrifice;
+        LoadSacrifice();
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.OnUpgradeChanged -= LoadSacrifice;
+    }
+
+    void LoadSacrifice()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_indicators"))
+        {
+            damageIndicatorsActive = false;
+        }
     }
 
     public void SetHealthPercent(float percent)
@@ -117,7 +138,7 @@ public class HUD : MonoBehaviour
 
     public static void AddDamageIndicator(Transform target)
     {
-        if (Instance == null) return;
+        if (Instance == null || !Instance.damageIndicatorsActive) return;
 
         Instance.damageIndicator.AddIndicator(target);
     }
@@ -141,5 +162,19 @@ public class HUD : MonoBehaviour
         if (Instance == null) return;
 
         Instance.saveSymbol.StopSaving();
+    }
+
+    public static void SetReducedMaxHealth()
+    {
+        if (Instance == null) return;
+
+        Instance.healthBar.ReduceMax();
+    }
+
+    public static void SetReducedMaxEnergy()
+    {
+        if (Instance == null) return;
+
+        Instance.energyBar.ReduceMax();
     }
 }
