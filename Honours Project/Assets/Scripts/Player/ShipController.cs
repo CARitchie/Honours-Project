@@ -26,6 +26,9 @@ public class ShipController : MonoBehaviour
     bool active = false;
     Rigidbody rb;
 
+    float originalStrength;
+    float originalMatchSpeed;
+
     public static ShipController Instance;
 
     private void Awake()
@@ -36,6 +39,9 @@ public class ShipController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        originalStrength = engineStrength;
+        originalMatchSpeed = matchVelocitySpeed;
     }
 
     private void Start()
@@ -66,6 +72,9 @@ public class ShipController : MonoBehaviour
 
         SettingsManager.OnChangesMade += LoadSensitivity;
         LoadSensitivity();
+
+        SaveManager.OnUpgradeChanged += LoadUpgrades;
+        LoadUpgrades();
     }
 
     bool LoadData()
@@ -92,6 +101,15 @@ public class ShipController : MonoBehaviour
         {
             int val = PlayerPrefs.GetInt("Ship");
             sensitivity = 8 * ((float)val / 5);
+        }
+    }
+
+    void LoadUpgrades()
+    {
+        if (SaveManager.SelfUpgraded("upgrade_thruster"))
+        {
+            engineStrength = originalStrength * 3;
+            matchVelocitySpeed = originalMatchSpeed * 4;
         }
     }
 

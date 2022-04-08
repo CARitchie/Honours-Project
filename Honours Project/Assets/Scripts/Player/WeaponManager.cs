@@ -18,6 +18,33 @@ public class WeaponManager : MonoBehaviour
     private void Start()
     {
         LoadStates(SaveManager.GetWeaponStates());
+        SaveManager.OnUpgradeChanged += LoadUpgrades;
+        LoadUpgrades();
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.OnUpgradeChanged -= LoadUpgrades;
+    }
+
+    void LoadUpgrades()
+    {
+        if (SaveManager.SelfUpgraded("upgrade_damage"))
+        {
+            for(int i = 0; i < weapons.Length; i++)
+            {
+                weapons[i].GetWeapon().SetDamageMultiplier(1.8f);
+            }
+        }
+
+        if (SaveManager.SelfUpgraded("upgrade_ammo"))
+        {
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                Gun gun = weapons[i].GetWeapon().GetComponent<Gun>();
+                if (gun != null) gun.SetMaxAmmoMultiplier(1.5f);
+            }
+        }
     }
 
     public bool IsLocked(int index)

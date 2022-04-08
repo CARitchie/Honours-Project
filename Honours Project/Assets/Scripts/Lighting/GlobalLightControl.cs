@@ -59,6 +59,12 @@ public class GlobalLightControl : MonoBehaviour
         Instance.index = 1;
     }
 
+    public static Transform SunTransform()
+    {
+        if (Instance == null) return null;
+        return Instance.transform;
+    }
+
     void UpdateObjects()
     {
         for(int i = 0; i < litObjects.Length; i++)

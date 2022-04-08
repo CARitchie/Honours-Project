@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [SerializeField] protected float damageMultiplier = 1;
     protected PersonController controller;
 
     public virtual void OnEquip(PersonController controller)
@@ -27,5 +28,10 @@ public class Weapon : MonoBehaviour
     public virtual void SecondaryAction(float val)
     {
 
+    }
+
+    public void SetDamageMultiplier(float multiplier)
+    {
+        damageMultiplier = multiplier;
     }
 }

@@ -24,6 +24,8 @@ public class Gun : Weapon
     Animator animator;
     AudioManager audioManager;
 
+    int _MaxAmmo;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -98,7 +100,7 @@ public class Gun : Weapon
         GravitySource source = controller.GetNearestSource();
         Transform body = source != null ? source.transform : null; 
 
-        projectile.Fire(velocity, body, transform.parent);
+        projectile.Fire(velocity, body, transform.parent, damageMultiplier);
         if(animator != null) animator.SetTrigger("Fire");
         if(muzzleFlash != null) muzzleFlash.Play();
 
@@ -115,6 +117,11 @@ public class Gun : Weapon
     {
         Vector3 spread = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * spreadSize / 100;
         return (baseDirection + spread).normalized;
+    }
+
+    public void SetMaxAmmoMultiplier(float percent)
+    {
+        _MaxAmmo = (int)(maxAmmo * percent);
     }
 
 }

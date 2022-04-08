@@ -13,10 +13,25 @@ public class PlayerDetails : PersonDetails
     float fullMaxEnergy;
     int powerCells = 0;
 
+    float maxShield = 80;
+    float shield = 80;
+    const float shieldDelay = 4;
+    float shieldTimer;
+    bool shieldActive = false;
+
+    bool solarPanel = false;
+    bool nanites = false;
+    float healTime = 0;
+
+    int layerMask = ~(1 << 2 | 1 << 10 | 1 << 11 | 1 << 12);
+
+    Transform sun;
+
     private void Start()
     {
         fullMaxHealth = maxHealth;
         fullMaxEnergy = maxEnergy;
+        shieldTimer = shieldDelay;
 
         if (SaveManager.SaveExists())
         {
@@ -47,10 +62,34 @@ public class PlayerDetails : PersonDetails
 
     private void Update()
     {
-        if(!UseEnergy(energyDrainRate * Time.deltaTime))
+        if (!solarPanel)
         {
-            TakeDamage(energyDrainRate * Time.deltaTime * 2);
+            if (!UseEnergy(energyDrainRate * Time.deltaTime))
+            {
+                TakeDamage(energyDrainRate * Time.deltaTime * 2);
+            }
         }
+        else
+        {
+            float rate = energyDrainRate * 2;
+
+            if(sun!=null && Physics.Raycast(transform.position,sun.position-transform.position,out RaycastHit hit, (sun.position - transform.position).magnitude, layerMask))
+            {
+                if (hit.transform.CompareTag("Sun")) rate *= 5;
+            }
+
+            Recharge(rate * Time.deltaTime);
+        }
+
+        if (shieldActive)
+        {
+            if (shieldTimer > 0) shieldTimer -= Time.deltaTime;
+            else IncreaseShield(6 * Time.deltaTime);
+        }
+
+        if (!nanites) return;
+        if (healTime > 0) healTime -= Time.deltaTime;
+        else HealUp(4 * Time.deltaTime);
     }
 
     public override bool TakeDamage(float amount)
@@ -59,6 +98,7 @@ public class PlayerDetails : PersonDetails
         bool val = base.TakeDamage(amount);
 
         hud.SetHealthPercent(HealthPercent());
+        healTime = 4;
 
         return val;
     }
@@ -102,12 +142,18 @@ public class PlayerDetails : PersonDetails
 
     public void Recharge(float amount)
     {
+        if (energy == maxEnergy) return;
         energy = Mathf.Clamp(energy + amount, 0, maxEnergy);
+        hud.SetEnergyPercent(EnergyPercent);
     }
 
     public override void OnShot(float damage, Transform origin)
     {
-        base.OnShot(damage, origin);
+        if (!shieldActive || !DecreaseShield(damage))
+        {
+            base.OnShot(damage, origin);
+        }
+        shieldTimer = shieldDelay;
         HUD.AddDamageIndicator(origin);
     }
 
@@ -157,6 +203,23 @@ public class PlayerDetails : PersonDetails
             }
             HUD.SetReducedMaxEnergy();
         }
+
+        if (SaveManager.SelfUpgraded("upgrade_nanites"))
+        {
+            nanites = true;
+        }
+
+        if (SaveManager.SelfUpgraded("upgrade_solar"))
+        {
+            sun = GlobalLightControl.SunTransform();
+            solarPanel = true;
+        }
+
+        if (SaveManager.SelfUpgraded("upgrade_shield"))
+        {
+            shieldActive = true;
+            hud.SetShieldPercent(ShieldPercent);
+        }
     }
 
     public override float HealthPercent()
@@ -165,4 +228,21 @@ public class PlayerDetails : PersonDetails
     }
 
     float EnergyPercent { get { return energy / fullMaxEnergy; } }
+
+    void IncreaseShield(float amount)
+    {
+        if (shield == maxShield) return;
+        shield = Mathf.Clamp(shield + amount, 0, maxShield);
+        hud.SetShieldPercent(ShieldPercent);
+    }
+
+    bool DecreaseShield(float amount)
+    {
+        if (shield <= 0) return false;
+        shield -= amount;
+        hud.SetShieldPercent(ShieldPercent);
+        return true;
+    }
+
+    float ShieldPercent { get { return shield / maxShield; } }
 }

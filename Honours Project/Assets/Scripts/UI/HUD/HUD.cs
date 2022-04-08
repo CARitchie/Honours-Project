@@ -14,6 +14,7 @@ public class HUD : MonoBehaviour
     [Header("References")]
     [SerializeField] HealthBar healthBar;
     [SerializeField] HealthBar energyBar;
+    [SerializeField] HealthBar shieldBar;
     [SerializeField] TextMeshProUGUI powerCells;
     [SerializeField] WeaponWheel weaponWheel;
     [SerializeField] TextMeshProUGUI interactText;
@@ -63,6 +64,11 @@ public class HUD : MonoBehaviour
     public void SetEnergyPercent(float percent)
     {
         energyBar.SetPercent(percent);
+    }
+
+    public void SetShieldPercent(float percent)
+    {
+        shieldBar.SetPercent(percent);
     }
 
     public void SetWeaponWheelActive(float val)

@@ -26,7 +26,7 @@ public class SacrificeButton : MonoBehaviour
         sacrificeMenu = GetComponentInParent<SacrificeMenu>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         UpdateState();
     }

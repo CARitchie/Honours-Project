@@ -27,7 +27,7 @@ public class Grenade : Projectile
             if(!rb.isKinematic) rb.AddExplosionForce(strength, hit.point, radius);
             if(rb.TryGetComponent(out Damageable damageable))
             {
-                damageable.OnExplosion(damage);
+                damageable.OnExplosion(damage * damageMultiplier);
             }
         }
 

@@ -167,6 +167,12 @@ public static class SaveManager
         return state == SaveFile.UpgradeState.Sacrificed;
     }
 
+    public static bool SelfUpgraded(string key)
+    {
+        if (!SaveExists()) return false;
+        return save.GetUpgradeState(key) == SaveFile.UpgradeState.PlayerUnlocked;
+    }
+
     public static int NumberOfFoundPods()
     {
         if (!SaveExists()) return 0;
