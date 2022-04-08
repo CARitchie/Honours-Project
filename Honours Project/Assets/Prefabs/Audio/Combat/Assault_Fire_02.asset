@@ -15,6 +15,6 @@ MonoBehaviour:
   title: Assault_Fire_02
   clip: {fileID: 8300000, guid: f895c2f996fbd114ba56debf4f83b110, type: 3}
   group: {fileID: 6847028368278008415, guid: 9bcf14369ab48e649ad44ace980a33b1, type: 2}
-  volume: 1
+  volume: 0.8
   pitch: 1
   spatialBlend: 1

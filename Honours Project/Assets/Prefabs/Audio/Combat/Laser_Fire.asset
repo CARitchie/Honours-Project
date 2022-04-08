@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a5c94909db50744af0ffd78a9b6b4b, type: 3}
+  m_Name: Laser_Fire
+  m_EditorClassIdentifier: 
+  title: Fire
+  sounds:
+  - {fileID: 11400000, guid: f0f4c6558cc40634fa000872f6879e5c, type: 2}
+  - {fileID: 11400000, guid: 0225dd17e0493be43b2f53ea56d14b91, type: 2}
+  - {fileID: 11400000, guid: e8859a8f211298f40bbabd3ca89ac1fb, type: 2}

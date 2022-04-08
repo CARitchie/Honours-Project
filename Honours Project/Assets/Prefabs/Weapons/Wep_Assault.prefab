@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e35be472cf07c4a848d43ccdfcf5c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
   projectileSpeed: 100
   maxAmmo: 10
   recoilStrength: 0.4
@@ -5244,7 +5245,6 @@ GameObject:
   - component: {fileID: 2518490143948082554}
   - component: {fileID: 2492280014725434028}
   - component: {fileID: 2499586367518167102}
-  - component: {fileID: 2451663151543720658}
   m_Layer: 0
   m_Name: SM_Wep_Assault_02
   m_TagString: Untagged
@@ -5321,20 +5321,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2451663151543720658
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515123110171813326}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 43208000927385598, guid: 6a17ca6ec10f5ac499927344ff34607a, type: 2}
 --- !u!1 &2515205014235225202
 GameObject:
   m_ObjectHideFlags: 0

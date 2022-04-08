@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
-    [SerializeField] float projectileSpeed;
+    [SerializeField] protected float projectileSpeed;
     [SerializeField] int maxAmmo;
-    [SerializeField] float recoilStrength;
+    [SerializeField] protected float recoilStrength;
     [SerializeField] Vector3 recoilDirection;
     [SerializeField] bool automatic = false;
     [SerializeField] float automaticDelay;
@@ -16,11 +16,11 @@ public class Gun : Weapon
     [SerializeField] protected Transform firePoint;
 
     Recoil recoil;
-    bool fired = false;
+    protected bool fired = false;
 
     float delayTimer = 0;
 
-    ObjectPool projectilePool;
+    protected ObjectPool projectilePool;
     Animator animator;
     AudioManager audioManager;
 
@@ -82,7 +82,7 @@ public class Gun : Weapon
         }
     }
 
-    public void Fire()
+    public virtual void Fire()
     {
         fired = true;
         controller.Recoil(recoilStrength);
@@ -101,11 +101,8 @@ public class Gun : Weapon
         Transform body = source != null ? source.transform : null; 
 
         projectile.Fire(velocity, body, transform.parent, damageMultiplier);
-        if(animator != null) animator.SetTrigger("Fire");
-        if(muzzleFlash != null) muzzleFlash.Play();
 
-        if (recoil != null) recoil.RecoilFire(recoilDirection);
-        if (audioManager != null) audioManager.PlaySound("Fire");
+        FireEffects();
     }
 
     public void AimAt(Vector3 point)
@@ -122,6 +119,15 @@ public class Gun : Weapon
     public void SetMaxAmmoMultiplier(float percent)
     {
         _MaxAmmo = (int)(maxAmmo * percent);
+    }
+
+    protected void FireEffects()
+    {
+        if (animator != null) animator.SetTrigger("Fire");
+        if (muzzleFlash != null) muzzleFlash.Play();
+
+        if (recoil != null) recoil.RecoilFire(recoilDirection);
+        if (audioManager != null) audioManager.PlaySound("Fire");
     }
 
 }
