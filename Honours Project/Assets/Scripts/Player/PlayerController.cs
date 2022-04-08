@@ -11,6 +11,7 @@ public class PlayerController : PersonController
     [SerializeField] HUD hud;
     [SerializeField] Transform cam;
     [SerializeField] CameraController camController;
+    [SerializeField] SummonedAmmo summonedAmmo;
     Weapon weapon;
 
     float verticalLook = 0;
@@ -41,6 +42,9 @@ public class PlayerController : PersonController
     bool canSave = true;
     bool walkOnLava = true;
     bool canDoubleJump = true;
+    bool canSummon = false;
+    float summonCooldown = 0;
+    const float summonDelay = 150;
 
     bool paused = false;
 
@@ -88,6 +92,7 @@ public class PlayerController : PersonController
 
         InputController.Jump += Jump;
         InputController.Pause += Pause;
+        InputController.SummonAmmo += SummonAmmo;
 
         fuel = maxFuel;
         evaSpeed = walkSpeed * 0.8f;
@@ -145,6 +150,11 @@ public class PlayerController : PersonController
         {
             canDoubleJump = false;
         }
+
+        if (SaveManager.SelfUpgraded("upgrade_teleport"))
+        {
+            canSummon = true;
+        }
     }
 
     void Pause()
@@ -158,6 +168,7 @@ public class PlayerController : PersonController
     {
         InputController.Jump -= Jump;
         InputController.Pause -= Pause;
+        InputController.SummonAmmo -= SummonAmmo;
         SettingsManager.OnChangesMade -= LoadSensitivity;
         SaveManager.OnUpgradeChanged -= LoadUpgrades;
     }
@@ -175,6 +186,24 @@ public class PlayerController : PersonController
         Look();
 
         HandleWeaponWheel();
+
+        AmmoSummonCooldown();
+    }
+
+    public void KeepLooping()
+    {
+        details.KeepLooping();
+        AmmoSummonCooldown();
+    }
+
+    void AmmoSummonCooldown()
+    {
+        if (canSummon && summonCooldown > 0)
+        {
+            summonCooldown -= Time.deltaTime;
+            hud.SetSummonPercent(1 - (summonCooldown / summonDelay));
+            if (summonCooldown <= 0) hud.SetSummonActive(false);
+        }
     }
     
     protected override void FixedUpdate()
@@ -338,6 +367,40 @@ public class PlayerController : PersonController
         }
 
         AddForce(transform.up * strength);
+    }
+
+    void SummonAmmo()
+    {
+        if (!canSummon || summonCooldown > 0) return;
+
+        summonCooldown = summonDelay;
+        hud.SetSummonActive(true);
+        hud.SetSummonPercent(0);
+
+        if(Physics.Raycast(cam.position, cam.forward,out RaycastHit hit, 7, aimLayerMask))
+        {
+            float distance = Vector3.Distance(cam.position, hit.point);
+            if (distance < 1)
+            {
+                SpawnAmmo(cam.position + transform.up * 0.25f);
+            }
+            else
+            {
+                SpawnAmmo(cam.position + cam.forward * (distance - 1));
+            }
+        }
+        else
+        {
+            SpawnAmmo(cam.position + cam.forward * 5);
+        }
+    }
+
+    void SpawnAmmo(Vector3 position)
+    {
+        SummonedAmmo newAmmo = Instantiate(summonedAmmo.gameObject, nearestSource != null ? nearestSource.transform : null).GetComponent<SummonedAmmo>();
+        newAmmo.transform.position = position;
+        newAmmo.transform.up = transform.up;
+        newAmmo.StartSpawn();
     }
 
     protected override void CheckGrounded()

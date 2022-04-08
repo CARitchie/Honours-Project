@@ -175,6 +175,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "SummonAmmo",
+                    "type": "Button",
+                    "id": "6f515e60-6cbd-4d43-90c7-c6b5299806a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -505,6 +514,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "MatchVelo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8ba08e3-57f9-4d2a-a01d-2ffac715471c",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SummonAmmo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

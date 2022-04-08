@@ -62,31 +62,53 @@ public class PlayerDetails : PersonDetails
 
     private void Update()
     {
-        if (!solarPanel)
+        if (!SolarPanelUsage(false))
         {
             if (!UseEnergy(energyDrainRate * Time.deltaTime))
             {
                 TakeDamage(energyDrainRate * Time.deltaTime * 2);
             }
         }
-        else
+
+        ShieldCooldown();
+
+        NanitesCooldown();
+    }
+
+    public void KeepLooping()
+    {
+        SolarPanelUsage(true);
+        ShieldCooldown();
+        NanitesCooldown();
+    }
+
+    bool SolarPanelUsage(bool inShip)
+    {
+        if (!solarPanel) return false;
+
+        float rate = energyDrainRate * 2;
+
+        if (!inShip && sun != null && Physics.Raycast(transform.position, sun.position - transform.position, out RaycastHit hit, (sun.position - transform.position).magnitude, layerMask))
         {
-            float rate = energyDrainRate * 2;
-
-            if(sun!=null && Physics.Raycast(transform.position,sun.position-transform.position,out RaycastHit hit, (sun.position - transform.position).magnitude, layerMask))
-            {
-                if (hit.transform.CompareTag("Sun")) rate *= 5;
-            }
-
-            Recharge(rate * Time.deltaTime);
+            if (hit.transform.CompareTag("Sun")) rate *= 5;
         }
 
-        if (shieldActive)
-        {
-            if (shieldTimer > 0) shieldTimer -= Time.deltaTime;
-            else IncreaseShield(6 * Time.deltaTime);
-        }
+        Recharge(rate * Time.deltaTime);
 
+        return true;
+    }
+
+    void ShieldCooldown()
+    {
+        if (!shieldActive) return;
+
+        if (shieldTimer > 0) shieldTimer -= Time.deltaTime;
+        else IncreaseShield(6 * Time.deltaTime);
+        
+    }
+
+    void NanitesCooldown()
+    {
         if (!nanites) return;
         if (healTime > 0) healTime -= Time.deltaTime;
         else HealUp(4 * Time.deltaTime);

@@ -13,6 +13,7 @@ public class InputController : MonoBehaviour
     public static event Action Exit;
     public static event Action Pause;
     public static event Action GodMode;
+    public static event Action SummonAmmo;
 
     PlayerInput input;
 
@@ -58,6 +59,12 @@ public class InputController : MonoBehaviour
     void OnPause()
     {
         Pause?.Invoke();
+    }
+
+    void OnSummonAmmo()
+    {
+        if (PlayerController.IsPaused()) return;
+        SummonAmmo?.Invoke();
     }
 
     void OnInteract()

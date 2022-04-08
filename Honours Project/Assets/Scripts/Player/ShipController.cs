@@ -148,6 +148,8 @@ public class ShipController : MonoBehaviour
         if (!active) return;
 
         Look();
+
+        PlayerController.Instance.KeepLooping();
     }
 
     public void Activate()

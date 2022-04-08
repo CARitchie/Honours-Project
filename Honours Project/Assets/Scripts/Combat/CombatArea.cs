@@ -96,6 +96,7 @@ public class CombatArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
         if(other.attachedRigidbody.GetComponent<PlayerDetails>() != null)
         {
             OnPlayerEnter();
@@ -104,6 +105,7 @@ public class CombatArea : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
         if (other.attachedRigidbody.GetComponent<PlayerDetails>() != null)
         {
             PlayerController.Instance.SetCanSave(true);
