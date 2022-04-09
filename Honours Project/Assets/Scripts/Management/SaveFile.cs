@@ -13,15 +13,17 @@ public class SaveFile
     float3 parentRot = new float3();
 
     RelativeTransform shipTransform;
-    List<bool> weaponStates;
+    List<WeaponData> weapons;
 
     float currentHealth = 100;
     float currentEnergy = 200;
     int numberOfCells = 0;
+    int currentWeapon = 0;
 
     Dictionary<string, bool> combatAreas = new Dictionary<string, bool>();
     Dictionary<string, Pod> cryoPods = new Dictionary<string, Pod>();
     Dictionary<string, UpgradeState> upgrades = new Dictionary<string, UpgradeState>();
+    Dictionary<string, bool> booleans = new Dictionary<string, bool>();
 
     public int GetState()
     {
@@ -47,6 +49,7 @@ public class SaveFile
         position.SetData(player.transform.position - player.GetNearestSource().transform.position);
         parentRot.SetData(player.GetParentRotation());
         localRot.SetData(player.GetLocalRotation());
+        player.WeaponManager()?.SaveWeapons();
 
         PlayerDetails details = player.GetDetails();
         if (details == null) return;
@@ -104,32 +107,33 @@ public class SaveFile
         return shipTransform;
     }
 
-    public void SetWeaponStates(List<bool> states)
+    public void SetWeaponState(int index, WeaponContainer container)
     {
-        weaponStates = states;
+        if (weapons == null) weapons = new List<WeaponData>();
+        while(index >= weapons.Count)
+        {
+            weapons.Add(new WeaponData());
+        }
+
+        weapons[index].CopyFromWeaponContainer(container);
     }
 
     public void UnlockWeapon(int index)
     {
-        if (weaponStates == null) weaponStates = new List<bool>();
-        while(index >= weaponStates.Count)
+        if (weapons == null) weapons = new List<WeaponData>();
+        while (index >= weapons.Count)
         {
-            weaponStates.Add(false);
+            weapons.Add(new WeaponData());
         }
 
-        weaponStates[index] = true;
+        weapons[index].unlocked = true;
     }
 
-    public bool GetWeaponState(int index)
+    public WeaponData GetWeaponData(int index)
     {
-        if (weaponStates == null || index >= weaponStates.Count) return false;
+        if (weapons == null || index >= weapons.Count) return null;
 
-        return weaponStates[index];
-    }
-
-    public List<bool> GetWeaponStates()
-    {
-        return weaponStates;
+        return weapons[index];
     }
 
     public void CompleteCombatArea(string key)
@@ -207,6 +211,20 @@ public class SaveFile
         return count;
     }
 
+    public bool GetBool(string key)
+    {
+        if(booleans == null || !booleans.ContainsKey(key)) return false;
+
+        return booleans[key];
+    }
+
+    public void SetBool(string key, bool value)
+    {
+        if (booleans == null) return;
+        if (!booleans.ContainsKey(key)) booleans.Add(key, value);
+        else booleans[key] = value;
+    }
+
     [System.Serializable]
     public struct float3
     {
@@ -275,6 +293,19 @@ public class SaveFile
         PlayerUnlocked = 5,
         Sacrificed = 10,
         Lost = 15
+    }
+
+    [System.Serializable]
+    public class WeaponData
+    {
+        public bool unlocked = false;
+        public int currentAmmo = -1000;
+
+        public void CopyFromWeaponContainer(WeaponContainer container)
+        {
+            unlocked = !container.IsLocked();
+            currentAmmo = container.GetWeapon().GetAmmo();
+        }
     }
 }
 

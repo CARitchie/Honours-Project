@@ -6,6 +6,9 @@ public class SummonedAmmo : MonoBehaviour
 {
     [SerializeField] float teleportTime;
     [SerializeField] float noiseScale;
+    [SerializeField] AmmoItem[] ammoItems;
+
+    float timer = 0;
 
     public void StartSpawn()
     {
@@ -24,9 +27,31 @@ public class SummonedAmmo : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        foreach (AmmoItem ammo in GetComponentsInChildren<AmmoItem>(true))
+        foreach (AmmoItem ammo in ammoItems)
         {
             ammo.SetActive(true);
+        }
+    }
+
+    private void Update()
+    {
+        timer -= Time.deltaTime;
+        if(timer <= 0)
+        {
+            bool stillExists = false;
+            for(int i = 0; i < ammoItems.Length; i++)
+            {
+                if (ammoItems[i] != null) stillExists = true;
+            }
+
+            if (!stillExists)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                timer = 3;
+            }
         }
     }
 

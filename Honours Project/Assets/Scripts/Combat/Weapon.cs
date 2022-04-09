@@ -44,4 +44,19 @@ public class Weapon : MonoBehaviour
     {
         return false;
     }
+
+    public virtual bool AddAmmo(float percentOfMax)
+    {
+        return false;
+    }
+
+    public virtual int GetAmmo()
+    {
+        return -1000;
+    }
+
+    public virtual void SetAmmo(int ammo)
+    {
+
+    }
 }

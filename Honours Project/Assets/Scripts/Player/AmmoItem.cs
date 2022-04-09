@@ -11,9 +11,10 @@ public class AmmoItem : MonoBehaviour
     {
         if (!active) return;
         if (other.attachedRigidbody == null) return;
-        if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
+
+        if (other.CompareTag("Player"))
         {
-            //if (player.HealUp(amount)) Destroy(gameObject);
+            if (PlayerController.Instance.AddAmmo(percent / 100)) Destroy(gameObject);
         }
     }
 

@@ -17,7 +17,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        LoadStates(SaveManager.GetWeaponStates());
+        LoadWeapons();
         SaveManager.OnUpgradeChanged += LoadUpgrades;
         LoadUpgrades();
     }
@@ -124,21 +124,46 @@ public class WeaponManager : MonoBehaviour
         return states;
     }
 
-    public void LoadStates(List<bool> states)
+    public void LoadWeapons()
     {
-        if (states == null) return;
-
         bool unlocked = false;
-        for(int i = 0; i < weapons.Length; i++)
+
+        for (int i = 0; i < weapons.Length; i++)
         {
-            if (i >= states.Count) break;
-            if (states[i]) {
+            SaveFile.WeaponData data = SaveManager.GetWeaponState(i);
+            if (data == null) break;
+
+            if (data.unlocked)
+            {
                 UnlockWeapon(i);
                 unlocked = true;
+                if(data.currentAmmo != -1000)
+                {
+                    weapons[i].GetWeapon().SetAmmo(data.currentAmmo);
+                }
             }
         }
 
         if (unlocked) HUD.ActivateAmmoIndicator();
+    }
+
+    public bool AddAmmo(float percentOfMax)
+    {
+        bool added = false;
+        foreach(WeaponContainer weapon in weapons)
+        {
+            if (weapon.GetWeapon().AddAmmo(percentOfMax)) added = true;
+        }
+
+        return added;
+    }
+
+    public void SaveWeapons()
+    {
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            SaveManager.SetWeaponData(i, weapons[i]);
+        }
     }
 }
 

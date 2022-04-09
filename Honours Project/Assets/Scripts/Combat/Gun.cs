@@ -26,7 +26,7 @@ public class Gun : Weapon
 
     int _MaxAmmo;   // Actual max ammo
 
-    int currentAmmo;
+    int currentAmmo = -450;
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class Gun : Weapon
         recoil = GetComponentInParent<Recoil>();
         audioManager = GetComponent<AudioManager>();
         _MaxAmmo = maxAmmo;
-        currentAmmo = _MaxAmmo;
+        if(currentAmmo == -450 || currentAmmo > _MaxAmmo) currentAmmo = _MaxAmmo;
     }
 
     private void Start()
@@ -148,5 +148,22 @@ public class Gun : Weapon
     public override bool IsInfinite()
     {
         return maxAmmo == -450;
+    }
+
+    public override bool AddAmmo(float percentOfMax)
+    {
+        if (currentAmmo == _MaxAmmo || IsInfinite()) return false;
+        currentAmmo = (int)Mathf.Clamp(currentAmmo + percentOfMax * _MaxAmmo, 0, _MaxAmmo);
+        return true;
+    }
+
+    public override int GetAmmo()
+    {
+        return currentAmmo;
+    }
+
+    public override void SetAmmo(int ammo)
+    {
+        currentAmmo = ammo;
     }
 }

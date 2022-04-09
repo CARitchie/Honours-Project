@@ -123,12 +123,6 @@ public static class SaveManager
         return save.GetGravitySource();
     }
 
-    public static List<bool> GetWeaponStates()
-    {
-        if (!SaveExists()) return null;
-        return save.GetWeaponStates();
-    }
-
     public static SaveFile.Pod GetPod(string key)
     {
         if (!SaveExists()) return null;
@@ -179,6 +173,18 @@ public static class SaveManager
         return save.NumberOfFoundPods();
     }
 
+    public static bool GetBool(string key)
+    {
+        if (!SaveExists()) return false;
+        return save.GetBool(key);
+    }
+
+    public static void SetBool(string key, bool value)
+    {
+        if (!SaveExists()) return;
+        save.SetBool(key, value);
+    }
+
     public static bool AttemptSave()
     {
         if (save == null || PlayerController.Instance == null || !PlayerController.Instance.Saveable()) return false;
@@ -195,17 +201,32 @@ public static class SaveManager
         SaveToFile();
     }
 
-    public static bool GetWeaponState(int index)
+    public static SaveFile.WeaponData GetWeaponState(int index)
+    {
+        if (!SaveExists()) return null;
+
+        return save.GetWeaponData(index);
+    }
+
+    public static bool WeaponUnlocked(int index)
     {
         if (!SaveExists()) return false;
 
-        return save.GetWeaponState(index);
+        SaveFile.WeaponData weapon = save.GetWeaponData(index);
+        if (weapon == null) return false;
+        return weapon.unlocked;
     }
 
     public static void UnlockWeapon(int index)
     {
         if (!SaveExists()) return;
         save.UnlockWeapon(index);
+    }
+
+    public static void SetWeaponData(int index, WeaponContainer container)
+    {
+        if (!SaveExists()) return;
+        save.SetWeaponState(index, container);
     }
 
     public static void CompleteCombatArea(string key)

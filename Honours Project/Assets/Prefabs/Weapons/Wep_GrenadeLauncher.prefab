@@ -5607,7 +5607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageMultiplier: 1
   projectileSpeed: 25
-  maxAmmo: 10
+  maxAmmo: 12
   recoilStrength: 2
   recoilDirection: {x: -10, y: 10, z: 0.35}
   automatic: 1

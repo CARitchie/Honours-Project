@@ -582,4 +582,14 @@ public class PlayerController : PersonController
 
         hud.SetAmmoText(weapon.GetAmmoText());
     }
+
+    public bool AddAmmo(float percentOfMax)
+    {
+        return weaponManager.AddAmmo(percentOfMax);
+    }
+
+    public WeaponManager WeaponManager()
+    {
+        return weaponManager;
+    }
 }

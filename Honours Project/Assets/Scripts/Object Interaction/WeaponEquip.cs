@@ -8,7 +8,7 @@ public class WeaponEquip : MonoBehaviour, Interact
 
     private void Start()
     {
-        if (SaveManager.GetWeaponState(weaponIndex))
+        if (SaveManager.WeaponUnlocked(weaponIndex))
         {
             Destroy(gameObject);
         }
