@@ -48,6 +48,8 @@ public class PlayerController : PersonController
 
     bool paused = false;
 
+    bool loadBigGun = false;
+
     int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
     protected override void Awake()
@@ -104,6 +106,7 @@ public class PlayerController : PersonController
 
         SaveManager.OnUpgradeChanged += LoadUpgrades;
         LoadUpgrades();
+        loadBigGun = true;
     }
 
     bool LoadData()
@@ -154,6 +157,16 @@ public class PlayerController : PersonController
         if (SaveManager.SelfUpgraded("upgrade_teleport"))
         {
             canSummon = true;
+        }
+
+        if (SaveManager.SelfUpgraded("upgrade_gun"))
+        {
+            UnlockWeapon(2);
+            if (loadBigGun)
+            {
+                EquipWeapon(2);
+                loadBigGun = false;
+            }
         }
     }
 
