@@ -30,14 +30,16 @@ public class DroneController : EnemyController
         Vector3 right = -Vector3.Cross(toCentre, direction);
         Vector3 up = -Vector3.Cross(right, direction);
 
-        if(Physics.Raycast(transform.position, toCentre, hoverHeight))
-        {
+        if(Physics.Raycast(transform.position, toCentre, out RaycastHit hit,hoverHeight, 1 << 8))
+        {/*
             if(Vector3.Dot(direction,toCentre) > 0)
             {
                 Vector3 forward = Vector3.Cross(right, -toCentre);
                 direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
                 up = -Vector3.Cross(right, direction);
-            }
+            }*/
+
+            transform.position = hit.point + (-toCentre.normalized) * hoverHeight;
 
         }
 

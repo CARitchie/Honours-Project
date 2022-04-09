@@ -14,6 +14,7 @@ public class PathFinder : MonoBehaviour
     List<Node> closedList = new List<Node>();
     Vector3 target;
     bool inViewGoodEnough = false;
+    int inViewCount = 0;
 
     float straightCost = 10;
     float diagonalCost = 14;
@@ -49,7 +50,7 @@ public class PathFinder : MonoBehaviour
 
         if (inViewGoodEnough)
         {
-            Vector3[] newTarget = FindPosition(target, transform.forward);
+            Vector3[] newTarget = FindPosition(target, transform.forward, 30);
             if (newTarget != null) this.target = newTarget[0];
         }
 
@@ -64,7 +65,19 @@ public class PathFinder : MonoBehaviour
             currentNode = FindSmallestCost();
             if(currentNode == null) return null;
 
-            if(AddToClosed(currentNode) || counter == 0 || (inViewGoodEnough && TargetInView(currentNode.Position))){
+            /*
+            if(inViewGoodEnough && TargetInView(currentNode.Position))
+            {
+                inViewCount++;
+                if(inViewCount >= 3)
+                {
+                    inViewCount = 0;
+                    counter = 0;
+                }
+            }
+            */
+
+            if(AddToClosed(currentNode) || counter == 0){
                 found = true;
             }else{
                 FindAdjacent(currentNode);
@@ -197,8 +210,8 @@ public class PathFinder : MonoBehaviour
         return (target - node.Position).sqrMagnitude < 4;
     }
 
-    public Vector3[] FindPosition(Vector3 position, Vector3 oldForward){
-        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, 3, 1 << 8)){
+    public Vector3[] FindPosition(Vector3 position, Vector3 oldForward, float distance = 3){
+        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, distance, 1 << 8)){
             return null;
         }
 
@@ -244,6 +257,8 @@ public class PathFinder : MonoBehaviour
         for(int i = 0 ; i < completed.Count - 1 ; i++){
             Gizmos.DrawLine(completed[i] + planet.position,completed[i+1] + planet.position);
         }
+
+        Gizmos.DrawSphere(target, 0.5f);
     
     }
 }

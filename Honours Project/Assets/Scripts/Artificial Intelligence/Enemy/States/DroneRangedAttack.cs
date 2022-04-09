@@ -27,18 +27,7 @@ public class DroneRangedAttack : State
         findTime -= Time.deltaTime;
         if (controller.PlayerVisible() || !PlayerController.IsPlayerActive())
         {
-            Vector3 playerPos = controller.PlayerPos();
-
-            controller.Look(playerPos);
-
-            gun.AimAt(playerPos);
-
-            if (controller.GetPlayerDistance() >= closeRange)
-            {
-                controller.Move();
-            }
-
-            gun.PrimaryAction(1);
+            AttackPlayer();
         }
         else
         {
@@ -57,6 +46,22 @@ public class DroneRangedAttack : State
         }
 
 
+    }
+
+    void AttackPlayer()
+    {
+        Vector3 playerPos = controller.PlayerPos();
+
+        controller.Look(playerPos);
+
+        gun.AimAt(playerPos);
+
+        if (controller.GetPlayerDistance() >= closeRange)
+        {
+            controller.Move();
+        }
+
+        gun.PrimaryAction(1);
     }
 
     public override void OnExitState()

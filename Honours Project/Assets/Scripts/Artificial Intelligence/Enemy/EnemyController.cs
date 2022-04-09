@@ -24,7 +24,7 @@ public class EnemyController : PersonController
 
     Vector3 offset;
 
-    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 11 | 1 << 12 | 1 << 13);
+    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 8| 1 << 11 | 1 << 12 | 1 << 13);
 
     protected override void Awake()
     {
@@ -37,9 +37,7 @@ public class EnemyController : PersonController
         offset = details.transform.position - details.transform.parent.position;
     }
 
-    protected override void Start(){
-        base.Start();
-
+    protected virtual void Start(){
         if(gravity!=null) GravityController.FindClosest(gravity);
 
         for(int i = 0; i < states.Length; i++)
@@ -142,6 +140,11 @@ public class EnemyController : PersonController
         return currentNode + nearestSource.transform.position;
     }
 
+    public bool PathExists()
+    {
+        return nodes != null && nodes.Count > 1;
+    }
+
     public bool IsHostile()
     {
         return hostile;
@@ -170,6 +173,8 @@ public class EnemyController : PersonController
                 return true;
             }
         }
+
+        Debug.DrawLine(point1, point2, Color.red);
 
         return false;
     }

@@ -59,11 +59,9 @@ public class PlayerController : PersonController
         weaponManager = GetComponentInChildren<WeaponManager>();
     }
 
-    protected override void Start()
+    protected void Start()
     {
         Application.targetFrameRate = 500;
-
-        base.Start();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

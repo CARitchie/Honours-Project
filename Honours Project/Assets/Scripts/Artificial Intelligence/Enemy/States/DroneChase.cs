@@ -25,8 +25,7 @@ public class DroneChase : State
 
         if (controller.PlayerVisible() || !PlayerController.IsPlayerActive())
         {
-            controller.Look(controller.PlayerPos());
-            controller.Move();
+            MoveToPlayer();
         }
         else
         {
@@ -44,6 +43,12 @@ public class DroneChase : State
             if (Useful.Close(controller.transform.position, target, 1)) controller.NextNode();
         }
 
+    }
+
+    void MoveToPlayer()
+    {
+        controller.Look(controller.PlayerPos());
+        controller.Move();
     }
 
     public override void OnExitState()

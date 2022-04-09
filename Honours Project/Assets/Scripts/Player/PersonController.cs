@@ -14,7 +14,6 @@ public class PersonController : MonoBehaviour
     protected bool grounded = false;
     protected Rigidbody rb;
     protected GravitySource nearestSource;
-    Vector3 lastVelocity;
     protected Animator animator;
 
     protected virtual void Awake(){
@@ -23,12 +22,7 @@ public class PersonController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    protected virtual void Start(){
-        lastVelocity = rb.velocity;
-    }
-
     protected virtual void FixedUpdate(){
-        VelocityCheck();
         CheckGrounded();
     }
 
@@ -39,7 +33,6 @@ public class PersonController : MonoBehaviour
     public void ForceVelocity(Vector3 velocity)
     {
         rb.velocity = velocity;
-        lastVelocity = velocity;
     }
 
     public void SetPosition(Vector3 position)
@@ -50,14 +43,6 @@ public class PersonController : MonoBehaviour
     public void SetRotation(Vector3 rotation)
     {
         transform.parent.eulerAngles = rotation;
-    }
-
-    void VelocityCheck(){
-        Vector3 currentVelocity = rb.velocity;
-        float deltaV = (lastVelocity - currentVelocity).magnitude;
-        lastVelocity = currentVelocity;
-
-        //if(deltaV > 15) Debug.LogError(transform.name + " Velocity death: " + deltaV + "m/s",transform);
     }
 
     protected virtual void CheckGrounded(){
