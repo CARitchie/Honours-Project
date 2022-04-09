@@ -27,6 +27,6 @@ public class UpgradeItem : MonoBehaviour, Interact
     public void OnSelect()
     {
         SaveManager.SetUpgradeState(upgradeKey, SaveFile.UpgradeState.Available);
-        Destroy(gameObject);
+        Useful.DestroyGameObject(gameObject);
     }
 }

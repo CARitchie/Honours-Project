@@ -79,6 +79,11 @@ public class Projectile : PoolObject
 
     protected void PlaceHitMarker(RaycastHit hit, Vector3 direction)
     {
+        if(hitMarker == null)
+        {
+            Debug.LogWarning("No hitmarker present");
+            return;
+        }
         hitMarker.transform.position = hit.point;
         hitMarker.transform.parent = hit.collider != null ? hit.collider.transform : null;
         //hitMarker.transform.parent = body;

@@ -11,7 +11,7 @@ public static class Useful
         return distance <= closeness * closeness;
     }
 
-    public static void DestroyGameobject(GameObject gameObject)
+    public static void DestroyGameObject(GameObject gameObject)
     {
         HitMarker[] markers = gameObject.GetComponentsInChildren<HitMarker>(true);
         foreach (HitMarker marker in markers)

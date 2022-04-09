@@ -603,7 +603,6 @@ public class PlayerController : PersonController
     void LoadWeapon()
     {
         int index = SaveManager.CurrentWeapon();
-        Debug.Log("LOADED INDEX: " + index);
         weaponManager.ForceLoad();
         EquipWeapon(index);
     }

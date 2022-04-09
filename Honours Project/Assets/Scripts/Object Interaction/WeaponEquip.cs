@@ -28,6 +28,6 @@ public class WeaponEquip : MonoBehaviour, Interact
     {
         PlayerController.Instance.UnlockWeapon(weaponIndex);
         PlayerController.Instance.EquipWeapon(weaponIndex);
-        Destroy(gameObject);
+        Useful.DestroyGameObject(gameObject);
     }
 }

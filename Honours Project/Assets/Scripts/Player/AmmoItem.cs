@@ -14,7 +14,7 @@ public class AmmoItem : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            if (PlayerController.Instance.AddAmmo(percent / 100)) Destroy(gameObject);
+            if (PlayerController.Instance.AddAmmo(percent / 100)) Useful.DestroyGameObject(gameObject);
         }
     }
 

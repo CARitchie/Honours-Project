@@ -41,7 +41,7 @@ public class PodLift : MonoBehaviour
     {
         if (lastPod != null)
         {
-            Destroy(lastPod.gameObject);
+            Useful.DestroyGameObject(lastPod.gameObject);
             lastPod = null;
         }
     }

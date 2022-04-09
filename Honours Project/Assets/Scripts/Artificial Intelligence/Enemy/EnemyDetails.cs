@@ -76,12 +76,6 @@ public class EnemyDetails : PersonDetails
 
     public void DestroyEnemy()
     {
-        HitMarker[] markers = GetComponentsInChildren<HitMarker>(true);
-        foreach(HitMarker marker in markers)
-        {
-            marker.SaveFromDeath();
-        }
-
-        Destroy(gameObject);
+        Useful.DestroyGameObject(gameObject);
     }
 }

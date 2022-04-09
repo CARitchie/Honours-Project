@@ -46,7 +46,7 @@ public class SummonedAmmo : MonoBehaviour
 
             if (!stillExists)
             {
-                Destroy(gameObject);
+                Useful.DestroyGameObject(gameObject);
             }
             else
             {

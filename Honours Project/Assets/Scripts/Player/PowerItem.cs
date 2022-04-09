@@ -9,7 +9,7 @@ public class PowerItem : MonoBehaviour
         if(other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
             player.AddPowerCell();
-            Destroy(gameObject);
+            Useful.DestroyGameObject(gameObject);
         }
     }
 }
