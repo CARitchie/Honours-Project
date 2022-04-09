@@ -96,6 +96,8 @@ public class PlayerController : PersonController
         evaSpeed = walkSpeed * 0.8f;
 
         LoadData();
+        LoadWeapon();
+
 
         SettingsManager.OnChangesMade += LoadSensitivity;
         LoadSensitivity();
@@ -591,5 +593,18 @@ public class PlayerController : PersonController
     public WeaponManager WeaponManager()
     {
         return weaponManager;
+    }
+
+    public int GetWeaponIndex()
+    {
+        return weaponManager.GetWeaponIndex(weapon);
+    }
+
+    void LoadWeapon()
+    {
+        int index = SaveManager.CurrentWeapon();
+        Debug.Log("LOADED INDEX: " + index);
+        weaponManager.ForceLoad();
+        EquipWeapon(index);
     }
 }

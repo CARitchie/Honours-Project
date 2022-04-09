@@ -185,6 +185,12 @@ public static class SaveManager
         save.SetBool(key, value);
     }
 
+    public static int CurrentWeapon()
+    {
+        if (!SaveExists()) return 0;
+        return save.CurrentWeapon();
+    }
+
     public static bool AttemptSave()
     {
         if (save == null || PlayerController.Instance == null || !PlayerController.Instance.Saveable()) return false;

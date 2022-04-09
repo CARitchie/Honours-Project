@@ -50,6 +50,7 @@ public class SaveFile
         parentRot.SetData(player.GetParentRotation());
         localRot.SetData(player.GetLocalRotation());
         player.WeaponManager()?.SaveWeapons();
+        currentWeapon = player.GetWeaponIndex();
 
         PlayerDetails details = player.GetDetails();
         if (details == null) return;
@@ -223,6 +224,11 @@ public class SaveFile
         if (booleans == null) return;
         if (!booleans.ContainsKey(key)) booleans.Add(key, value);
         else booleans[key] = value;
+    }
+
+    public int CurrentWeapon()
+    {
+        return currentWeapon;
     }
 
     [System.Serializable]

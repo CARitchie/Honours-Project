@@ -17,6 +17,8 @@ public class WeaponWedge : MonoBehaviour
     private void Start()
     {
         WeaponManager.OnWeaponUnlock += Unlock;
+
+        if (SaveManager.WeaponUnlocked(index)) Unlock(index);
     }
 
     private void OnDestroy()

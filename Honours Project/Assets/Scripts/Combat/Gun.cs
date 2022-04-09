@@ -24,7 +24,7 @@ public class Gun : Weapon
     Animator animator;
     AudioManager audioManager;
 
-    int _MaxAmmo;   // Actual max ammo
+    int _MaxAmmo = -450;   // Actual max ammo
 
     int currentAmmo = -450;
 
@@ -33,7 +33,7 @@ public class Gun : Weapon
         animator = GetComponent<Animator>();
         recoil = GetComponentInParent<Recoil>();
         audioManager = GetComponent<AudioManager>();
-        _MaxAmmo = maxAmmo;
+        if(_MaxAmmo == -450) _MaxAmmo = maxAmmo;
         if(currentAmmo == -450 || currentAmmo > _MaxAmmo) currentAmmo = _MaxAmmo;
     }
 

@@ -12,14 +12,15 @@ public class WeaponManager : MonoBehaviour
     float weaponZ = 0;
     int lastIndex = 0;
 
+    bool loaded = false;
+
     public delegate void WeaponUnlock(int index);
     public static event WeaponUnlock OnWeaponUnlock;
 
     private void Start()
     {
-        LoadWeapons();
+        ForceLoad();
         SaveManager.OnUpgradeChanged += LoadUpgrades;
-        LoadUpgrades();
     }
 
     private void OnDestroy()
@@ -152,7 +153,11 @@ public class WeaponManager : MonoBehaviour
         bool added = false;
         foreach(WeaponContainer weapon in weapons)
         {
-            if (weapon.GetWeapon().AddAmmo(percentOfMax)) added = true;
+            if (!weapon.IsLocked())
+            {
+                if (weapon.GetWeapon().AddAmmo(percentOfMax)) added = true;
+            }
+            
         }
 
         return added;
@@ -164,6 +169,24 @@ public class WeaponManager : MonoBehaviour
         {
             SaveManager.SetWeaponData(i, weapons[i]);
         }
+    }
+
+    public int GetWeaponIndex(Weapon wep)
+    {
+        if (wep == null) return 0;
+        for(int i = 0; i < weapons.Length; i++)
+        {
+            if (weapons[i].GetWeapon() == wep) return i;
+        }
+        return 0;
+    }
+
+    public void ForceLoad()
+    {
+        if (loaded) return;
+        loaded = true;
+        LoadWeapons();
+        LoadUpgrades();
     }
 }
 

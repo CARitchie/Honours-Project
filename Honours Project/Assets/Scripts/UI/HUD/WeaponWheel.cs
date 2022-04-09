@@ -21,7 +21,7 @@ public class WeaponWheel : MonoBehaviour
     Vector2 lookDirection = Vector2.up;
     float lastVal = 0;
     bool goingUp = false;
-    bool swapped = false;
+    bool swapped = true;
 
     private void Awake()
     {
