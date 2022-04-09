@@ -6,7 +6,7 @@ public class Shotgun : Gun
 {
     [SerializeField] int numberOfProjectiles = 1;
 
-    public override void Fire()
+    protected override void Fire()
     {
         fired = true;
         controller.Recoil(recoilStrength);

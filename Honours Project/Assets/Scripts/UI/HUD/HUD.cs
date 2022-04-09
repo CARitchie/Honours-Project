@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class HUD : MonoBehaviour
     [SerializeField] GameObject planetTextHolder;
     [SerializeField] DamageIndicatorController damageIndicator;
     [SerializeField] SaveSymbol saveSymbol;
+    [SerializeField] GameObject ammoIndicator;
+    [SerializeField] TextMeshProUGUI ammoText;
+    [SerializeField] Image ammoInfinite;
 
     public static HUD Instance;
 
@@ -31,6 +35,7 @@ public class HUD : MonoBehaviour
     Vector3 targetPos;
 
     bool damageIndicatorsActive = true;
+    bool infinite = false;
 
     private void Awake()
     {
@@ -85,6 +90,26 @@ public class HUD : MonoBehaviour
     public void SetWeaponWheelActive(float val)
     {
         weaponWheel.Activate(val);
+    }
+
+    public static void ActivateAmmoIndicator()
+    {
+        if (Instance == null) return;
+        Instance.ammoIndicator.SetActive(true);
+    }
+
+    public void SetAmmoText(string text)
+    {
+        if (infinite) return;
+        ammoText.text = text;
+    }
+
+    public void SetAmmoInfinite(bool infinite)
+    {
+        ammoText.enabled = !infinite;
+        ammoInfinite.enabled = infinite;
+
+        this.infinite = infinite;
     }
 
     public void Shake(float yChange, float xChange)

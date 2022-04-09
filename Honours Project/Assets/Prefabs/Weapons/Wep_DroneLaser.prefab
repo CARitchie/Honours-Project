@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e35be472cf07c4a848d43ccdfcf5c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
   projectileSpeed: 50
-  maxAmmo: 10
+  maxAmmo: -450
   recoilStrength: 1
   recoilDirection: {x: 0, y: 0, z: 0}
   automatic: 1

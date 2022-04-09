@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gun : Weapon
 {
     [SerializeField] protected float projectileSpeed;
-    [SerializeField] int maxAmmo;
+    [SerializeField] [Tooltip("Set to -450 for infinite ammo")] int maxAmmo;   // Default max ammo
     [SerializeField] protected float recoilStrength;
     [SerializeField] Vector3 recoilDirection;
     [SerializeField] bool automatic = false;
@@ -24,18 +24,22 @@ public class Gun : Weapon
     Animator animator;
     AudioManager audioManager;
 
-    int _MaxAmmo;
+    int _MaxAmmo;   // Actual max ammo
+
+    int currentAmmo;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         recoil = GetComponentInParent<Recoil>();
         audioManager = GetComponent<AudioManager>();
+        _MaxAmmo = maxAmmo;
+        currentAmmo = _MaxAmmo;
     }
 
     private void Start()
     {
-        projectilePool = ObjectPool.GetPool(projectileKey);
+        projectilePool = ObjectPool.GetPool(projectileKey);         
     }
 
     public override void OnEquip(PersonController controller)
@@ -55,9 +59,15 @@ public class Gun : Weapon
                 return;
             }
 
-            Fire();
+            if(currentAmmo > 0 || maxAmmo == -450)
+            {
+                if (maxAmmo != -450) currentAmmo--;
 
-            if (automatic) delayTimer = automaticDelay;
+                Fire();
+
+                if (automatic) delayTimer = automaticDelay;
+            }
+
         }
         else
         {
@@ -82,7 +92,7 @@ public class Gun : Weapon
         }
     }
 
-    public virtual void Fire()
+    protected virtual void Fire()
     {
         fired = true;
         controller.Recoil(recoilStrength);
@@ -130,4 +140,13 @@ public class Gun : Weapon
         if (audioManager != null) audioManager.PlaySound("Fire");
     }
 
+    public override string GetAmmoText()
+    {
+        return currentAmmo.ToString() + "/" + _MaxAmmo.ToString();
+    }
+
+    public override bool IsInfinite()
+    {
+        return maxAmmo == -450;
+    }
 }

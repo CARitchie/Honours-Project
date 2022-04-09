@@ -430,6 +430,8 @@ public class PlayerController : PersonController
 
         weapon.PrimaryAction(weaponAction.ReadValue<float>());
         weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
+
+        hud.SetAmmoText(weapon.GetAmmoText());
     }
 
     public void EquipWeapon(int index)
@@ -443,6 +445,8 @@ public class PlayerController : PersonController
     {
         SaveManager.UnlockWeapon(index);
         weaponManager.UnlockWeapon(index);
+
+        HUD.ActivateAmmoIndicator();
     }
 
     void SwapWeapon(Weapon newWeapon)
@@ -453,7 +457,11 @@ public class PlayerController : PersonController
 
         weapon = newWeapon;
 
-        if (weapon != null) weapon.OnEquip(this);
+        if (weapon != null) {
+            weapon.OnEquip(this);
+            hud.SetAmmoInfinite(weapon.IsInfinite());
+            hud.SetAmmoText(weapon.GetAmmoText());
+        }
     }
 
     public override void AddForce(Vector3 force)
@@ -566,5 +574,12 @@ public class PlayerController : PersonController
     {
         details.TakeDamage(20 * Time.fixedDeltaTime);
         details.UseEnergy(10 * Time.fixedDeltaTime);
+    }
+
+    public void UpdateAmmoText()
+    {
+        if (weapon == null) return;
+
+        hud.SetAmmoText(weapon.GetAmmoText());
     }
 }

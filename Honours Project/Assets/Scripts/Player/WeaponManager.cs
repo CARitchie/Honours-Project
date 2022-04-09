@@ -44,6 +44,8 @@ public class WeaponManager : MonoBehaviour
                 Gun gun = weapons[i].GetWeapon().GetComponent<Gun>();
                 if (gun != null) gun.SetMaxAmmoMultiplier(1.5f);
             }
+
+            PlayerController.Instance.UpdateAmmoText();
         }
     }
 
@@ -77,12 +79,15 @@ public class WeaponManager : MonoBehaviour
     public int Scroll(float value)
     {
         bool increase = value < 0;
+        int counter = 0;
 
         do
         {
             if (increase) IncreaseIndex();
             else DecreaseIndex();
-        } while (weapons[lastIndex].IsLocked() || weapons[lastIndex].GetWeapon() == null);
+
+            counter++;
+        } while (counter < weapons.Length && (weapons[lastIndex].IsLocked() || weapons[lastIndex].GetWeapon() == null));
 
         return lastIndex;
     }
@@ -122,11 +127,18 @@ public class WeaponManager : MonoBehaviour
     public void LoadStates(List<bool> states)
     {
         if (states == null) return;
+
+        bool unlocked = false;
         for(int i = 0; i < weapons.Length; i++)
         {
-            if (i >= states.Count) return;
-            if (states[i]) UnlockWeapon(i);
+            if (i >= states.Count) break;
+            if (states[i]) {
+                UnlockWeapon(i);
+                unlocked = true;
+            }
         }
+
+        if (unlocked) HUD.ActivateAmmoIndicator();
     }
 }
 

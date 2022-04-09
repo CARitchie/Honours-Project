@@ -34,4 +34,14 @@ public class Weapon : MonoBehaviour
     {
         damageMultiplier = multiplier;
     }
+
+    public virtual string GetAmmoText()
+    {
+        return "null";
+    }
+
+    public virtual bool IsInfinite()
+    {
+        return false;
+    }
 }
