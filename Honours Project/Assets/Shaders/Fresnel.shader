@@ -1,5 +1,4 @@
 // Adapted from https://www.ronja-tutorials.com/post/012-fresnel/
-
 Shader "Custom/Fresnel"
 {
     Properties
