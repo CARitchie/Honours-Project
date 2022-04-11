@@ -24,15 +24,16 @@ public class SettingsManager : MonoBehaviour
             Screen.SetResolution(PlayerPrefs.GetInt("Screen_Width"), PlayerPrefs.GetInt("Screen_Height"), (FullScreenMode)PlayerPrefs.GetInt("Fullscreen"));
         }
 
+        if (PlayerPrefs.HasKey("Graphics"))
+        {
+            QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Graphics"));
+        }
+
         if (PlayerPrefs.HasKey("VSync"))
         {
             QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSync");
         }
 
-        if (PlayerPrefs.HasKey("Graphics"))
-        {
-            QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Graphics"));
-        }
 
         OnChangesMade?.Invoke();
     }
