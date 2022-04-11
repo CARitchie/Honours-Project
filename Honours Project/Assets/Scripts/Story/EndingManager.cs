@@ -35,22 +35,22 @@ public class EndingManager : MonoBehaviour
     void ForceStates()
     {
         SaveManager.LoadGame();
-        SaveManager.SetUpgradeState("upgrade_teleport", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_solar", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_ammo", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_damage", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("upgrade_teleport", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("upgrade_solar", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("upgrade_ammo", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("upgrade_damage", SaveFile.UpgradeState.PlayerUnlocked);
         SaveManager.SetUpgradeState("upgrade_gun", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_shield", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_nanites", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("upgrade_thruster", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_lava", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_energy", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("upgrade_shield", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("upgrade_nanites", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("upgrade_thruster", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_lava", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_energy", SaveFile.UpgradeState.PlayerUnlocked);
         SaveManager.SetUpgradeState("sacrifice_speed", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_indicators", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_pulse", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_jump", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_compass", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_health", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("sacrifice_indicators", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_pulse", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_jump", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_compass", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_health", SaveFile.UpgradeState.PlayerUnlocked);
     }
 
     public void CalculateSurvival()
@@ -270,7 +270,15 @@ public class EndingManager : MonoBehaviour
     {
         if(health > 70)
         {
-            SetTime(enemyDestroyedTime);
+            if(SaveManager.SacrificeMade("upgrade_gun") || SaveManager.SacrificeMade("sacrifice_speed"))
+            {
+                SetTime(enemyDestroyedTime);
+            }
+            else
+            {
+                SetTime(62.3f);
+            }
+            
         }
         else
         {
