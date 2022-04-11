@@ -42,5 +42,10 @@ public class GravitySource : MonoBehaviour
         return Mathf.Clamp01(1 - (height / (influenceRange - startFade)));
     }
 
+    public virtual Vector3 GetUp(Vector3 point)
+    {
+        return point - transform.position;
+    }
+
     public string Key { get { return key; } }
 }

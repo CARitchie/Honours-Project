@@ -7,6 +7,7 @@ public class PlayerDetails : PersonDetails
     [SerializeField] float maxEnergy = 200;
     [SerializeField] float energyDrainRate;
     [SerializeField] HUD hud;
+    [SerializeField] bool finalFight;
     [Header("Temporary")] [SerializeField] GameObject shipCompass;
     float energy;
     float fullMaxHealth;
@@ -197,9 +198,17 @@ public class PlayerDetails : PersonDetails
 
     public override void OnDeath()
     {
-        immune = true;
-        SaveManager.LoadGame();
-        SceneManager.FadeToScene("Space");
+        if (!finalFight)
+        {
+            immune = true;
+            SaveManager.LoadGame();
+            SceneManager.FadeToScene("Space");
+        }
+        else
+        {
+            FindObjectOfType<EndFight>()?.OnPlayerDeath();
+        }
+
     }
 
     void LoadUpgrades()

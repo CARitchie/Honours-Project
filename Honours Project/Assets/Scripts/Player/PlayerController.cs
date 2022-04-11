@@ -12,6 +12,7 @@ public class PlayerController : PersonController
     [SerializeField] Transform cam;
     [SerializeField] CameraController camController;
     [SerializeField] SummonedAmmo summonedAmmo;
+    [SerializeField] bool finalFight;
     Weapon weapon;
 
     float verticalLook = 0;
@@ -97,7 +98,7 @@ public class PlayerController : PersonController
         fuel = maxFuel;
         evaSpeed = walkSpeed * 0.8f;
 
-        LoadData();
+        if(!finalFight) LoadData();
         LoadWeapon();
 
 

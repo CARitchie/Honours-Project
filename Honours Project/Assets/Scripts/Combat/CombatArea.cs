@@ -9,6 +9,7 @@ public class CombatArea : MonoBehaviour
     [SerializeField] GravitySource gravitySource;
     [SerializeField] string areaKey;
     [SerializeField] UnityEvent completed;
+    [SerializeField] bool dontSave = false;
 
     int index;
     bool complete = false;
@@ -89,6 +90,7 @@ public class CombatArea : MonoBehaviour
     {
         Debug.Log("Yay");
         PlayerController.Instance.SetCanSave(true);
+        if (dontSave) return;
         SaveManager.CompleteCombatArea(areaKey);
         GameManager.Autosave();
         completed?.Invoke();
@@ -120,5 +122,11 @@ public class CombatArea : MonoBehaviour
     public GravitySource GetSource()
     {
         return gravitySource;
+    }
+
+    public void ForceOff()
+    {
+        complete = true;
+        StopAllCoroutines();
     }
 }

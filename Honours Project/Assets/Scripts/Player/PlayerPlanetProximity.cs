@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerPlanetProximity : MonoBehaviour
 {
+    [SerializeField] bool active;
     [SerializeField] PlayerController player;
     [SerializeField] GravityReceiver ship;
     [SerializeField] GravitySource shipSource;
@@ -19,6 +20,8 @@ public class PlayerPlanetProximity : MonoBehaviour
         Color colour = mat.color;
         colour.a = 0.43f;
         mat.color = colour;
+
+        if (!active) enabled = false;
     }
 
 

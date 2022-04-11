@@ -5,16 +5,16 @@ using UnityEngine;
 public class DroneController : EnemyController
 {
     [Header("Drone Settings")]
-    Transform centre;
+    GravitySource centre;
     [SerializeField] float hoverHeight;
 
     protected override void Start()
     {
         base.Start();
 
-        centre = nearestSource.transform;
+        centre = nearestSource;
 
-        Vector3 up = transform.position - centre.position;
+        Vector3 up = centre.GetUp(transform.position);
         transform.up = up;
 
         up = up.normalized;
@@ -24,7 +24,7 @@ public class DroneController : EnemyController
     public override void Look(Vector3 point)
     {
         Vector3 direction = point - transform.position;
-        Vector3 toCentre = centre.position - transform.position;
+        Vector3 toCentre = -centre.GetUp(transform.position);
 
         direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
         Vector3 right = -Vector3.Cross(toCentre, direction);

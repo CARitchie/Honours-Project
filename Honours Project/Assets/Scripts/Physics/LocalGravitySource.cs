@@ -59,4 +59,9 @@ public class LocalGravitySource : GravitySource
 
         return GetComponentInParent<Rigidbody>().velocity;
     }
+
+    public override Vector3 GetUp(Vector3 point)
+    {
+        return transform.up;
+    }
 }
