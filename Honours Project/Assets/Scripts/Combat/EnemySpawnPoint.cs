@@ -238,7 +238,7 @@ class RendererMaterial
     {
         renderer.material.mainTexture = originalMat.mainTexture;
         renderer.material.SetTexture("_Emission", originalMat.GetTexture("_EmissionMap"));
-        renderer.material.SetFloat("_Glossiness", originalMat.GetFloat("_Glossiness"));
+        renderer.material.SetFloat("_Glossiness", originalMat.HasProperty("_Glossiness") ? originalMat.GetFloat("_Glossiness") : 0);
         renderer.material.SetFloat("_Scale", scale);
     }
 

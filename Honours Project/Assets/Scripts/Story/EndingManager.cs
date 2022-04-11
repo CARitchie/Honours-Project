@@ -6,14 +6,25 @@ using UnityEngine.Playables;
 public class EndingManager : MonoBehaviour
 {
     [SerializeField] PlayableDirector director;
+    [SerializeField] PlayableDirector enemyShip;
+    [SerializeField] PlayableDirector turret;
+    [SerializeField] ColonyTeleport teleporter;
     [SerializeField] float avoidMineTime;
     [SerializeField] float clipMineTime;
     [SerializeField] float hitMineTime;
     [SerializeField] float mineExplosionTime;
     [SerializeField] float suckTime;
     [SerializeField] float enemyArriveTime;
+    [SerializeField] float bigGunTime;
+    [SerializeField] ParticleSystem turretParticles;
+    [SerializeField] float turretTime;
+    [SerializeField] float enemyDestroyedTime;
+    [SerializeField] float colonyShipDestroyedTime;
+    [SerializeField] float enemyAttackTime;
+    [SerializeField] float teleportTime;
     float health = 100;
     int teleportType = 0;
+    bool turretsPlayed = false;
 
     private void Start()
     {
@@ -23,6 +34,7 @@ public class EndingManager : MonoBehaviour
 
     void ForceStates()
     {
+        SaveManager.LoadGame();
         SaveManager.SetUpgradeState("upgrade_teleport", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("upgrade_solar", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("upgrade_ammo", SaveFile.UpgradeState.Sacrificed);
@@ -31,14 +43,14 @@ public class EndingManager : MonoBehaviour
         SaveManager.SetUpgradeState("upgrade_shield", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("upgrade_nanites", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("upgrade_thruster", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_lava", SaveFile.UpgradeState.PlayerUnlocked);
-        SaveManager.SetUpgradeState("sacrifice_energy", SaveFile.UpgradeState.PlayerUnlocked);
-        SaveManager.SetUpgradeState("sacrifice_speed", SaveFile.UpgradeState.PlayerUnlocked);
-        SaveManager.SetUpgradeState("sacrifice_indicators", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_lava", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("sacrifice_energy", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("sacrifice_speed", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("sacrifice_indicators", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("sacrifice_pulse", SaveFile.UpgradeState.Sacrificed);
         SaveManager.SetUpgradeState("sacrifice_jump", SaveFile.UpgradeState.Sacrificed);
-        SaveManager.SetUpgradeState("sacrifice_compass", SaveFile.UpgradeState.PlayerUnlocked);
-        SaveManager.SetUpgradeState("sacrifice_health", SaveFile.UpgradeState.PlayerUnlocked);
+        SaveManager.SetUpgradeState("sacrifice_compass", SaveFile.UpgradeState.Sacrificed);
+        SaveManager.SetUpgradeState("sacrifice_health", SaveFile.UpgradeState.Sacrificed);
     }
 
     public void CalculateSurvival()
@@ -57,7 +69,6 @@ public class EndingManager : MonoBehaviour
             if (SaveManager.SacrificeMade("sacrifice_lava")) count++;
             if (SaveManager.SacrificeMade("sacrifice_energy")) count++;
             if (SaveManager.SacrificeMade("upgrade_solar")) count++;
-
             switch (count)
             {
                 case 3:
@@ -137,7 +148,6 @@ public class EndingManager : MonoBehaviour
 
     public void MineCollision()
     {
-        Debug.Log("COLLISION");
         SetTime(mineExplosionTime);
     }
 
@@ -148,6 +158,13 @@ public class EndingManager : MonoBehaviour
         director.Play();
     }
 
+    public void SetTime(float time, PlayableDirector playableDirector)
+    {
+        playableDirector.Stop();
+        playableDirector.time = time;
+        playableDirector.Play();
+    }
+
     public void SuckOutPods()
     {
         if (!SaveManager.SacrificeMade("sacrifice_health"))
@@ -156,19 +173,29 @@ public class EndingManager : MonoBehaviour
         }
         else
         {
-            EarlyWarning();
+            SecondEscapeAttempt();
         }
     }
 
     public void EarlyWarning()
     {
+        SetTime(enemyArriveTime);
+        SetTime(0, enemyShip);
+
         if (SaveManager.SacrificeMade("sacrifice_indicators"))
         {
-
+            PlayTurrets();
         }
-        else
+    }
+
+    public void PlayTurrets()
+    {
+        if (turretsPlayed) return;
+        turretsPlayed = true;
+
+        if (SaveManager.SacrificeMade("sacrifice_speed"))
         {
-            SetTime(enemyArriveTime);
+            SetTime(0, turret);
         }
     }
 
@@ -176,20 +203,106 @@ public class EndingManager : MonoBehaviour
     {
         if(teleportType == 2 && health > 40)
         {
-            //Escape
+            TeleportAway();
         }
     }
 
     public void SecondEscapeAttempt()
     {
-        if((teleportType == 2 && health > 10) ||(teleportType == 2 && health > 50))
+        if((teleportType == 2 && health > 10) ||(teleportType == 1 && health > 50))
         {
-            //Escape
+            TeleportAway();
         }
         else
         {
             EarlyWarning();
         }
     }
+
+    public void ThirdEscapeAttempt()
+    {
+        if(teleportType == 1 && health > 40)
+        {
+            TeleportAway();
+        }
+        else
+        {
+            BigGun();
+        }
+    }
+
+    void BigGun()
+    {
+        if (SaveManager.SacrificeMade("upgrade_gun"))
+        {
+            SetTime(bigGunTime);
+            FireTurrets();
+        }
+        else
+        {
+            AttackEnemy();
+        }
+    }
+
+    bool FireTurrets()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_speed"))
+        {
+            turretParticles.Play();
+            return true;
+        }
+        return false;
+    }
+
+    void AttackEnemy()
+    {
+        if (FireTurrets())
+        {
+            SetTime(turretTime);
+        }
+        else
+        {
+            AfterAttack();
+        }
+    }
+
+    public void AfterAttack()
+    {
+        if(health > 70)
+        {
+            SetTime(enemyDestroyedTime);
+        }
+        else
+        {
+            SetTime(enemyAttackTime);
+        }
+    }
+
+    public void TestSurvived()
+    {
+        if(health < 10)
+        {
+            Debug.Log("Decimated");
+            SetTime(colonyShipDestroyedTime);
+        }
+        else
+        {
+            Debug.Log("Survived");
+            // switch to fighting
+            director.Stop();
+        }
+    }
+
+    public void GameEnd()
+    {
+        director.Stop();
+    }
+
+    void TeleportAway()
+    {
+        SetTime(teleportTime);
+        teleporter.Teleport();
+    }
+
 
 }
