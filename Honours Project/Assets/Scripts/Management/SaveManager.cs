@@ -57,6 +57,7 @@ public static class SaveManager
         Debug.Log("Creating new save file");
         save = new SaveFile();
         SaveToFile();
+        OnUpgradeChanged?.Invoke();
     }
 
     public static void SaveToFile()
