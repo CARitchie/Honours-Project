@@ -9,7 +9,7 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] bool inScene = false;
     [SerializeField] bool teleportIn = false;
     EnemyWave wave;
-    Transform centre;
+    GravitySource centre;
     float teleportTime;
     float noiseScale = 961.1f;
     Vector3 offset = Vector3.zero;
@@ -165,13 +165,20 @@ public class EnemySpawnPoint : MonoBehaviour
 
     public Vector3 GetParticleUp(Transform particles)
     {
-        return particles.position - centre.position;
+        if(centre != null)
+        {
+            return centre.GetUp(particles.position);
+        }
+        else
+        {
+            return transform.up;
+        }
     }
 
     public void SetWave(EnemyWave wave)
     {
         this.wave = wave;
-        centre = wave.GetSource().transform;
+        centre = wave.GetSource();
     }
 
     public bool IsAlive()

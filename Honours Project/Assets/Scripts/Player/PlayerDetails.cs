@@ -154,7 +154,7 @@ public class PlayerDetails : PersonDetails
     void ToggleGodMode()
     {
         immune = !immune;
-        shipCompass.SetActive(immune);
+        if(shipCompass != null) shipCompass.SetActive(immune);
     }
 
     public void AddPowerCell()

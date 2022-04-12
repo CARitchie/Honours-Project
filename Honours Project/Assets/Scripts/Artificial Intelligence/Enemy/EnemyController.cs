@@ -24,7 +24,7 @@ public class EnemyController : PersonController
 
     Vector3 offset;
 
-    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 8| 1 << 11 | 1 << 12 | 1 << 13);
+    int layerMask = (1 << 0 | 1 << 8 | 1 << 9 | 1 << 10);
 
     protected override void Awake()
     {
@@ -166,17 +166,28 @@ public class EnemyController : PersonController
         Vector3 point1 = transform.position;
         Vector3 point2 = player.position;
 
-        if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit, Vector3.Distance(point1, point2), layerMask)){
-            if (hit.transform.CompareTag("Player"))
-            {
-                Debug.DrawLine(point1, point2, Color.cyan);
-                return true;
-            }
+        RaycastHit[] hits = Physics.RaycastAll(point1, point2 - point1, Vector3.Distance(point1, point2), layerMask);
+
+        if (hits == null || hits.Length < 1)
+        {
+            Debug.DrawLine(point1, point2, Color.red);
+
+            return false;
         }
 
-        Debug.DrawLine(point1, point2, Color.red);
+        if(hits.Length == 1 && hits[0].transform.CompareTag("Player"))
+        {
+            Debug.DrawLine(point1, point2, Color.cyan);
+            return true;
 
-        return false;
+        }
+
+        for(int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.layer != 10) return false;
+        }
+
+        return true;
     }
 
     public void SetHostile(bool val)

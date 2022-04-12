@@ -6,6 +6,7 @@ using UnityEngine.Playables;
 
 public class EndFight : MonoBehaviour
 {
+    [SerializeField] bool faster;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] CombatArea combat;
     [SerializeField] Animator colonyDoor;
@@ -25,6 +26,7 @@ public class EndFight : MonoBehaviour
         float percent = 1 - ((health - 10) / 60);
 
         timer = percent * 4 * 60 + 60;
+        if(faster) timer = 10;
         colonyDoor.SetBool("Open", false);
     }
 
@@ -51,7 +53,8 @@ public class EndFight : MonoBehaviour
     void StartSecondSegment()
     {
         state = 1;
-        timer = 60;
+        if (faster) timer = 10;
+        else timer = 60;
         combat.ForceOff();
         colonyDoor.SetBool("Open", true);
     }

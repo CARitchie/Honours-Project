@@ -24,7 +24,7 @@ public class PathFinder : MonoBehaviour
 
     Vector3 originalPos;
 
-    int layerMask = ~(1 << 2 | 1 << 6 | 1 << 10 | 1 << 11 | 1 << 12 | 1 << 13);
+    int layerMask = (1 << 0 | 1 << 8 | 1 << 9 | 1 << 10);
 
     void Start(){
 
@@ -97,7 +97,21 @@ public class PathFinder : MonoBehaviour
 
     bool TargetInView(Vector3 current)
     {
-        return !Physics.Raycast(current, target - current, (target - current).magnitude, layerMask);
+        Vector3 point1 = current;
+        Vector3 point2 = target;
+
+        RaycastHit[] hits = Physics.RaycastAll(point1, point2 - point1, Vector3.Distance(point1, point2), layerMask);
+
+        if (hits == null || hits.Length < 1) return false;
+
+        if (hits.Length == 1 && hits[0].transform.CompareTag("Player")) return true;
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.layer != 10) return false;
+        }
+
+        return true;
     }
 
     IEnumerator VisualiseProcess(Vector3 target){
