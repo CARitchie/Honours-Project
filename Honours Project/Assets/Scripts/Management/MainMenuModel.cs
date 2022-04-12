@@ -19,6 +19,8 @@ public class MainMenuModel : MonoBehaviour
     {
         Time.timeScale = 1;
         UnityEngine.SceneManagement.SceneManager.LoadScene("StoryIntro", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         saveExists = SaveManager.SaveFileExists();
         continueButton.SetActive(saveExists);
