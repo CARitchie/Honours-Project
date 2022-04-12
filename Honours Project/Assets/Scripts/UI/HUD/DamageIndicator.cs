@@ -28,6 +28,7 @@ public class DamageIndicator : PoolObject
 
     public void RotateTo(Transform player)
     {
+        if (target == null) return;
         Vector3 dir = target.position - player.position;
         Vector3 right = Vector3.Cross(dir, player.up).normalized;
         dir = Vector3.Cross(-right, player.up);
