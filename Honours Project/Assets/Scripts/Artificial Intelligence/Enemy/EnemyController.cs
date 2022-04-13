@@ -243,4 +243,20 @@ public class EnemyController : PersonController
             return (details.transform.position - Origin).sqrMagnitude;
         }
     }
+
+    public float PlayerHeight()
+    {
+        if (player == null) return -1;
+        if (Physics.Raycast(player.position, -player.up, out RaycastHit hit, 5, 1 << 8))
+        {
+            return hit.distance - 1;
+        }
+        return -1;
+    }
+
+    public bool PlayerLowEnough()
+    {
+        float height = PlayerHeight();
+        return height != -1 && height < 4;
+    }
 }

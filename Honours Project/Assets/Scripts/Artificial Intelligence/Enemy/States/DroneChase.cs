@@ -29,7 +29,7 @@ public class DroneChase : State
         }
         else
         {
-            if(findTime <= 0)
+            if(findTime <= 0 && controller.PlayerLowEnough())
             {
                 findTime = 3;
                 controller.FindPath(controller.PlayerPos(), true);

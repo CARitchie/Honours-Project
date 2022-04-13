@@ -620,4 +620,5 @@ public class PlayerController : PersonController
         weaponManager.ForceLoad();
         EquipWeapon(index);
     }
+
 }

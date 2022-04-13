@@ -4973,7 +4973,7 @@ MonoBehaviour:
   planet: {fileID: 0}
   targetObject: {fileID: 0}
   visualise: 0
-  maxIterations: 400
+  maxIterations: 70
 --- !u!114 &2150120160891472912
 MonoBehaviour:
   m_ObjectHideFlags: 0
