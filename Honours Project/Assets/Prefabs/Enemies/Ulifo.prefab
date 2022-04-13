@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 2161806703567906068}
   - component: {fileID: 1489025708344646071}
   - component: {fileID: 823896326445499563}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: HurtZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,6 +366,14 @@ PrefabInstance:
     - target: {fileID: 6964429125510888011, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}
       propertyPath: Death.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7521190055372484344, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}
+      propertyPath: noiseScale
+      value: 10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7521190055372484344, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}
+      propertyPath: teleportTime
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}

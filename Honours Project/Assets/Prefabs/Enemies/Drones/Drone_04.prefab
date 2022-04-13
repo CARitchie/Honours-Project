@@ -4788,6 +4788,7 @@ GameObject:
   - component: {fileID: 4371211834912825374}
   - component: {fileID: 2271574016332880714}
   - component: {fileID: 6763849866024225594}
+  - component: {fileID: 2150120160891472912}
   m_Layer: 10
   m_Name: Drone_04
   m_TagString: Untagged
@@ -4973,6 +4974,44 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   visualise: 0
   maxIterations: 400
+--- !u!114 &2150120160891472912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540103207733495761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fe602eca5ff294babb3057c3fbf0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers:
+  - {fileID: 6729764024878803438}
+  materials:
+  - {fileID: 2100000, guid: 4cee7a5983b187943adc589b9cb1f084, type: 2}
+  - {fileID: 2100000, guid: eaee0f11d6e5b7d4db338fedb688937e, type: 2}
+  - {fileID: 2100000, guid: 82a7ccffd2fed3e47ae444f4d5b0e027, type: 2}
+  - {fileID: 2100000, guid: d8dfda64987cff5419b3497636a384d6, type: 2}
+  - {fileID: 2100000, guid: ed3bd972f89e47e42843b13fe786b1bc, type: 2}
+  - {fileID: 2100000, guid: b5bb9a826b3056a48bae3843c804d4a5, type: 2}
+  - {fileID: 2100000, guid: 475a38ac09e45e34190d59c017dadc53, type: 2}
+  - {fileID: 2100000, guid: d6bbd080a39b4854096c1041d680d666, type: 2}
+  - {fileID: 2100000, guid: 8a6d64850f424d3419b8d9df49078ff4, type: 2}
+  - {fileID: 2100000, guid: 0c673a34921a40e41a11b1f96f70b371, type: 2}
+  - {fileID: 2100000, guid: bcaa4f37939a5bf42b5fb1a833c5714e, type: 2}
+  - {fileID: 2100000, guid: eddaffce8e7b618439f29009ac111ebf, type: 2}
+  - {fileID: 2100000, guid: 4e487708cce33b647b13149ee619e642, type: 2}
+  - {fileID: 2100000, guid: 0c12261101fafa741904eae00d611c84, type: 2}
+  - {fileID: 2100000, guid: 880f2e8ae8117924d96d9b5e1d9bb8a9, type: 2}
+  - {fileID: 2100000, guid: 9a116b178d4414b45aa521891f469727, type: 2}
+  - {fileID: 2100000, guid: b905751414f60f04491e10e1cdd4bd34, type: 2}
+  - {fileID: 2100000, guid: 852e08e8e7224cb4b8935e20924d01d4, type: 2}
+  - {fileID: 2100000, guid: e871de2d3a078f445b028b75b70ee154, type: 2}
+  - {fileID: 2100000, guid: ae5678c8e76ecae4fbb0afcbe88edd33, type: 2}
+  - {fileID: 2100000, guid: 0dd46c726e72adc45a13a91d6fc48aa3, type: 2}
+  - {fileID: 2100000, guid: 471818ee249267849bd3a01cfefe564a, type: 2}
+  - {fileID: 2100000, guid: 27935e4f4ec5bd848acb1c16b91ff694, type: 2}
 --- !u!1 &2230845091850813917
 GameObject:
   m_ObjectHideFlags: 0
@@ -5118,6 +5157,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8592964597837435647, guid: 7e6af7b93b372134b973376f0da8d444, type: 3}
+      propertyPath: damageMultiplier
+      value: 1.6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e6af7b93b372134b973376f0da8d444, type: 3}
 --- !u!4 &4262932035815263568 stripped
@@ -5197,6 +5240,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8462cc0fad2b284cb775e5fb7c2dd19, type: 3}
+--- !u!23 &6729764024878803438 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23259562486437646, guid: b8462cc0fad2b284cb775e5fb7c2dd19, type: 3}
+  m_PrefabInstance: {fileID: 6716642529845460704}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6712336666523795982 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4869088832863470, guid: b8462cc0fad2b284cb775e5fb7c2dd19, type: 3}
