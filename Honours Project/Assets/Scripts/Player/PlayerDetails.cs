@@ -27,6 +27,13 @@ public class PlayerDetails : PersonDetails
     int layerMask = ~(1 << 2 | 1 << 10 | 1 << 11 | 1 << 12);
 
     Transform sun;
+    AudioManager audioManager;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        audioManager = GetComponent<AudioManager>();
+    }
 
     private void Start()
     {
@@ -148,6 +155,10 @@ public class PlayerDetails : PersonDetails
     {
         bool healed = base.HealUp(amount);
         hud.SetHealthPercent(HealthPercent());
+        if (healed)
+        {
+            audioManager.PlaySound("heal");
+        }
         return healed;
     }
 
@@ -161,6 +172,7 @@ public class PlayerDetails : PersonDetails
     {
         powerCells++;
         hud.SetNumberOfPowerCells(powerCells);
+        audioManager.PlaySound("addPower");
     }
 
     public void Recharge(float amount)

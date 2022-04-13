@@ -4699,6 +4699,7 @@ GameObject:
   - component: {fileID: -840455796300246570}
   - component: {fileID: -1070957154877013973}
   - component: {fileID: 7321074014026871420}
+  - component: {fileID: -8406857640297793240}
   m_Layer: 10
   m_Name: Drone_03
   m_TagString: Untagged
@@ -4822,6 +4823,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: -8406857640297793240}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Spark
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!54 &3943127024788149188
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4906,6 +4919,20 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   visualise: 0
   maxIterations: 70
+--- !u!114 &-8406857640297793240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3943127024788149184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28dfc8d5d1c7aef41907be196edfc006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - {fileID: 11400000, guid: bb218ab3f548873428292a90eb7a100d, type: 2}
 --- !u!1 &3943127025261856771
 GameObject:
   m_ObjectHideFlags: 0

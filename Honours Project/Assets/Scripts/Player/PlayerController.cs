@@ -32,6 +32,7 @@ public class PlayerController : PersonController
     
     PlayerDetails details;
     WeaponManager weaponManager;
+    AudioManager audioManager;
 
     float fuel;
     float maxFuel = 200;
@@ -45,6 +46,7 @@ public class PlayerController : PersonController
     bool canDoubleJump = true;
     bool canSummon = false;
     float summonCooldown = 0;
+    float footstepTimer;
     const float summonDelay = 150;
 
     bool paused = false;
@@ -60,6 +62,7 @@ public class PlayerController : PersonController
         Instance = this;
         details = GetComponentInParent<PlayerDetails>();
         weaponManager = GetComponentInChildren<WeaponManager>();
+        audioManager = GetComponentInParent<AudioManager>();
     }
 
     protected void Start()
@@ -288,6 +291,17 @@ public class PlayerController : PersonController
         if (!inSpace)
         {
             rb.MovePosition(rb.position + velocity);
+
+            if (grounded)
+            {
+                footstepTimer -= movementSpeed * 0.15f * Time.deltaTime;
+                if (footstepTimer <= 0)
+                {
+                    audioManager.PlaySound("Footstep");
+                    footstepTimer = 0.3f;
+                }
+            }
+
         }
         else
         {
@@ -461,6 +475,7 @@ public class PlayerController : PersonController
     {
         SaveManager.UnlockWeapon(index);
         weaponManager.UnlockWeapon(index);
+        audioManager.PlaySound("equip");
 
         HUD.ActivateAmmoIndicator();
     }
