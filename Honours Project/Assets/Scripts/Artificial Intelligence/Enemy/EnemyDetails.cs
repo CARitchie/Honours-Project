@@ -71,6 +71,11 @@ public class EnemyDetails : PersonDetails
         }
 
         Debug.Log(gameObject + " was despawned");
-        Destroy(gameObject);
+        DestroyEnemy();
+    }
+
+    public void DestroyEnemy()
+    {
+        Useful.DestroyGameObject(gameObject);
     }
 }

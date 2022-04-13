@@ -47,7 +47,7 @@ public class PatrolState : State
 
     public void FindPath()
     {
-        active = controller.FindPath(patrolPoints[currentIndex].position);
+        active = controller.FindPath(patrolPoints[currentIndex].position, false);
         if (!active) StartCoroutine(DoubleCheck());
     }
 

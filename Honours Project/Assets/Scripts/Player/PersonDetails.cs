@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PersonDetails : MonoBehaviour, Damageable
 {
@@ -29,15 +28,19 @@ public class PersonDetails : MonoBehaviour, Damageable
 
     public virtual void OnDeath()
     {
-        SceneManager.LoadScene("Space");
     }
 
-    public virtual void OnShot(float damage)
+    public virtual void OnShot(float damage, Transform origin)
     {
         TakeDamage(damage);
     }
 
-    public float HealthPercent()
+    public virtual void OnExplosion(float damage)
+    {
+        TakeDamage(damage);
+    }
+
+    public virtual float HealthPercent()
     {
         return health / maxHealth;
     }
@@ -55,8 +58,13 @@ public class PersonDetails : MonoBehaviour, Damageable
         return true;
     }
 
-    public void OnMelee(float damage)
+    public virtual void OnMelee(float damage, Transform origin)
     {
         TakeDamage(damage);
+    }
+
+    public float GetHealth()
+    {
+        return health;
     }
 }

@@ -14,6 +14,7 @@ public class ChaseState : State
     public override void OnEnterState()
     {
         Debug.Log("Enter Chase");
+        controller.SetHostile(true);
     }
 
     public override void OnExecute()

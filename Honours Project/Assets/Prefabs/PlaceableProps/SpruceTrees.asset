@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d240c393f128e4d4c864836e0c8e779c, type: 3}
+  m_Name: SpruceTrees
+  m_EditorClassIdentifier: 
+  props:
+  - {fileID: 11400000, guid: ac0a4bca86f4ed949b1b04c4fce4c8b8, type: 2}
+  - {fileID: 11400000, guid: 5eb8cdedd24c8554486d1f7241b60360, type: 2}
+  - {fileID: 11400000, guid: 1ac2da6354c56f34792b01fcd6b8a04f, type: 2}
+  - {fileID: 11400000, guid: 9cb2e478769e9a4468cc8860d513a910, type: 2}
+  - {fileID: 11400000, guid: bf1c5e5010744b144823e2d739c176ce, type: 2}
+  - {fileID: 11400000, guid: 35e4e45d3ca663f4cb5b680ce3608509, type: 2}
+  - {fileID: 11400000, guid: 4329e78ac5b80c046a75042608ceb066, type: 2}
+  - {fileID: 11400000, guid: 94d6170993aee394c92c49a17e074df6, type: 2}
+  - {fileID: 11400000, guid: 549e4664f5af7a34493c9cb67fe1d7d4, type: 2}

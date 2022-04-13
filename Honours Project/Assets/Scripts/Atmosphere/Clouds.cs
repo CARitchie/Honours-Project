@@ -40,4 +40,9 @@ public class Clouds : MonoBehaviour
 
         return mat;
     }
+
+    public float GetSpeed()
+    {
+        return weatherSpeed.x;
+    }
 }

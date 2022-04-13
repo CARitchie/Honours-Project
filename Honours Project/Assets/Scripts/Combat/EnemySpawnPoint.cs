@@ -9,8 +9,10 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] bool inScene = false;
     [SerializeField] bool teleportIn = false;
     EnemyWave wave;
-    Transform centre;
+    GravitySource centre;
     float teleportTime;
+    float noiseScale = 961.1f;
+    Vector3 offset = Vector3.zero;
 
     public void Spawn()
     {
@@ -36,6 +38,7 @@ public class EnemySpawnPoint : MonoBehaviour
         controller.SetActive(false);
 
         ParticleSystem particles = GetParticles(0);
+        particles.transform.localPosition += offset;
         particles.Play();
 
         var emission = particles.emission;
@@ -127,7 +130,7 @@ public class EnemySpawnPoint : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Destroy(enemy.gameObject);
+        enemy.DestroyEnemy();
         particles.transform.parent = transform;
 
         yield return new WaitForSeconds(0.2f);
@@ -153,6 +156,8 @@ public class EnemySpawnPoint : MonoBehaviour
         if(enemy.TryGetComponent(out SpawnDetails details))
         {
             teleportTime = details.GetTeleportTime();
+            noiseScale = details.GetNoiseScale();
+            offset = details.GetParticleOffset();
         }
 
         if (teleportIn) StartCoroutine(FadeIn());
@@ -160,13 +165,20 @@ public class EnemySpawnPoint : MonoBehaviour
 
     public Vector3 GetParticleUp(Transform particles)
     {
-        return particles.position - centre.position;
+        if(centre != null)
+        {
+            return centre.GetUp(particles.position);
+        }
+        else
+        {
+            return transform.up;
+        }
     }
 
     public void SetWave(EnemyWave wave)
     {
         this.wave = wave;
-        centre = wave.GetSource().transform;
+        centre = wave.GetSource();
     }
 
     public bool IsAlive()
@@ -202,7 +214,7 @@ public class EnemySpawnPoint : MonoBehaviour
         {
             if (renderers[i].GetComponent<MeshRenderer>() || renderers[i].GetComponent<SkinnedMeshRenderer>())
             {
-                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold));
+                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold, noiseScale));
             }
         }
 
@@ -220,20 +232,21 @@ class RendererMaterial
     Renderer renderer;
     Material originalMat;
 
-    public RendererMaterial(Renderer renderer, Material newMat, float threshold)
+    public RendererMaterial(Renderer renderer, Material newMat, float threshold, float scale)
     {
         this.renderer = renderer;
         originalMat = renderer.material;
         this.renderer.material = newMat;
-        CopyMaterialSettings();
+        CopyMaterialSettings(scale);
         SetThreshold(threshold);
     }
 
-    void CopyMaterialSettings()
+    void CopyMaterialSettings(float scale)
     {
         renderer.material.mainTexture = originalMat.mainTexture;
         renderer.material.SetTexture("_Emission", originalMat.GetTexture("_EmissionMap"));
-        renderer.material.SetFloat("_Glossiness", originalMat.GetFloat("_Glossiness"));
+        renderer.material.SetFloat("_Glossiness", originalMat.HasProperty("_Glossiness") ? originalMat.GetFloat("_Glossiness") : 0);
+        renderer.material.SetFloat("_Scale", scale);
     }
 
     public void SetThreshold(float value)

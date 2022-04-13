@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Projectile : PoolObject
 {
     [SerializeField] GameObject hitMarker;
-    [SerializeField] float damage = 10;
+    [SerializeField] protected float damage = 10;
     [SerializeField] float despawnTime = 10;
+    [SerializeField] protected UnityEvent OnHit;
     Rigidbody rb;
     Vector3 lastPos;
-    Transform body;
+    protected Transform body;
+    TrailRenderer trail;
     float timer;
+    Transform originator;
+    protected float damageMultiplier = 1;
 
-    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12));
+    int layerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        trail = GetComponent<TrailRenderer>();
+        hitMarker.SetActive(false);
     }
 
     public override void OnExitQueue()
@@ -26,14 +33,18 @@ public class Projectile : PoolObject
         base.OnExitQueue();
     }
 
-    public void Fire(Vector3 velocity, Transform body)
+    public void Fire(Vector3 velocity, Transform body, Transform originator, float multiplier)
     {
         rb.velocity = velocity;
+        transform.forward = velocity;
+        damageMultiplier = multiplier;
 
         this.body = body;
+        this.originator = originator;
         Vector3 offset = Vector3.zero;
         if (body != null) offset = body.position;
         lastPos = transform.position - offset;
+        if(trail != null) trail.Clear();
     }
 
     private void FixedUpdate()
@@ -42,23 +53,42 @@ public class Projectile : PoolObject
 
         timer -= Time.fixedDeltaTime;
         if (timer <= 0) {
-            gameObject.SetActive(false);
-            timer = despawnTime;
+            Despawn();
         }
     }
 
-    public void HitSuccess(RaycastHit hit)
+    protected virtual void Despawn()
     {
-        GameObject marker = Instantiate(hitMarker);
-        marker.transform.position = hit.point;
-        marker.transform.parent = hit.collider.transform;
+        gameObject.SetActive(false);
+        timer = despawnTime;
+    }
 
-        if(hit.transform.TryGetComponent(out Damageable damageable))
+    public virtual void HitSuccess(RaycastHit hit, Vector3 direction)
+    {
+        PlaceHitMarker(hit, direction);
+
+        OnHit?.Invoke();
+
+        if (hit.transform.TryGetComponent(out Damageable damageable))
         {
-            damageable.OnShot(damage);
+            damageable.OnShot(damage * damageMultiplier, originator);
         }
 
         gameObject.SetActive(false);
+    }
+
+    protected void PlaceHitMarker(RaycastHit hit, Vector3 direction)
+    {
+        if(hitMarker == null)
+        {
+            Debug.LogWarning("No hitmarker present");
+            return;
+        }
+        hitMarker.transform.position = hit.point;
+        hitMarker.transform.parent = hit.collider != null ? hit.collider.transform : null;
+        //hitMarker.transform.parent = body;
+        hitMarker.transform.up = -direction;
+        hitMarker.SetActive(true);
     }
 
     bool DetectCollision()
@@ -69,7 +99,7 @@ public class Projectile : PoolObject
         lastPos += offset;
         if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position), layerMask))
         {
-            HitSuccess(hit);
+            HitSuccess(hit, transform.position - lastPos);
             return true;
         }
 
@@ -80,6 +110,7 @@ public class Projectile : PoolObject
 
 public interface Damageable
 {
-    void OnShot(float damage);
-    void OnMelee(float damage);
+    void OnShot(float damage, Transform origin);
+    void OnMelee(float damage, Transform origin);
+    void OnExplosion(float damage);
 }

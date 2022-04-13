@@ -6,13 +6,9 @@ public class EnemyController : PersonController
 {
     [Header("Enemy Settings")]
     [SerializeField] State[] states;
-    [SerializeField] Transform projectileHolder;
-    [SerializeField] float hostileResetTime;
     [SerializeField] float tempSpeed;
     CharacterGravity gravity;
     PathFinder pathFinder;
-
-    float hostileTimer;
 
     State currentState;
 
@@ -26,6 +22,10 @@ public class EnemyController : PersonController
     protected EnemyDetails details;
     bool active = true;
 
+    Vector3 offset;
+
+    int layerMask = (1 << 0 | 1 << 8 | 1 << 9 | 1 << 10);
+
     protected override void Awake()
     {
         base.Awake();
@@ -33,11 +33,11 @@ public class EnemyController : PersonController
         pathFinder = GetComponentInParent<PathFinder>();
         gravity = GetComponentInParent<CharacterGravity>();
         details = GetComponentInParent<EnemyDetails>();
+
+        offset = details.transform.position - details.transform.parent.position;
     }
 
-    protected override void Start(){
-        base.Start();
-
+    protected virtual void Start(){
         if(gravity!=null) GravityController.FindClosest(gravity);
 
         for(int i = 0; i < states.Length; i++)
@@ -70,11 +70,7 @@ public class EnemyController : PersonController
 
         currentState?.OnExecute();
 
-        if(hostileTimer > 0)
-        {
-            hostileTimer -= Time.fixedDeltaTime;
-            if (hostileTimer <= 0) hostile = false;
-        }
+        CheckDespawnDistance();
     }
 
     void ChangeState(State state)
@@ -94,8 +90,8 @@ public class EnemyController : PersonController
         float moveSpeed;
         if (movementSpeed < walkSpeed) moveSpeed = movementSpeed / walkSpeed;
         else moveSpeed = ((movementSpeed - walkSpeed) / (sprintSpeed - walkSpeed)) + 1;
-        SetAnimFloat("MoveSpeed", moveSpeed);
-
+        //SetAnimFloat("MoveSpeed", moveSpeed);
+        AnimMoveTo(moveSpeed);
 
         Vector3 target = rb.position + (transform.forward * movementSpeed * Time.deltaTime);
 
@@ -107,6 +103,7 @@ public class EnemyController : PersonController
         Vector3 direction = point - transform.position;
         Vector3 originalAngles = transform.localEulerAngles;
 
+        // This can probably be improved
         direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(direction);
         
@@ -114,9 +111,9 @@ public class EnemyController : PersonController
         transform.localEulerAngles = new Vector3(originalAngles.x,newAngles.y,originalAngles.z);
     }
 
-    public bool FindPath(Vector3 target)
+    public bool FindPath(Vector3 target, bool inViewGoodEnough)
     {
-        nodes = pathFinder.FindPath(target, nearestSource?.transform);
+        nodes = pathFinder.FindPath(target, nearestSource?.transform, inViewGoodEnough);
         if (nodes != null && nodes.Count > 0)
         {
             currentNode = nodes.Pop();
@@ -143,6 +140,11 @@ public class EnemyController : PersonController
         return currentNode + nearestSource.transform.position;
     }
 
+    public bool PathExists()
+    {
+        return nodes != null && nodes.Count > 1;
+    }
+
     public bool IsHostile()
     {
         return hostile;
@@ -150,6 +152,7 @@ public class EnemyController : PersonController
 
     public Vector3 PlayerPos()
     {
+        // Could add code to correct for when player is in the ship
         return player.position;
     }
 
@@ -160,35 +163,36 @@ public class EnemyController : PersonController
 
     public bool PlayerVisible()
     {
-        Vector3 point1 = transform.position + transform.up * 0.5f;
-        Vector3 point2 = player.position + player.up * 0.5f;
+        Vector3 point1 = transform.position;
+        Vector3 point2 = player.position;
 
-        if (Physics.Raycast(point1, point2 - point1, out RaycastHit hit)){
-            if (hit.transform.CompareTag("Player"))
-            {
-                Debug.DrawLine(point1, point2, Color.cyan);
-                return true;
-            }
+        RaycastHit[] hits = Physics.RaycastAll(point1, point2 - point1, Vector3.Distance(point1, point2), layerMask);
+
+        if (hits == null || hits.Length < 1)
+        {
+            Debug.DrawLine(point1, point2, Color.red);
+
+            return false;
         }
 
-        return false;
-    }
+        if(hits.Length == 1 && hits[0].transform.CompareTag("Player"))
+        {
+            Debug.DrawLine(point1, point2, Color.cyan);
+            return true;
 
-    public override Transform ProjectileSpawnPoint()
-    {
-        return projectileHolder;
-    }
+        }
 
-    public void AimAtPlayer()
-    {
-        projectileHolder.LookAt(player);
+        for(int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.layer != 10) return false;
+        }
+
+        return true;
     }
 
     public void SetHostile(bool val)
     {
         hostile = val;
-
-        if (hostile) hostileTimer = hostileResetTime;
     }
 
     public EnemyDetails GetDetails()
@@ -204,5 +208,39 @@ public class EnemyController : PersonController
     public void MatchSourceVelocity()
     {
         rb.velocity = nearestSource.GetVelocity();
+    }
+
+    public void AnimatorSlowDown()
+    {
+        float value = GetAnimFloat("MoveSpeed");
+        value = Mathf.MoveTowards(value, 0, Time.deltaTime);
+        SetAnimFloat("MoveSpeed", value);
+    }
+
+    public void AnimMoveTo(float target)
+    {
+        float current = GetAnimFloat("MoveSpeed");
+        SetAnimFloat("MoveSpeed", Mathf.MoveTowards(current, target, Time.deltaTime * 3));
+    }
+
+    void CheckDespawnDistance()
+    {
+        if (!Useful.Close(Origin, details.transform.position, 500)) details.OnDeath();
+    }
+
+    public Vector3 Origin
+    {
+        get
+        {
+            return details.transform.parent.position + offset;
+        }
+    }
+
+    public float SquareDistanceToOrigin
+    {
+        get
+        {
+            return (details.transform.position - Origin).sqrMagnitude;
+        }
     }
 }

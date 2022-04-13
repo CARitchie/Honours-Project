@@ -8,17 +8,13 @@ public class CharacterGravity : GravityReceiver
     [SerializeField] bool player;
     PersonController controller;
 
-    Vector3 targetDir;
-    Coroutine rotateRoutine;
-    bool routineRunning = false;
-    const float rotateThreshold = -0.95f;
+    GravitySource nearSource;
 
     protected override void Awake()
     {
         base.Awake();
         controller = GetComponentInChildren<PersonController>();
     }
-
 
     public override void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
     {
@@ -58,11 +54,12 @@ public class CharacterGravity : GravityReceiver
             force += GetLocalForce();
 
             LocalGravitySource localGravitySource = ClosestLocalSource();
-            dir = localGravitySource.GetDirection();
+            dir = localGravitySource.GetGravityDirection(Vector3.zero);
             closestSource = localGravitySource;
         }
 
         controller.SetNearestSource(closestSource);
+        nearSource = closestSource;
 
         if (float.IsNaN(force.x)) return;
 
@@ -70,27 +67,8 @@ public class CharacterGravity : GravityReceiver
         if (!player)
         {
             rb.AddForce(playerVelocity, ForceMode.VelocityChange);
-            Rotate(dir, time);
         }
-        else
-        {
-            targetDir = dir;
-            if (dir != Vector3.zero)
-            {
-                float dot = Vector3.Dot(dir, transform.up);
-                if(dot > rotateThreshold)
-                {
-                    if (!routineRunning)
-                    {
-                        rotateRoutine = StartCoroutine(FasterRotate());
-                    }
-                }
-                else
-                {
-                    Rotate(dir, time);
-                }
-            }
-        }
+
     }
 
     void Rotate(Vector3 direction, float time)
@@ -103,46 +81,13 @@ public class CharacterGravity : GravityReceiver
 
         rot = Quaternion.RotateTowards(Quaternion.identity, rot, time * rotationSpeed);
 
-        transform.rotation = rot * transform.rotation;
+        rb.MoveRotation(rot * transform.rotation);
     }
 
-    public void FindClosest(List<PlanetGravity> sources)
+    private void LateUpdate()
     {
-        GravitySource closest = null;
-
-        if (localGravitySources.Count > 0)
-        {
-            LocalGravitySource localGravitySource = ClosestLocalSource();
-            closest = localGravitySource;
-            return;
-        }
-
-        float max = 0;
-        for (int i = 0; i < sources.Count; i++)
-        {
-            if (sources[i].transform != transform)
-            {
-                Vector3 direction = sources[i].transform.position - transform.position;
-                float magnitude = direction.sqrMagnitude;
-
-                if (magnitude - sources[i].GetSquareDistance() < max && magnitude < sources[i].Influence)
-                {
-                    max = magnitude;
-                    closest = sources[i];
-                }
-            }
-        }
-    }
-
-    IEnumerator FasterRotate()
-    {
-        if (routineRunning) yield return null;
-        routineRunning = true;
-        do
-        {
-            Rotate(targetDir, Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        } while (targetDir != Vector3.zero && Vector3.Dot(targetDir, transform.up) > rotateThreshold);
-        routineRunning = false;
+        if (nearSource == null) return;
+        Vector3 direction = nearSource.GetGravityDirection(transform.position);
+        Rotate(direction, Time.deltaTime);
     }
 }

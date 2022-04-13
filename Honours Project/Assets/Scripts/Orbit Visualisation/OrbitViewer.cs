@@ -22,6 +22,14 @@ public class OrbitViewer : MonoBehaviour
         StartFollow();
     }
 
+    private void Start()
+    {
+        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)
+        {
+            transform.parent = orbitObjects[relativeBody].SourceTransform();
+        }
+    }
+
     public void UpdateOrbits()
     {
         if (Application.isPlaying) return;
@@ -64,8 +72,12 @@ public class OrbitViewer : MonoBehaviour
                 {
                     orbitObject.ChangePosition(timeStep, orbitObjects[relativeBody].GetLastPos() - origin);
                 }
-                orbitObject.Finalise();
             }
+        }
+
+        foreach(OrbitObject orbitObject in orbitObjects)
+        {
+            orbitObject.Finalise();
         }
     }
 
@@ -123,6 +135,11 @@ class OrbitObject
     float mass;
     Vector3 lastPos;
     Vector3 velocity;
+
+    public Transform SourceTransform()
+    {
+        return source.transform;
+    }
 
     public void Initialise()
     {

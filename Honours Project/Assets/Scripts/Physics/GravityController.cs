@@ -41,7 +41,7 @@ public class GravityController : MonoBehaviour
 
         foreach(GravityReceiver receiver in receivers)
         {
-            receiver.ApplyForce(sources, time, -playerVelocity);
+            if(receiver.enabled) receiver.ApplyForce(sources, time, -playerVelocity);
         }
     }
 
@@ -52,12 +52,21 @@ public class GravityController : MonoBehaviour
         playerVelocity = Vector3.zero;
     }
 
-    public static void FindClosest(CharacterGravity character)
+    public static GravitySource FindClosest(GravityReceiver receiver, bool global = false)
     {
-        if (Instance == null) return;
+        if (Instance == null) return null;
 
-        character.FindClosest(Instance.sources);
+        if (!global)
+        {
+            return receiver.FindClosest(Instance.sources);
+        }
+        else
+        {
+            return receiver.FindGlobalClosest(Instance.sources);
+        }
+        
     }
+
 
     public static void RemoveReceiver(GravityReceiver receiver)
     {
@@ -78,5 +87,23 @@ public class GravityController : MonoBehaviour
         if (Instance == null) return;
 
         Instance.player = receiver;
+    }
+
+    public static bool FindSource(string key, out GravitySource source)
+    {
+        source = null;
+        if (Instance == null) return false;
+
+        GravitySource[] allSources = FindObjectsOfType<GravitySource>();
+        for (int i = 0; i < allSources.Length; i++)
+        {
+            if (allSources[i].Key == key)
+            {
+                source = allSources[i];
+                return true;
+            }
+        }
+
+        return false;
     }
 }

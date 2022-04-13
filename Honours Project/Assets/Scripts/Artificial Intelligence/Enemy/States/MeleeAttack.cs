@@ -22,9 +22,10 @@ public class MeleeAttack : State
 
     public override void OnEnterState()
     {
+        controller.SetHostile(true);
         timer = Random.Range(minRestTime, maxRestTime);
-        controller.SetAnimFloat("MoveSpeed", 0);
         controller.SetAnimBool("Attack", true);
+        StartCoroutine(SlowDown());
     }
 
     public override void OnExecute()
@@ -34,6 +35,16 @@ public class MeleeAttack : State
 
     public override void OnExitState()
     {
+        StopAllCoroutines();
         controller.SetAnimBool("Attack", false);
+    }
+
+    IEnumerator SlowDown()
+    {
+        while (true)
+        {
+            controller.AnimatorSlowDown();
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

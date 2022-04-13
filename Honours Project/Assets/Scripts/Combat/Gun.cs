@@ -4,30 +4,47 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
-    [SerializeField] float projectileSpeed;
-    [SerializeField] int maxAmmo;
-    [SerializeField] float recoilStrength;
+    [SerializeField] protected float projectileSpeed;
+    [SerializeField] [Tooltip("Set to -450 for infinite ammo")] int maxAmmo;   // Default max ammo
+    [SerializeField] protected float recoilStrength;
+    [SerializeField] Vector3 recoilDirection;
     [SerializeField] bool automatic = false;
     [SerializeField] float automaticDelay;
+    [SerializeField] float spreadSize;
     [SerializeField] string projectileKey;
+    [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] protected Transform firePoint;
 
-    bool fired = false;
+    Recoil recoil;
+    protected bool fired = false;
 
     float delayTimer = 0;
 
-    protected Transform projectileOrigin;
+    protected ObjectPool projectilePool;
+    Animator animator;
+    AudioManager audioManager;
 
-    ObjectPool projectilePool;
+    int _MaxAmmo = -450;   // Actual max ammo
+
+    int currentAmmo = -450;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        recoil = GetComponentInParent<Recoil>();
+        audioManager = GetComponent<AudioManager>();
+        if(_MaxAmmo == -450) _MaxAmmo = maxAmmo;
+        if(currentAmmo == -450 || currentAmmo > _MaxAmmo) currentAmmo = _MaxAmmo;
+    }
 
     private void Start()
     {
-        projectilePool = ObjectPool.GetPool(projectileKey);
+        projectilePool = ObjectPool.GetPool(projectileKey);         
     }
 
     public override void OnEquip(PersonController controller)
     {
         base.OnEquip(controller);
-        projectileOrigin = controller.ProjectileSpawnPoint();
     }
 
     public override void PrimaryAction(float val)
@@ -42,12 +59,23 @@ public class Gun : Weapon
                 return;
             }
 
-            Fire();
+            if(currentAmmo > 0 || maxAmmo == -450)
+            {
+                if (maxAmmo != -450) currentAmmo--;
 
-            if (automatic) delayTimer = automaticDelay;
+                Fire();
+
+                if (automatic) delayTimer = automaticDelay;
+            }
+
         }
         else
         {
+            if(fired && animator != null)
+            {
+                animator.ResetTrigger("Fire");
+            }
+
             fired = false;
             delayTimer = 0;
         }
@@ -64,7 +92,7 @@ public class Gun : Weapon
         }
     }
 
-    public void Fire()
+    protected virtual void Fire()
     {
         fired = true;
         controller.Recoil(recoilStrength);
@@ -73,14 +101,69 @@ public class Gun : Weapon
         
         Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();
 
-        projectile.transform.position = projectileOrigin.position + projectileOrigin.forward * 1.5f;
+        projectile.transform.position = firePoint.position;
 
-        Vector3 velocity = controller.GetVelocity() + projectileOrigin.forward * projectileSpeed;
+        Vector3 direction = controller.GetAimDirection(firePoint);
+        direction = SpreadAim(direction);
+        Vector3 velocity = controller.GetVelocity() + direction * projectileSpeed;
 
         GravitySource source = controller.GetNearestSource();
         Transform body = source != null ? source.transform : null; 
 
-        projectile.Fire(velocity, body);
+        projectile.Fire(velocity, body, transform.parent, damageMultiplier);
+
+        FireEffects();
     }
 
+    public void AimAt(Vector3 point)
+    {
+        firePoint.LookAt(point);
+    }
+
+    public Vector3 SpreadAim(Vector3 baseDirection)
+    {
+        Vector3 spread = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * spreadSize / 100;
+        return (baseDirection + spread).normalized;
+    }
+
+    public void SetMaxAmmoMultiplier(float percent)
+    {
+        _MaxAmmo = (int)(maxAmmo * percent);
+    }
+
+    protected void FireEffects()
+    {
+        if (animator != null) animator.SetTrigger("Fire");
+        if (muzzleFlash != null) muzzleFlash.Play();
+
+        if (recoil != null) recoil.RecoilFire(recoilDirection);
+        if (audioManager != null) audioManager.PlaySound("Fire");
+    }
+
+    public override string GetAmmoText()
+    {
+        return currentAmmo.ToString() + "/" + _MaxAmmo.ToString();
+    }
+
+    public override bool IsInfinite()
+    {
+        return maxAmmo == -450;
+    }
+
+    public override bool AddAmmo(float percentOfMax)
+    {
+        if (currentAmmo == _MaxAmmo || IsInfinite()) return false;
+        currentAmmo = (int)Mathf.Clamp(currentAmmo + percentOfMax * _MaxAmmo, 0, _MaxAmmo);
+        return true;
+    }
+
+    public override int GetAmmo()
+    {
+        return currentAmmo;
+    }
+
+    public override void SetAmmo(int ammo)
+    {
+        currentAmmo = ammo;
+    }
 }

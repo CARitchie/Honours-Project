@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ShipEntry : MonoBehaviour, Interact
 {
-    [SerializeField] GameObject message;
-
     ShipController ship;
 
     private void Awake()
@@ -17,12 +15,12 @@ public class ShipEntry : MonoBehaviour, Interact
     {
         if (ship.IsActive()) return;
 
-        message.SetActive(true);
+        HUD.SetInteractText("Control Spaceship");
     }
 
     public void OnExit()
     {
-        message.SetActive(false);
+        HUD.ClearInteractText();
     }
 
     public void OnSelect()

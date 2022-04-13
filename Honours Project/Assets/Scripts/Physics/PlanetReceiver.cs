@@ -33,4 +33,11 @@ public class PlanetReceiver : GravityReceiver
     {
         return velocity;
     }
+
+#if (UNITY_EDITOR)
+    private void OnValidate()
+    {
+        FindObjectOfType<OrbitViewer>()?.UpdateOrbits();
+    }
+#endif
 }

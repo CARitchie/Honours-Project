@@ -29,7 +29,8 @@ public class MeleeWeapon : MonoBehaviour
         {
             if (damageable == GetComponentInParent<Damageable>()) return;
 
-            damageable.OnMelee(damage);
+            damageable.OnMelee(damage, transform);
+            if (other.attachedRigidbody == null) return;
             other.attachedRigidbody.AddForce(transform.forward * 5, ForceMode.VelocityChange);
             
         }

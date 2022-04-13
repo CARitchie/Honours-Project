@@ -14,8 +14,7 @@ public class PersonController : MonoBehaviour
     protected bool grounded = false;
     protected Rigidbody rb;
     protected GravitySource nearestSource;
-    Vector3 lastVelocity;
-    Animator animator;
+    protected Animator animator;
 
     protected virtual void Awake(){
         rb = GetComponentInParent<Rigidbody>();
@@ -23,12 +22,7 @@ public class PersonController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    protected virtual void Start(){
-        lastVelocity = rb.velocity;
-    }
-
     protected virtual void FixedUpdate(){
-        VelocityCheck();
         CheckGrounded();
     }
 
@@ -39,7 +33,6 @@ public class PersonController : MonoBehaviour
     public void ForceVelocity(Vector3 velocity)
     {
         rb.velocity = velocity;
-        lastVelocity = velocity;
     }
 
     public void SetPosition(Vector3 position)
@@ -52,14 +45,6 @@ public class PersonController : MonoBehaviour
         transform.parent.eulerAngles = rotation;
     }
 
-    void VelocityCheck(){
-        Vector3 currentVelocity = rb.velocity;
-        float deltaV = (lastVelocity - currentVelocity).magnitude;
-        lastVelocity = currentVelocity;
-
-        //if(deltaV > 15) Debug.LogError(transform.name + " Velocity death: " + deltaV + "m/s",transform);
-    }
-
     protected virtual void CheckGrounded(){
         bool newGrounded = IsGrounded();
         if(grounded != newGrounded){
@@ -67,11 +52,11 @@ public class PersonController : MonoBehaviour
         }
     }
 
-    public bool IsGrounded(){
+    public virtual bool IsGrounded(){
         return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
     }
 
-    public void SetNearestSource(GravitySource source)
+    public virtual void SetNearestSource(GravitySource source)
     {
         nearestSource = source;
     }
@@ -79,11 +64,6 @@ public class PersonController : MonoBehaviour
     public GravitySource GetNearestSource()
     {
         return nearestSource;
-    }
-
-    public virtual Transform ProjectileSpawnPoint()
-    {
-        return transform;
     }
 
     public Vector3 GetVelocity()
@@ -114,5 +94,23 @@ public class PersonController : MonoBehaviour
     public void SetAnimFloat(string key, float val)
     {
         animator?.SetFloat(key, val);
+    }
+
+    public float GetAnimFloat(string key)
+    {
+        if (animator == null) return 0;
+        return animator.GetFloat(key);
+    }
+
+    public virtual Vector3 GetAimDirection(Transform fireHole)
+    {
+        return fireHole.forward;
+    }
+
+    public float GetHeight()
+    {
+        if (nearestSource == null) return -1;
+
+        return Vector3.Distance(nearestSource.transform.position, transform.position);
     }
 }

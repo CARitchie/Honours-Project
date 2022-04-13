@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d240c393f128e4d4c864836e0c8e779c, type: 3}
+  m_Name: SnowTrees
+  m_EditorClassIdentifier: 
+  props:
+  - {fileID: 11400000, guid: 2fe3059cc7c00fe41816b42f7750c4a2, type: 2}
+  - {fileID: 11400000, guid: 05d4d2c603134cf4abffad4b5336bb2f, type: 2}
+  - {fileID: 11400000, guid: c51c6377667160a498c3c5da93aff967, type: 2}
+  - {fileID: 11400000, guid: fa470bfb228cf5e4981f7d9a779bdce7, type: 2}

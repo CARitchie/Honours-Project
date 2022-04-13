@@ -11,7 +11,7 @@ public class LocalGravitySource : GravitySource
     private void OnTriggerEnter(Collider other)
     {
         GravityReceiver receiver = other.GetComponentInParent<GravityReceiver>();
-        if(receiver != null){
+        if(receiver != null && receiver.GetComponent<PlanetReceiver>() == null){
             if(!receivers.Contains(receiver)){
                 receivers.Add(receiver);
                 receiver.AddLocalGravitySource(this);
@@ -31,10 +31,11 @@ public class LocalGravitySource : GravitySource
     }
 
     public Vector3 GetForce(){
-        return strength * GetDirection();
+        return strength * GetGravityDirection(Vector3.zero);
     }
 
-    public Vector3 GetDirection(){
+    public override Vector3 GetGravityDirection(Vector3 point)
+    {
         return -transform.up;
     }
 
@@ -46,5 +47,21 @@ public class LocalGravitySource : GravitySource
     public void RemoveReceiver(GravityReceiver receiver)
     {
         receivers.Remove(receiver);
+    }
+
+    public override Vector3 GetVelocity()
+    {
+        PlanetGravity planet = GetComponentInParent<PlanetGravity>();
+        if(planet != null)
+        {
+            return planet.GetVelocity();
+        }
+
+        return GetComponentInParent<Rigidbody>().velocity;
+    }
+
+    public override Vector3 GetUp(Vector3 point)
+    {
+        return transform.up;
     }
 }

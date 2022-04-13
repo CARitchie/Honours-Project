@@ -13,6 +13,8 @@ public class PathFinder : MonoBehaviour
     List<Node> openList = new List<Node>();
     List<Node> closedList = new List<Node>();
     Vector3 target;
+    bool inViewGoodEnough = false;
+    int inViewCount = 0;
 
     float straightCost = 10;
     float diagonalCost = 14;
@@ -22,6 +24,8 @@ public class PathFinder : MonoBehaviour
 
     Vector3 originalPos;
 
+    int layerMask = (1 << 0 | 1 << 8 | 1 << 9 | 1 << 10);
+
     void Start(){
 
         if(visualise && targetObject != null){
@@ -29,12 +33,13 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    public Stack<Vector3> FindPath(Vector3 target, Transform planet){
+    public Stack<Vector3> FindPath(Vector3 target, Transform planet, bool inViewGoodEnough){
 
         if (planet == null) return null;
 
         this.target = target;
         this.planet = planet;
+        this.inViewGoodEnough = inViewGoodEnough;
 
         openList = new List<Node>();
         closedList = new List<Node>();
@@ -42,6 +47,12 @@ public class PathFinder : MonoBehaviour
 
         Vector3 start = transform.position;
         Vector3 dir = transform.forward;
+
+        if (inViewGoodEnough)
+        {
+            Vector3[] newTarget = FindPosition(target, transform.forward, 30);
+            if (newTarget != null) this.target = newTarget[0];
+        }
 
         Vector3[] originData = FindPosition(start, dir);
         if(originData == null) return null;
@@ -53,6 +64,18 @@ public class PathFinder : MonoBehaviour
         while(!found){
             currentNode = FindSmallestCost();
             if(currentNode == null) return null;
+
+            /*
+            if(inViewGoodEnough && TargetInView(currentNode.Position))
+            {
+                inViewCount++;
+                if(inViewCount >= 3)
+                {
+                    inViewCount = 0;
+                    counter = 0;
+                }
+            }
+            */
 
             if(AddToClosed(currentNode) || counter == 0){
                 found = true;
@@ -70,6 +93,25 @@ public class PathFinder : MonoBehaviour
         }
 
         return path;
+    }
+
+    bool TargetInView(Vector3 current)
+    {
+        Vector3 point1 = current;
+        Vector3 point2 = target;
+
+        RaycastHit[] hits = Physics.RaycastAll(point1, point2 - point1, Vector3.Distance(point1, point2), layerMask);
+
+        if (hits == null || hits.Length < 1) return false;
+
+        if (hits.Length == 1 && hits[0].transform.CompareTag("Player")) return true;
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.layer != 10) return false;
+        }
+
+        return true;
     }
 
     IEnumerator VisualiseProcess(Vector3 target){
@@ -92,7 +134,7 @@ public class PathFinder : MonoBehaviour
 
             currentNode = FindSmallestCost();
             if(currentNode == null) yield return null;
-
+            // Add code here to account for first visible node
             if(AddToClosed(currentNode) || counter == 0){
                 found = true;
             }else{
@@ -182,8 +224,8 @@ public class PathFinder : MonoBehaviour
         return (target - node.Position).sqrMagnitude < 4;
     }
 
-    public Vector3[] FindPosition(Vector3 position, Vector3 oldForward){
-        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, 3, 1 << 8)){
+    public Vector3[] FindPosition(Vector3 position, Vector3 oldForward, float distance = 3){
+        if(!Physics.Raycast(position, planet.position - position, out RaycastHit hit, distance, 1 << 8)){
             return null;
         }
 
@@ -229,6 +271,8 @@ public class PathFinder : MonoBehaviour
         for(int i = 0 ; i < completed.Count - 1 ; i++){
             Gizmos.DrawLine(completed[i] + planet.position,completed[i+1] + planet.position);
         }
+
+        Gizmos.DrawSphere(target, 0.5f);
     
     }
 }

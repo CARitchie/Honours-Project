@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 403c6e10e1ceda74d98000fdfe33a68c, type: 3}
+  m_Name: Pistol_Fire_03
+  m_EditorClassIdentifier: 
+  title: Pistol_Fire_03
+  clip: {fileID: 8300000, guid: a4a2f0260a8abce4e8692e51291da79b, type: 3}
+  group: {fileID: 6847028368278008415, guid: 9bcf14369ab48e649ad44ace980a33b1, type: 2}
+  volume: 0.7
+  pitch: 1
+  spatialBlend: 1

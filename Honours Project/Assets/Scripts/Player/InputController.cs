@@ -12,9 +12,8 @@ public class InputController : MonoBehaviour
     public static event Action Interact;
     public static event Action Exit;
     public static event Action Pause;
-    public static event Action Cloud;
-    public static event Action Atmosphere;
     public static event Action GodMode;
+    public static event Action SummonAmmo;
 
     PlayerInput input;
 
@@ -47,6 +46,11 @@ public class InputController : MonoBehaviour
         Instance.input.SwitchCurrentActionMap(map);
     }
 
+    public InputAction FindAction(string action)
+    {
+        return input.actions.FindAction(action);
+    }
+
     void OnJump()
     {
         Jump?.Invoke();
@@ -57,24 +61,22 @@ public class InputController : MonoBehaviour
         Pause?.Invoke();
     }
 
+    void OnSummonAmmo()
+    {
+        if (PlayerController.IsPaused()) return;
+        SummonAmmo?.Invoke();
+    }
+
     void OnInteract()
     {
+        if (PlayerController.IsPaused()) return;
         Interact?.Invoke();
     }
 
     void OnExitShip()
     {
+        if (PlayerController.IsPaused()) return;
         Exit?.Invoke();
-    }
-
-    void OnCloud()
-    {
-        Cloud?.Invoke();
-    }
-
-    void OnAtmosphere()
-    {
-        Atmosphere?.Invoke();
     }
 
     void OnGodMode()

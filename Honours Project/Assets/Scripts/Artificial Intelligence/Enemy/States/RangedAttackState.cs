@@ -17,13 +17,16 @@ public class RangedAttackState : State
     {
         Debug.Log("Enter Ranged Attack");
         gun.OnEquip(controller);
+        controller.SetHostile(true);
     }
 
     public override void OnExecute()
     {
-        controller.Look(controller.PlayerPos());
+        Vector3 playerPos = controller.PlayerPos();
 
-        controller.AimAtPlayer();
+        controller.Look(playerPos);
+
+        gun.AimAt(playerPos);
 
         if(controller.GetPlayerDistance() >= closeRange)
         {

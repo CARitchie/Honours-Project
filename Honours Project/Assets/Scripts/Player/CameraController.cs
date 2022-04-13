@@ -9,19 +9,23 @@ public class CameraController : MonoBehaviour
     AtmosphereRenderer atmosphere;
     CloudRenderer cloud;
 
-    private void Start()
+    int layerMask = 1 << 8 | 1 << 14;
+
+    private void Awake()
     {
         atmosphere = GetComponent<AtmosphereRenderer>();
         cloud = GetComponent<CloudRenderer>();
+    }
 
-        InputController.Cloud += ToggleClouds;
-        InputController.Atmosphere += ToggleAtmospheres;
+    private void Start()
+    {
+        SettingsManager.OnChangesMade += LoadAtmosphereSetting;
+        LoadAtmosphereSetting();
     }
 
     private void OnDestroy()
     {
-        InputController.Cloud -= ToggleClouds;
-        InputController.Atmosphere -= ToggleAtmospheres;
+        SettingsManager.OnChangesMade -= LoadAtmosphereSetting;
     }
 
     public void MoveToTransform(Transform transform)
@@ -48,13 +52,36 @@ public class CameraController : MonoBehaviour
         transform.localEulerAngles = Vector3.zero;
     }
 
-    public void ToggleClouds()
+    public void LoadAtmosphereSetting()
     {
-        cloud.enabled = !cloud.enabled;
+        if (PlayerPrefs.HasKey("Atmosphere"))
+        {
+            bool active = PlayerPrefs.GetInt("Atmosphere") == 1;
+            atmosphere.enabled = active;
+            cloud.enabled = active;
+        }
     }
 
-    public void ToggleAtmospheres()
+    public Vector3 UpdatePlanetHUD(Rigidbody rb)
     {
-        atmosphere.enabled = !atmosphere.enabled;
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, 50000, layerMask))
+        {
+            Vector3 objectVelocity = hitInfo.rigidbody.velocity;
+
+            float relativeVel = Vector3.Distance(rb.velocity, objectVelocity);
+            float distance = Vector3.Distance(rb.position, hitInfo.rigidbody.position);
+
+            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - hitInfo.rigidbody.position) > 0) relativeVel *= -1;
+
+            HUD.SetPlanetDetails(hitInfo.rigidbody.name, relativeVel, distance);
+
+            return objectVelocity;
+        }
+        else
+        {
+            HUD.SetPlanetTextActive(false);
+        }
+
+        return rb.velocity;
     }
 }

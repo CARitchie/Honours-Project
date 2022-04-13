@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoolObject : MonoBehaviour
 {
-    private void Start()
+    protected virtual void Start()
     {
         gameObject.SetActive(false);
     }

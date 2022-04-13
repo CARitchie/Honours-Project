@@ -286,3 +286,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportTime: 1.5
+  noiseScale: 961

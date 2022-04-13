@@ -9,13 +9,22 @@ public class CombatArea : MonoBehaviour
     [SerializeField] GravitySource gravitySource;
     [SerializeField] string areaKey;
     [SerializeField] UnityEvent completed;
+    [SerializeField] bool dontSave = false;
 
     int index;
     bool complete = false;
 
     private void Start()
     {
-        SpawnInitialWave();
+        if (SaveManager.IsCombatAreaComplete(areaKey))
+        {
+            complete = true;
+        }
+        else
+        {
+            SpawnInitialWave();
+        }
+        
     }
 
     void SpawnInitialWave()
@@ -55,8 +64,12 @@ public class CombatArea : MonoBehaviour
 
     public void OnPlayerEnter()
     {
-        StopAllCoroutines();
-        StartCoroutine(SpawnAllWaves());
+        if (!complete)
+        {
+            PlayerController.Instance.SetCanSave(false);
+            StopAllCoroutines();
+            StartCoroutine(SpawnAllWaves());
+        }
     }
 
     public void CheckComplete()
@@ -76,14 +89,28 @@ public class CombatArea : MonoBehaviour
     public void OnComplete()
     {
         Debug.Log("Yay");
+        PlayerController.Instance.SetCanSave(true);
+        if (dontSave) return;
+        SaveManager.CompleteCombatArea(areaKey);
+        GameManager.Autosave();
         completed?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
         if(other.attachedRigidbody.GetComponent<PlayerDetails>() != null)
         {
             OnPlayerEnter();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.attachedRigidbody == null) return;
+        if (other.attachedRigidbody.GetComponent<PlayerDetails>() != null)
+        {
+            PlayerController.Instance.SetCanSave(true);
         }
     }
 
@@ -95,5 +122,11 @@ public class CombatArea : MonoBehaviour
     public GravitySource GetSource()
     {
         return gravitySource;
+    }
+
+    public void ForceOff()
+    {
+        complete = true;
+        StopAllCoroutines();
     }
 }

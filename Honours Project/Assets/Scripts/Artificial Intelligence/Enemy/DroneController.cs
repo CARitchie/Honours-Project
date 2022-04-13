@@ -5,37 +5,42 @@ using UnityEngine;
 public class DroneController : EnemyController
 {
     [Header("Drone Settings")]
-    Transform centre;
+    GravitySource centre;
     [SerializeField] float hoverHeight;
 
     protected override void Start()
     {
         base.Start();
 
-        centre = nearestSource.transform;
+        centre = nearestSource;
 
-        Vector3 up = transform.position - centre.position;
+        Vector3 up = centre.GetUp(transform.position);
         transform.up = up;
 
         up = up.normalized;
-        transform.position += (hoverHeight + 1) * up;
+        transform.position += (hoverHeight + 1.2f) * up;
     }
 
     public override void Look(Vector3 point)
     {
         Vector3 direction = point - transform.position;
-        Vector3 toCentre = centre.position - transform.position;
+        Vector3 toCentre = -centre.GetUp(transform.position);
 
         direction = Vector3.RotateTowards(transform.forward, direction, lookSensitivity * Time.deltaTime, 0.0f);
-        Vector3 right = Vector3.Cross(toCentre, direction);
-        Vector3 up = Vector3.Cross(right, direction);
+        Vector3 right = -Vector3.Cross(toCentre, direction);
+        Vector3 up = -Vector3.Cross(right, direction);
 
-        if(Physics.Raycast(transform.position, toCentre, hoverHeight))
-        {
-            Vector3 forward = Vector3.Cross(-right, -toCentre);
-            direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
-            
-            //transform.position += transform.up * movementSpeed * 0.5f * Time.deltaTime;
+        if(Physics.Raycast(transform.position, toCentre, out RaycastHit hit,hoverHeight, 1 << 8))
+        {/*
+            if(Vector3.Dot(direction,toCentre) > 0)
+            {
+                Vector3 forward = Vector3.Cross(right, -toCentre);
+                direction = Vector3.RotateTowards(direction, forward, lookSensitivity * Time.deltaTime * 1.5f, 0.0f);
+                up = -Vector3.Cross(right, direction);
+            }*/
+
+            transform.position = hit.point + (-toCentre.normalized) * hoverHeight;
+
         }
 
         transform.rotation = Quaternion.LookRotation(direction, up);

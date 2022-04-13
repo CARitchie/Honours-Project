@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Compass : MonoBehaviour
 {
     [SerializeField] RectTransform compassImage;
+    [SerializeField] TextMeshProUGUI distanceText;
     [SerializeField] float fadeSpeed;
+    float pulseDelay;
+    [SerializeField] Color pulseColour;
 
     public static Compass Instance;
 
@@ -14,9 +18,11 @@ public class Compass : MonoBehaviour
     GravitySource planet;
     Transform playerT;
 
-    List<Image> images = new List<Image>();
+    List<Graphic> images = new List<Graphic>();
+    Graphic[] pulseImages;
 
     List<CompassItem> items = new List<CompassItem>();
+    List<Transform> nearObjects = new List<Transform>();
 
     Vector3 targetPos = new Vector3(200, 0, 0);
 
@@ -24,10 +30,17 @@ public class Compass : MonoBehaviour
     static bool active = true;
 
     float size = 800;
+    float pulseTime;
+    float pulsePercent = 0;
+
+    bool pulseActive = true;
+    bool sacrificedCompass = false;
+
 
     private void Awake()
     {
         Instance = this;
+        pulseImages = GetComponentsInChildren<Graphic>(true);
     }
 
     private void Start()
@@ -37,37 +50,110 @@ public class Compass : MonoBehaviour
         player = PlayerController.Instance;
         playerT = player.transform;
 
-        Image[] tempImages = GetComponentsInChildren<Image>();
-        for(int i = 0; i < tempImages.Length; i++)
+        for (int i = 0; i < pulseImages.Length; i++)
         {
-            images.Add(tempImages[i]);
+            images.Add(pulseImages[i]);
         }
 
+        pulseTime = pulseDelay;
 
         SetAlpha(0);
+
+        SaveManager.OnUpgradeChanged += LoadSacrifices;
+        LoadSacrifices();
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.OnUpgradeChanged -= LoadSacrifices;
+    }
+
+    void LoadSacrifices()
+    {
+        if (SaveManager.SacrificeMade("sacrifice_pulse"))
+        {
+            pulseActive = false;
+            foreach (Graphic image in pulseImages)
+            {
+                Color target = Color.white;
+                target.a = image.color.a;
+                image.color = target;
+            }
+        }
+
+        if (SaveManager.SacrificeMade("sacrifice_compass"))
+        {
+            sacrificedCompass = true;
+            if (!pulseActive) gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        planet = player.GetNearestSource();
+        GravitySource tempPlanet = player.GetNearestSource();
 
-        if (planet == null || !active)
+        if (tempPlanet == null || !active)
         {
             FadeOut();
             return;
         }
 
+        if(tempPlanet != planet)
+        {
+            CheckSamePlanet();
+            planet = tempPlanet;
+        }
+
         FadeIn();
+
+        if (sacrificedCompass) return;
+
+        float minDist = 1000;
+        int minIndex = -1;
 
         for(int i = 0; i < items.Count; i++)
         {
-            FindItem(items[i]);
+            if (items[i].active)
+            {
+                float distance = FindItem(items[i]);
+
+                if (distance < 0) distance *= -1;
+                if(distance < 30 && distance < minDist)
+                {
+                    minDist = distance;
+                    minIndex = i;
+                }
+            }
+        }
+
+        if(minIndex != -1)
+        {
+            if (!distanceText.enabled)
+            {
+                distanceText.enabled = true;
+                Color colour = distanceText.color;
+                colour.a = 1;
+                distanceText.color = colour;
+            }
+
+            int distance = (int)Vector3.Distance(player.transform.position, items[minIndex].transform.position);
+            distanceText.text = distance.ToString() + "m";
+            
+        }
+        else
+        {
+            if (distanceText.enabled)
+            {
+                distanceText.enabled = false;
+            }
         }
 
 
         UpdateTarget();
         compassImage.localPosition = targetPos;
+
+        Pulse();
     }
 
     void UpdateTarget()
@@ -95,7 +181,7 @@ public class Compass : MonoBehaviour
         }
     }
 
-    void FindItem(CompassItem item)
+    float FindItem(CompassItem item)
     {
         Vector3 directToItem = (playerT.position - item.transform.position).normalized;
         Vector3 itemPlayerRight = Vector3.Cross(directToItem, playerT.up).normalized;
@@ -109,7 +195,7 @@ public class Compass : MonoBehaviour
 
         float x = (angle / 360) * size;
 
-        if (float.IsNaN(x)) return;
+        if (float.IsNaN(x)) return 1000;
 
         if (rightAngle < 0)
         {
@@ -121,6 +207,8 @@ public class Compass : MonoBehaviour
             // West
             item.SetPosition(x);
         }
+
+        return x;
     }
 
     void FadeIn()
@@ -143,9 +231,64 @@ public class Compass : MonoBehaviour
         }
     }
 
+    void Pulse()
+    {
+        if (!pulseActive) return;
+
+        if(nearObjects.Count > 0)
+        {
+            float distance = NearestDistance();
+            pulseDelay = Mathf.Clamp01((distance - 2) / 500) * 5;
+            if (pulseTime > pulseDelay) pulseTime = pulseDelay;
+        }
+        else
+        {
+            pulseDelay = -1;
+        }
+
+        if(pulseTime < 0)
+        {
+            if(pulseTime != -450 && pulseDelay >= 0)
+            {
+                pulsePercent += Time.deltaTime * 3;
+
+                if (pulsePercent >= 1) pulseTime = -450;
+            }
+            else if (pulsePercent > 0)
+            {
+                pulsePercent -= Time.deltaTime * 3;
+
+                if (pulsePercent <= 0) pulseTime = pulseDelay;
+            }
+
+            foreach (Graphic image in pulseImages)
+            {
+                Color target = Color.Lerp(Color.white, pulseColour, pulsePercent);
+                target.a = image.color.a;
+                image.color = target;
+            }
+        }
+        else if(pulseDelay >= 0)
+        {
+            pulseTime -= Time.deltaTime;
+        }
+    }
+
+    float NearestDistance()
+    {
+        float dist = 10000;
+        foreach(Transform transform in nearObjects)
+        {
+            float newDist = (playerT.position - transform.position).sqrMagnitude;
+            if (newDist < dist) dist = newDist;
+        }
+
+        return dist;
+    }
+
     void SetAlpha(float percent)
     {
-        foreach(Image image in images)
+        foreach(Graphic image in images)
         {
             Color colour = image.color;
             colour.a = percent;
@@ -156,11 +299,33 @@ public class Compass : MonoBehaviour
     public static void SetActive(bool value)
     {
         active = value;
+        if (!active && Instance != null)
+        {
+            Instance.nearObjects.Clear();
+        }
+    }
+
+    void CheckSamePlanet()
+    {
+        Transform playerPlanet = player.GetNearestSource().transform;
+
+        foreach(CompassItem item in items)
+        {
+            if (!item.SameParent(playerPlanet))
+            {
+                item.SetIconActive(false);
+            }
+            else
+            {
+                item.SetIconActive(true);
+            }
+            
+        }
     }
 
     public static void AddItem(CompassItem item)
     {
-        if (Instance == null) return;
+        if (Instance == null || Instance.sacrificedCompass) return;
 
         Instance.items.Add(item);
 
@@ -172,6 +337,8 @@ public class Compass : MonoBehaviour
             colour.a = 0;
             newImage.color = colour;
         }
+
+        if (!item.SameParent(Instance.planet == null ? null : Instance.planet.transform)) item.SetIconActive(false);
     }
 
     public static void RemoveItem(CompassItem item)
@@ -181,5 +348,19 @@ public class Compass : MonoBehaviour
         Instance.images.Remove(item.GetIcon());
         Instance.items.Remove(item);
         item.DestroyIcon();
+    }
+
+    public static void AddNearObject(Transform nearObject)
+    {
+        if (Instance == null || !Instance.pulseActive) return;
+
+        if (!Instance.nearObjects.Contains(nearObject)) Instance.nearObjects.Add(nearObject);
+    }
+
+    public static void RemoveNearObject(Transform nearObject)
+    {
+        if (Instance == null) return;
+
+        if (Instance.nearObjects.Contains(nearObject)) Instance.nearObjects.Remove(nearObject);
     }
 }

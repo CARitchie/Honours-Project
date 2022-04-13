@@ -8,9 +8,10 @@ public class HealthItem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
         if(other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            if(player.HealUp(amount)) Destroy(gameObject);
+            if(player.HealUp(amount)) Useful.DestroyGameObject(gameObject);
         }
     }
 }

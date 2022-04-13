@@ -141,27 +141,45 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Atmosphere",
-                    "type": "Button",
-                    "id": "b8bd3514-9879-4a49-9eda-068da8993c8b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Cloud",
-                    "type": "Button",
-                    "id": "91bdeae9-85ce-42ca-87b6-6afb02c1c61f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "GodMode",
                     "type": "Button",
                     "id": "b5849710-f2e8-41f3-aa15-00812355f5a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WeaponWheel",
+                    "type": "Button",
+                    "id": "25037e48-b862-4613-b917-9a36f96742a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WeaponScroll",
+                    "type": "Value",
+                    "id": "9403efa0-8940-4074-9e1d-be81402475c9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MatchVelo",
+                    "type": "Value",
+                    "id": "668ff84f-4c4b-43ab-adae-67f02a95fbf6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SummonAmmo",
+                    "type": "Button",
+                    "id": "6f515e60-6cbd-4d43-90c7-c6b5299806a0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -457,34 +475,56 @@
                 },
                 {
                     "name": "",
-                    "id": "4ed817d7-7a6e-40d6-87c7-7f3e4dc80c69",
-                    "path": "<Keyboard>/n",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Atmosphere",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d2505685-32d4-48dd-b1ce-174810d077f9",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cloud",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f363e63f-695d-4563-bef7-abd5c0eed119",
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "GodMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2d08109-58e6-46f2-8bfc-6ed274390385",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "WeaponWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8ab0a13-29aa-484f-a1c2-696df22be52a",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "WeaponScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0683cc16-190e-47e7-95a6-0d52e7035b81",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MatchVelo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8ba08e3-57f9-4d2a-a01d-2ffac715471c",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SummonAmmo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -594,22 +634,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Atmosphere",
-                    "type": "Button",
-                    "id": "097bdb0b-1ea3-42ad-b6c2-18f1679d5577",
-                    "expectedControlType": "Button",
+                    "name": "ShipMatchVelo",
+                    "type": "Value",
+                    "id": "a39780c9-ab47-45a0-9fec-ab62bb1f3e28",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Cloud",
-                    "type": "Button",
-                    "id": "1dceb02e-c031-4f7f-83db-289de8fdaafb",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -846,23 +877,12 @@
                 },
                 {
                     "name": "",
-                    "id": "f83e45ef-dc93-4475-811d-0d771955ae28",
-                    "path": "<Keyboard>/n",
+                    "id": "c97b2450-fa39-4a7a-9cf6-bd2f3ae34a9c",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Atmosphere",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "85da8879-a0a9-4c57-9828-b82484de8388",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cloud",
+                    "action": "ShipMatchVelo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

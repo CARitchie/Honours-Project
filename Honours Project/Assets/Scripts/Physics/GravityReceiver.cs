@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class GravityReceiver : MonoBehaviour
 {
     [SerializeField] protected float defaultMultiplier = 1;
@@ -103,5 +103,70 @@ public class GravityReceiver : MonoBehaviour
     private void OnDestroy()
     {
         GravityController.RemoveReceiver(this);
+    }
+
+    public GravitySource FindClosest(List<PlanetGravity> sources)
+    {
+        GravitySource closest = null;
+
+        if (localGravitySources.Count > 0)
+        {
+            LocalGravitySource localGravitySource = ClosestLocalSource();
+            closest = localGravitySource;
+            return closest;
+        }
+
+        float max = 1000000;
+        for (int i = 0; i < sources.Count; i++)
+        {
+            if (sources[i].transform != transform)
+            {
+                Vector3 direction = sources[i].transform.position - transform.position;
+                float magnitude = direction.sqrMagnitude;
+
+                if (magnitude - sources[i].GetSquareDistance() < max && magnitude < sources[i].Influence)
+                {
+                    max = magnitude;
+                    closest = sources[i];
+                }
+            }
+        }
+
+        return closest;
+    }
+
+    public GravitySource FindGlobalClosest(List<PlanetGravity> sources)
+    {
+        GravitySource closest = null;
+
+        if (localGravitySources.Count > 0)
+        {
+            LocalGravitySource localGravitySource = ClosestLocalSource();
+            closest = localGravitySource;
+            return closest;
+        }
+
+        float max = float.PositiveInfinity;
+        for (int i = 0; i < sources.Count; i++)
+        {
+            if (sources[i].transform != transform)
+            {
+                Vector3 direction = sources[i].transform.position - transform.position;
+                float magnitude = direction.sqrMagnitude;
+
+                if (magnitude - sources[i].GetSquareDistance() < max)
+                {
+                    max = magnitude;
+                    closest = sources[i];
+                }
+            }
+        }
+
+        return closest;
+    }
+
+    public void SetRigidBody(Rigidbody rb)
+    {
+        this.rb = rb;
     }
 }
