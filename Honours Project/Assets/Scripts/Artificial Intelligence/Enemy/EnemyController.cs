@@ -21,6 +21,7 @@ public class EnemyController : PersonController
     bool hostile = false;
     protected EnemyDetails details;
     bool active = true;
+    bool suspended = false;
 
     Vector3 offset;
 
@@ -52,9 +53,21 @@ public class EnemyController : PersonController
     {
         if (!active) return;
 
-        base.FixedUpdate();
+        //base.FixedUpdate();
 
         playerDistance = Vector3.Distance(transform.position, player.position);
+
+        if (playerDistance > 100)
+        {
+            if (!suspended)
+            {
+                suspended = true;
+                SetAnimFloat("MoveSpeed", 0);
+            }
+
+            return;
+        }
+        else if (suspended) suspended = false;
 
         if (currentState == null || currentState.ExitCondition())
         {
