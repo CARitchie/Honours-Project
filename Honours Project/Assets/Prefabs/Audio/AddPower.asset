@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 403c6e10e1ceda74d98000fdfe33a68c, type: 3}
   m_Name: AddPower
   m_EditorClassIdentifier: 
-  title: equip
-  clip: {fileID: 8300000, guid: b036abcef99011942982b3340e14db5b, type: 3}
+  title: addPower
+  clip: {fileID: 8300000, guid: 1b83e2f26b17217429d6e3a4c7febc72, type: 3}
   group: {fileID: 39953726523059655, guid: 9bcf14369ab48e649ad44ace980a33b1, type: 2}
   volume: 1
   pitch: 1

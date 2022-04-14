@@ -616,7 +616,13 @@ public class PlayerController : PersonController
 
     public bool AddAmmo(float percentOfMax)
     {
-        return weaponManager.AddAmmo(percentOfMax);
+        bool success = weaponManager.AddAmmo(percentOfMax);
+        if (success)
+        {
+            audioManager.PlaySound("increaseAmmo");
+        }
+
+        return success;
     }
 
     public WeaponManager WeaponManager()
@@ -634,6 +640,11 @@ public class PlayerController : PersonController
         int index = SaveManager.CurrentWeapon();
         weaponManager.ForceLoad();
         EquipWeapon(index);
+    }
+
+    public void PlaySound(string sound)
+    {
+        audioManager.PlaySound(sound);
     }
 
 }

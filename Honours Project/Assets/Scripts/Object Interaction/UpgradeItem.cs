@@ -27,6 +27,7 @@ public class UpgradeItem : MonoBehaviour, Interact
     public void OnSelect()
     {
         SaveManager.SetUpgradeState(upgradeKey, SaveFile.UpgradeState.Available);
+        PlayerController.Instance.PlaySound("collectUpgrade");
         Useful.DestroyGameObject(gameObject);
     }
 }

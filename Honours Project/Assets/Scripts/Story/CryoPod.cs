@@ -18,6 +18,8 @@ public class CryoPod : MonoBehaviour, Interact
     float mass;
     bool active = true;
 
+    NearObject nearObject;
+
     public void OnEnter()
     {
         if (!grabbed)
@@ -46,6 +48,7 @@ public class CryoPod : MonoBehaviour, Interact
             HUD.SetInteractText("Drop");
             AttachToTransform(Camera.main.transform);
             meshCollider.enabled = false;
+            
 
             ObjectInteractor.podGrabbed = true;
         }
@@ -53,6 +56,7 @@ public class CryoPod : MonoBehaviour, Interact
         {
             HUD.SetInteractText("Pick Up");
             Detach();
+            nearObject.Enable();
             ObjectInteractor.podGrabbed = false;
         }
 
@@ -63,6 +67,7 @@ public class CryoPod : MonoBehaviour, Interact
     {
         rb = GetComponent<Rigidbody>();
         gravity = GetComponent<GravityReceiver>();
+        nearObject = GetComponentInChildren<NearObject>();
         mass = rb.mass;
     }
 
@@ -103,6 +108,7 @@ public class CryoPod : MonoBehaviour, Interact
         transform.parent = parent;
         offset = transform.localPosition;
         gravity.enabled = false;
+        nearObject.Disable();
         Destroy(rb);
     }
 

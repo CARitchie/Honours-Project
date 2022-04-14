@@ -140,6 +140,7 @@ public class PlayerDetails : PersonDetails
             if(powerCells <= 0) return false;
             else
             {
+                audioManager.PlaySound("newCell");
                 energy += maxEnergy;
                 powerCells--;
                 hud.SetNumberOfPowerCells(powerCells);
