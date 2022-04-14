@@ -17,5 +17,6 @@ public class OpenSacrifice : MonoBehaviour, Interact
     public void OnSelect()
     {
         PauseMenu.OpenSacrificeMenu();
+        HUD.DisableObjectiveMarker(1);
     }
 }

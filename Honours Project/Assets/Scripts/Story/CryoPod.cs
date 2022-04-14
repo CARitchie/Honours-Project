@@ -48,7 +48,7 @@ public class CryoPod : MonoBehaviour, Interact
             HUD.SetInteractText("Drop");
             AttachToTransform(Camera.main.transform);
             meshCollider.enabled = false;
-            
+            if(SaveManager.NumberOfFoundPods() < 1) HUD.ChangeObjectiveTarget(0);
 
             ObjectInteractor.podGrabbed = true;
         }
@@ -57,6 +57,7 @@ public class CryoPod : MonoBehaviour, Interact
             HUD.SetInteractText("Pick Up");
             Detach();
             nearObject.Enable();
+            HUD.DisableObjectiveMarker(0);
             ObjectInteractor.podGrabbed = false;
         }
 

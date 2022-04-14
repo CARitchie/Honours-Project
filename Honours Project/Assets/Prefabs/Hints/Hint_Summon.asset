@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: hint_summon
   text: Press [G] to teleport ammunition
-  additionalTime: 0
+  additionalTime: 2

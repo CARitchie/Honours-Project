@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
     [SerializeField] float returnSpeed;
 
     [Header("References")]
+    [SerializeField] Camera cam;
     [SerializeField] HealthBar healthBar;
     [SerializeField] HealthBar energyBar;
     [SerializeField] HealthBar shieldBar;
@@ -28,6 +29,9 @@ public class HUD : MonoBehaviour
     [SerializeField] GameObject ammoIndicator;
     [SerializeField] TextMeshProUGUI ammoText;
     [SerializeField] Image ammoInfinite;
+    [SerializeField] RectTransform objectiveMarker;
+    [SerializeField] TextMeshProUGUI objectiveText;
+    [SerializeField] Transform[] objectiveTargets;
 
     public static HUD Instance;
 
@@ -36,6 +40,8 @@ public class HUD : MonoBehaviour
 
     bool damageIndicatorsActive = true;
     bool infinite = false;
+
+    int objectiveTarget;
 
     private void Awake()
     {
@@ -123,6 +129,8 @@ public class HUD : MonoBehaviour
         targetPos = Vector3.Lerp(targetPos, Vector3.zero, returnSpeed * Time.deltaTime);
         currentPos = Vector3.Lerp(currentPos, targetPos, snappiness * Time.deltaTime);
         transform.localPosition = currentPos;
+
+        UpdateObjectiveMarker();
     }
 
     public static void SetInteractText(string text)
@@ -153,14 +161,19 @@ public class HUD : MonoBehaviour
 
         Instance.planetText.text = name;
 
-        string subText = "";
-        if (distance > 1000) subText += (distance / 1000).ToString("F1") + "km";
-        else subText += distance.ToString("F0") + "m";
+
+        string subText = DistanceText(distance);
 
         subText += '\n';
         subText += relativeVel.ToString("F0") + "m/s";
 
         Instance.velocityText.text = subText;
+    }
+
+    public static string DistanceText(float distance)
+    {
+        if (distance > 1000) return (distance / 1000).ToString("F1") + "km";
+        else return distance.ToString("F0") + "m";
     }
 
     public static void SetPlanetTextActive(bool val)
@@ -218,5 +231,46 @@ public class HUD : MonoBehaviour
         if (Instance == null) return;
 
         Instance.energyBar.ReduceMax();
+    }
+
+    public static void DisableObjectiveMarker(int index)
+    {
+        if (Instance == null) return;
+
+        if(index == Instance.objectiveTarget || index == -1) {
+            Instance.objectiveMarker.gameObject.SetActive(false);
+        }
+    }
+
+    public static void ChangeObjectiveTarget(int index)
+    {
+        if (Instance == null) return;
+        if (index < Instance.objectiveTargets.Length) {
+            Instance.objectiveMarker.gameObject.SetActive(true);
+            Instance.objectiveTarget = index;
+        }
+    }
+
+    void UpdateObjectiveMarker()
+    {
+        if (!objectiveMarker.gameObject.activeInHierarchy) return;
+
+        Vector3 screenPos = cam.WorldToScreenPoint(objectiveTargets[objectiveTarget].position);
+        float width = Screen.currentResolution.width;
+        float height = Screen.currentResolution.height;
+
+
+        if (Vector3.Dot(objectiveTargets[objectiveTarget].position - cam.transform.position, cam.transform.forward) < 0)
+        {
+            screenPos *= -1;
+        }
+        screenPos.x = Mathf.Clamp(screenPos.x, 0.1f * width, 0.9f * width);
+        screenPos.y = Mathf.Clamp(screenPos.y, 0.1f * height, 0.9f * height);
+        screenPos.z = 0;
+
+        float distance = Vector3.Distance(objectiveTargets[objectiveTarget].position, cam.transform.position);
+        objectiveText.text = DistanceText(distance);
+
+        objectiveMarker.transform.position = screenPos;
     }
 }
