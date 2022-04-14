@@ -85,8 +85,8 @@ public class SacrificeMenu : MonoBehaviour
 
     public void Hide()
     {
+        if (gameObject.activeInHierarchy) DialogueManager.PlayDialogue("audio_depart");
         gameObject.SetActive(false);
-        DialogueManager.PlayDialogue("audio_depart");
     }
 
     public void CloseSubMenu()
