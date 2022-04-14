@@ -48,8 +48,11 @@ public class CryoPod : MonoBehaviour, Interact
             HUD.SetInteractText("Drop");
             AttachToTransform(Camera.main.transform);
             meshCollider.enabled = false;
-            if(SaveManager.NumberOfFoundPods() < 1) HUD.ChangeObjectiveTarget(0);
-
+            if (SaveManager.NumberOfFoundPods() < 1)
+            {
+                HUD.ChangeObjectiveTarget(0);
+                DialogueManager.PlayDialogue("audio_found");
+            }
             ObjectInteractor.podGrabbed = true;
         }
         else

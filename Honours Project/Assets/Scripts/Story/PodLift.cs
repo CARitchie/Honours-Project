@@ -40,7 +40,11 @@ public class PodLift : MonoBehaviour
         anim.SetTrigger("Activate");
         yield return new WaitForSeconds(3);
         inUse = false;
-        if(SaveManager.NumberOfFoundPods() <= 1) HUD.ChangeObjectiveTarget(1);
+        if (SaveManager.NumberOfFoundPods() <= 1)
+        {
+            HUD.ChangeObjectiveTarget(1);
+            DialogueManager.PlayDialogue("audio_delivered");
+        }
     }
 
     public void DestroyPod()

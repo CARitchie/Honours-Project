@@ -29,6 +29,7 @@ public class EndingManager : MonoBehaviour
     private void Start()
     {
         //ForceStates();
+        health = 100;
         CalculateSurvival();
     }
 
@@ -139,7 +140,11 @@ public class EndingManager : MonoBehaviour
     {
         if (SaveManager.SacrificeMade("sacrifice_pulse"))
         {
-            if (SaveManager.SacrificeMade("sacrifice_jump")) SetTime(avoidMineTime);
+            if (SaveManager.SacrificeMade("sacrifice_jump"))
+            {
+                SetTime(avoidMineTime);
+                DialogueManager.PlayDialogue("audio_mine");
+            }
             else SetTime(clipMineTime);
         }
         else
@@ -187,6 +192,7 @@ public class EndingManager : MonoBehaviour
         if (SaveManager.SacrificeMade("sacrifice_indicators"))
         {
             PlayTurrets();
+            DialogueManager.PlayDialogue("audio_hyperdrive");
         }
     }
 
@@ -194,6 +200,11 @@ public class EndingManager : MonoBehaviour
     {
         if (turretsPlayed) return;
         turretsPlayed = true;
+
+        if (!SaveManager.SacrificeMade("sacrifice_indicators"))
+        {
+            DialogueManager.PlayDialogue("audio_unexpected");
+        }
 
         if (SaveManager.SacrificeMade("sacrifice_speed"))
         {

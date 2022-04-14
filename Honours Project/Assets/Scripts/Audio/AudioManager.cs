@@ -32,6 +32,14 @@ public class AudioManager : MonoBehaviour
             dictionary[key].Play();
         }
     }
+
+    public void StopAll()
+    {
+        foreach(KeyValuePair<string, PlayableSound> pair in dictionary)
+        {
+            pair.Value.Stop();
+        }
+    }
 }
 
 public class PlayableSound : ScriptableObject
@@ -39,6 +47,7 @@ public class PlayableSound : ScriptableObject
     [SerializeField] string title;
 
     public virtual void Play() { }
+    public virtual void Stop() { }
     public virtual void Initialise(GameObject holder) { }
     public virtual float GetLength() { return -1; }
     public virtual AudioSource GetSource() { return null; }
@@ -48,4 +57,6 @@ public class PlayableSound : ScriptableObject
     {
         return title;
     }
+
+
 }

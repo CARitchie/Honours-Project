@@ -28,6 +28,8 @@ public class EndFight : MonoBehaviour
         timer = percent * 4 * 60 + 60;
         if(faster) timer = 10;
         colonyDoor.SetBool("Open", false);
+
+        DialogueManager.PlayDialogue("audio_fight");
     }
 
     private void Update()
@@ -57,6 +59,8 @@ public class EndFight : MonoBehaviour
         else timer = 60;
         combat.ForceOff();
         colonyDoor.SetBool("Open", true);
+
+        DialogueManager.PlayDialogue("audio_oneMinute");
     }
 
     public string GetTime(float value)
@@ -80,6 +84,7 @@ public class EndFight : MonoBehaviour
         }
         else
         {
+            DialogueManager.PlayDialogue("audio_soLong");
             SetTime(50);
         }
     }
@@ -95,6 +100,7 @@ public class EndFight : MonoBehaviour
     {
         DisablePlayer();
         SetTime(25);
+        DialogueManager.PlayDialogue("audio_soLong");
     }
 
     void DisablePlayer()

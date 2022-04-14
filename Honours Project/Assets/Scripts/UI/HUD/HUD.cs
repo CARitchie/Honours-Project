@@ -253,7 +253,7 @@ public class HUD : MonoBehaviour
 
     void UpdateObjectiveMarker()
     {
-        if (!objectiveMarker.gameObject.activeInHierarchy) return;
+        if (objectiveMarker == null || !objectiveMarker.gameObject.activeInHierarchy) return;
 
         Vector3 screenPos = cam.WorldToScreenPoint(objectiveTargets[objectiveTarget].position);
         float width = Screen.currentResolution.width;

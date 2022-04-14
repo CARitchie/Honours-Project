@@ -42,6 +42,14 @@ public class Sound : PlayableSound
         }
     }
 
+    public override void Stop()
+    {
+        if(audioSource != null)
+        {
+            audioSource.Stop();
+        }
+    }
+
     public override float GetLength()
     {
         if (audioSource != null)

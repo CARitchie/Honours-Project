@@ -129,4 +129,9 @@ public class CombatArea : MonoBehaviour
         complete = true;
         StopAllCoroutines();
     }
+
+    public void PlayDialogue(string key)
+    {
+        DialogueManager.PlayDialogue(key);
+    }
 }
