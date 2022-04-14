@@ -101,7 +101,10 @@ public class PlayerController : PersonController
         fuel = maxFuel;
         evaSpeed = walkSpeed * 0.8f;
 
-        if(!finalFight) LoadData();
+        if (!finalFight) {
+            LoadData();
+            if (!SaveManager.GetBool("hint_initial")) StartCoroutine(InitialHints());
+        }
         LoadWeapon();
 
 
@@ -161,6 +164,7 @@ public class PlayerController : PersonController
         if (SaveManager.SelfUpgraded("upgrade_teleport"))
         {
             canSummon = true;
+            HintManager.PlayHint("hint_summon");
         }
 
         if (SaveManager.SelfUpgraded("upgrade_gun"))
@@ -478,6 +482,14 @@ public class PlayerController : PersonController
         audioManager.PlaySound("equip");
 
         HUD.ActivateAmmoIndicator();
+        HintManager.PlayHint("hint_fire");
+
+        Debug.Log("WEAPON COUNT: " + weaponManager.NumberUnlocked());
+
+        if(weaponManager.NumberUnlocked() == 2)
+        {
+            HintManager.PlayHint("hint_wheel");
+        }
     }
 
     void SwapWeapon(Weapon newWeapon)
@@ -647,4 +659,16 @@ public class PlayerController : PersonController
         audioManager.PlaySound(sound);
     }
 
+    IEnumerator InitialHints()
+    {
+        while (!grounded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        HintManager.PlayHint("hint_initial");
+        HintManager.PlayHint("hint_sprint");
+        HintManager.PlayHint("hint_jump");
+        HintManager.PlayHint("hint_pause");
+    }
 }

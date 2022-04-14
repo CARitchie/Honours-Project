@@ -188,6 +188,16 @@ public class WeaponManager : MonoBehaviour
         LoadWeapons();
         LoadUpgrades();
     }
+
+    public int NumberUnlocked()
+    {
+        int count = 0;
+        for(int i = 0; i < weapons.Length; i++)
+        {
+            if (!weapons[i].IsLocked()) count++;
+        }
+        return count;
+    }
 }
 
 [System.Serializable]
