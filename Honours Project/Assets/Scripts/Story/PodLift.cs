@@ -18,6 +18,7 @@ public class PodLift : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (inUse) return;
+        if (other.attachedRigidbody == null) return;
         if (other.attachedRigidbody.TryGetComponent(out CryoPod pod))
         {
             inUse = true;

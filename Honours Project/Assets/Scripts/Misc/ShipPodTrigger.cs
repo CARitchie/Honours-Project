@@ -7,8 +7,7 @@ public class ShipPodTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (GetComponentInChildren<CryoPod>() != null) return;
-
+        if (GetComponentInChildren<CryoPod>() != null || other.attachedRigidbody == null) return;
         if (other.attachedRigidbody.TryGetComponent(out CryoPod pod))
         {
             pod.AttachToTransform(transform);

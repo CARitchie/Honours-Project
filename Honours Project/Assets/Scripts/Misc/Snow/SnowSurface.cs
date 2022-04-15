@@ -93,6 +93,8 @@ public class SnowSurface : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         SnowImprinter[] imprints = other.attachedRigidbody.GetComponentsInChildren<SnowImprinter>(true);
 
         if (imprints == null || imprints.Length < 1) return;
@@ -105,6 +107,8 @@ public class SnowSurface : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         SnowImprinter[] imprints = other.attachedRigidbody.GetComponentsInChildren<SnowImprinter>(true);
 
         if (imprints == null || imprints.Length < 1) return;

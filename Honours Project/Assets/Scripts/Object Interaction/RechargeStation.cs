@@ -10,6 +10,8 @@ public class RechargeStation : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
             this.player = player;
@@ -19,6 +21,8 @@ public class RechargeStation : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
             this.player = null;

@@ -396,6 +396,7 @@ public class PlayerController : PersonController
             doubleJumped = true;
             strength *= 1.2f;
             details.UseEnergy(2);
+            audioManager.PlaySound("jump");
         }
 
         AddForce(transform.up * strength);

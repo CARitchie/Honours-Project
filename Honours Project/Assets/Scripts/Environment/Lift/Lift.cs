@@ -19,7 +19,9 @@ public class Lift : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.attachedRigidbody != null)
+        if (other.attachedRigidbody == null) return;
+
+        if (other.attachedRigidbody != null)
         {
             if (!bodies.Contains(other.attachedRigidbody)) bodies.Add(other.attachedRigidbody);
         }
@@ -27,6 +29,8 @@ public class Lift : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody != null)
         {
             if (bodies.Contains(other.attachedRigidbody)) bodies.Remove(other.attachedRigidbody);
