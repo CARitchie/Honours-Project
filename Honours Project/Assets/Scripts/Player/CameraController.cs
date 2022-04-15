@@ -69,11 +69,20 @@ public class CameraController : MonoBehaviour
             Vector3 objectVelocity = hitInfo.rigidbody.velocity;
 
             float relativeVel = Vector3.Distance(rb.velocity, objectVelocity);
-            float distance = Vector3.Distance(rb.position, hitInfo.rigidbody.position);
 
-            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - hitInfo.rigidbody.position) > 0) relativeVel *= -1;
+            string planetName = hitInfo.rigidbody.name;
+            Vector3 planetPos = hitInfo.rigidbody.position;
 
-            HUD.SetPlanetDetails(hitInfo.rigidbody.name, relativeVel, distance);
+            if (hitInfo.collider.name == "Arturius") {
+                planetName = "Arturius";
+                planetPos = hitInfo.collider.transform.position;
+            }
+
+            float distance = Vector3.Distance(rb.position, planetPos);
+
+            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - planetPos) > 0) relativeVel *= -1;
+
+            HUD.SetPlanetDetails(planetName, relativeVel, distance);
 
             return objectVelocity;
         }

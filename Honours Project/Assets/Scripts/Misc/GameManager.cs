@@ -55,8 +55,18 @@ public class GameManager : MonoBehaviour
 
     IEnumerator RunAutosave()
     {
-        while (!SaveManager.AttemptSave())
+        bool saved = false;
+        while (!saved)
         {
+            if (PlayerController.Instance.IsDead())
+            {
+                saved = true;
+                break;
+            }
+            else
+            {
+                saved = SaveManager.AttemptSave();
+            }  
             yield return new WaitForEndOfFrame();
         }
 

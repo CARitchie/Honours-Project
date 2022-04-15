@@ -55,9 +55,15 @@ public class PlayerController : PersonController
 
     int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
+    float originalWalk;
+    float originalSprint;
+
     protected override void Awake()
     {
         base.Awake();
+
+        originalWalk = walkSpeed;
+        originalSprint = sprintSpeed;
 
         Instance = this;
         details = GetComponentInParent<PlayerDetails>();
@@ -152,8 +158,8 @@ public class PlayerController : PersonController
 
         if (SaveManager.SacrificeMade("sacrifice_speed"))
         {
-            walkSpeed = walkSpeed * 0.7f;
-            sprintSpeed = sprintSpeed * 0.7f;
+            walkSpeed = originalWalk * 0.7f;
+            sprintSpeed = originalSprint * 0.7f;
         }
 
         if (SaveManager.SacrificeMade("sacrifice_jump"))
@@ -461,7 +467,7 @@ public class PlayerController : PersonController
 
     void UseWeapon()
     {
-        if (weapon == null) return;
+        if (weapon == null || paused) return;
 
         weapon.PrimaryAction(weaponAction.ReadValue<float>());
         weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
@@ -671,5 +677,10 @@ public class PlayerController : PersonController
         HintManager.PlayHint("hint_sprint");
         HintManager.PlayHint("hint_jump");
         HintManager.PlayHint("hint_pause");
+    }
+
+    public bool IsDead()
+    {
+        return details.GetHealth() <= 0;
     }
 }

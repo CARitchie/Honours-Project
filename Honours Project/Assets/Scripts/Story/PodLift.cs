@@ -46,6 +46,10 @@ public class PodLift : MonoBehaviour
             HUD.ChangeObjectiveTarget(1);
             DialogueManager.PlayDialogue("audio_delivered");
         }
+        else
+        {
+            HintManager.PlayHint("hint_newSacrifice", true);
+        }
     }
 
     public void DestroyPod()

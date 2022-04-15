@@ -90,7 +90,7 @@ public class CombatArea : MonoBehaviour
     {
         Debug.Log("Yay");
         PlayerController.Instance.SetCanSave(true);
-        if (dontSave) return;
+        if (dontSave || PlayerController.Instance.IsDead()) return;
         SaveManager.CompleteCombatArea(areaKey);
         GameManager.Autosave();
         completed?.Invoke();

@@ -25,18 +25,18 @@ public class HintManager : MonoBehaviour
         }
     }
 
-    public static void PlayHint(string key)
+    public static void PlayHint(string key, bool replayable = false)
     {
-        if (Instance == null || !Instance.HintPlayable(key)) return;
+        if (Instance == null || !Instance.HintPlayable(key ,replayable)) return;
 
         SaveManager.SetBool(key, true);
         Instance.StartHint(key);
 
     }
 
-    bool HintPlayable(string key)
+    bool HintPlayable(string key, bool replayable)
     {
-        if (SaveManager.GetBool(key)) return false;
+        if (!replayable && SaveManager.GetBool(key)) return false;
         if (dictionary == null) return false;
         if (!dictionary.ContainsKey(key)) return false;
 

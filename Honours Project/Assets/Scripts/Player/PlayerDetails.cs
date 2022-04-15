@@ -214,6 +214,7 @@ public class PlayerDetails : PersonDetails
         if (!finalFight)
         {
             immune = true;
+            PlayerController.SetPaused(true);
             SaveManager.LoadGame();
             SceneManager.FadeToScene("Space");
         }
@@ -289,4 +290,9 @@ public class PlayerDetails : PersonDetails
     }
 
     float ShieldPercent { get { return shield / maxShield; } }
+
+    public override void OnExplosion(float damage)
+    {
+        base.OnExplosion(damage * 0.2f);
+    }
 }

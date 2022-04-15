@@ -21,6 +21,11 @@ public class LinkedCollection : SoundCollection
 
     public override void Play()
     {
+        sources[sourceIndex].Stop();
+        sources[sourceIndex].Play();
+        sourceIndex++;
+        if (sourceIndex >= sources.Count) sourceIndex = 0;
+
         int index = Random.Range(0, sounds.Length);
         if(index < sounds.Length)
         {
@@ -28,9 +33,6 @@ public class LinkedCollection : SoundCollection
             if(clip != null)
             {
                 sources[sourceIndex].clip = clip;
-                sources[sourceIndex].Play();
-                sourceIndex++;
-                if (sourceIndex >= sources.Count) sourceIndex = 0;
             }
         }
     }

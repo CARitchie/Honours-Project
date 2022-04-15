@@ -15,6 +15,6 @@ MonoBehaviour:
   title: Footstep_07
   clip: {fileID: 8300000, guid: aff5fc5b13ccdd241b8fbf775bb58288, type: 3}
   group: {fileID: 39953726523059655, guid: 9bcf14369ab48e649ad44ace980a33b1, type: 2}
-  volume: 0.3
+  volume: 0.15
   pitch: 1.4
   spatialBlend: 1
