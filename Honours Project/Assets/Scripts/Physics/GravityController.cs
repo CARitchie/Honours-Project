@@ -106,4 +106,11 @@ public class GravityController : MonoBehaviour
 
         return false;
     }
+
+    public static void Disable()
+    {
+        if (Instance == null) return;
+
+        Instance.gameObject.SetActive(false);
+    }
 }

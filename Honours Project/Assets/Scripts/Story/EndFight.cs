@@ -13,6 +13,8 @@ public class EndFight : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject cinematicCamera;
     [SerializeField] PlayableDirector director;
+    [SerializeField] GameObject[] otherPlanets;
+    [SerializeField] MeshRenderer sun;
     float timer;
     int state = 0;
     bool countDown = true;
@@ -112,6 +114,14 @@ public class EndFight : MonoBehaviour
         canvas.SetActive(false);
         colonyDoor.SetBool("Open", false);
         cinematicCamera.SetActive(true);
+
+        GravityController.Disable();
+        foreach(GameObject planet in otherPlanets)
+        {
+            planet.SetActive(false);
+        }
+        sun.enabled = false;
+
     }
 
     public void SetTime(float time)

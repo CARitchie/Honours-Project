@@ -32,6 +32,11 @@ public class MeleeWeapon : MonoBehaviour
             if (damageable == GetComponentInParent<Damageable>()) return;
 
             damageable.OnMelee(damage, transform);
+
+            // For some reason this needs to be checked again here
+            // It's possible for a null reference exception to occur without it
+            if (other.attachedRigidbody == null) return;
+
             other.attachedRigidbody.AddForce(transform.forward * 5, ForceMode.VelocityChange);
             
         }
