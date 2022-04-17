@@ -60,7 +60,7 @@ public class CryoPod : MonoBehaviour, Interact
             HUD.SetInteractText("Pick Up");
             Detach();
             nearObject.Enable();
-            HUD.DisableObjectiveMarker(0);
+            //HUD.DisableObjectiveMarker(0);
             ObjectInteractor.podGrabbed = false;
         }
 

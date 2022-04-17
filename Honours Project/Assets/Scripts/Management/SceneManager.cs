@@ -10,6 +10,7 @@ public class SceneManager : MonoBehaviour
     [SerializeField] float fadeInTime;
 
     public static SceneManager Instance;
+    public static bool reload = false;
 
     private void Awake()
     {
@@ -29,8 +30,12 @@ public class SceneManager : MonoBehaviour
     {
         if (Instance == null) return;
 
+        if (reload) SaveManager.LoadGame();
+
         Instance.StopAllCoroutines();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+
+        reload = false;
     }
 
     public static void FadeToScene(string sceneName)

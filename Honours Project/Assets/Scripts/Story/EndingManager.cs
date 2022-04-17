@@ -203,7 +203,7 @@ public class EndingManager : MonoBehaviour
 
         if (!SaveManager.SacrificeMade("sacrifice_indicators"))
         {
-            DialogueManager.PlayDialogue("audio_unexpected");
+            //DialogueManager.PlayDialogue("audio_unexpected");
         }
 
         if (SaveManager.SacrificeMade("sacrifice_speed"))

@@ -60,6 +60,8 @@ public class PlayerDetails : PersonDetails
 
         SaveManager.OnUpgradeChanged += LoadUpgrades;
         LoadUpgrades();
+
+        SceneManager.reload = false;
     }
 
     private void OnDestroy()
@@ -216,6 +218,7 @@ public class PlayerDetails : PersonDetails
             immune = true;
             PlayerController.SetPaused(true);
             SaveManager.LoadGame();
+            SceneManager.reload = true;
             SceneManager.FadeToScene("Space");
         }
         else

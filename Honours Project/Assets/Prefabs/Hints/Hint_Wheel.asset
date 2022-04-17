@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: hint_wheel
   text: Change weapons with [Scroll] or hold [Tab] to open the weapon wheel
+  additionalTime: 3
