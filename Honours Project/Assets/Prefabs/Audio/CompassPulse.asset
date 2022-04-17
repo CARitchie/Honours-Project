@@ -18,3 +18,4 @@ MonoBehaviour:
   volume: 0.2
   pitch: 1
   spatialBlend: 0
+  doppler: 0

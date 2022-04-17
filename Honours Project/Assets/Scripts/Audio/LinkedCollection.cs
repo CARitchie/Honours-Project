@@ -22,6 +22,7 @@ public class LinkedCollection : SoundCollection
     public override void Play()
     {
         sources[sourceIndex].Stop();
+        sources[sourceIndex].time = 0;
         sources[sourceIndex].Play();
         sourceIndex++;
         if (sourceIndex >= sources.Count) sourceIndex = 0;
