@@ -165,6 +165,13 @@ public class ShipController : MonoBehaviour
         compassIcon.SetActive(true);
         AudioControl.AtmosphereInterpolation(1);
         SaveManager.SetGameState(2);
+
+        if (!SaveManager.GetBool("hint_takeOff"))
+        {
+            HintManager.PlayHint("hint_takeOff");
+            HintManager.PlayHint("hint_roll");
+            StartCoroutine(MatchVelocityHint());
+        }
     }
 
     public void Deactivate()
@@ -237,5 +244,11 @@ public class ShipController : MonoBehaviour
     public void SetVelocity(Vector3 velo)
     {
         rb.velocity = velo;
+    }
+
+    IEnumerator MatchVelocityHint()
+    {
+        yield return new WaitForSeconds(15);
+        HintManager.PlayHint("hint_match");
     }
 }

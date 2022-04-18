@@ -37,7 +37,27 @@ public class EnemyWave : MonoBehaviour
         this.area = area;
         gameObject.SetActive(true);
 
-        for(int i = 0; i < enemies.Length; i++)
+        if (initialWave)
+        {
+            StartCoroutine(WaitAFrame());
+        }
+        else
+        {
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                enemies[i].SetWave(this);
+                enemies[i].Spawn();
+            }
+        }
+
+    }
+
+    IEnumerator WaitAFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        for (int i = 0; i < enemies.Length; i++)
         {
             enemies[i].SetWave(this);
             enemies[i].Spawn();

@@ -11,6 +11,8 @@ public class PlayerTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
             OnEnter?.Invoke();
@@ -19,6 +21,8 @@ public class PlayerTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
             OnExit?.Invoke();

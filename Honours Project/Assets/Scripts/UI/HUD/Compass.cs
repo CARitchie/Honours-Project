@@ -25,6 +25,7 @@ public class Compass : MonoBehaviour
     List<Transform> nearObjects = new List<Transform>();
 
     Vector3 targetPos = new Vector3(200, 0, 0);
+    AudioManager audioManager;
 
     // This could cause issues
     static bool active = true;
@@ -41,6 +42,7 @@ public class Compass : MonoBehaviour
     {
         Instance = this;
         pulseImages = GetComponentsInChildren<Graphic>(true);
+        audioManager = GetComponentInParent<AudioManager>();
     }
 
     private void Start()
@@ -271,6 +273,10 @@ public class Compass : MonoBehaviour
         else if(pulseDelay >= 0)
         {
             pulseTime -= Time.deltaTime;
+            if(pulseTime <= 0)
+            {
+                audioManager.PlaySound("pulse");
+            }
         }
     }
 

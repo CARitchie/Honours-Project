@@ -375,6 +375,10 @@ PrefabInstance:
       propertyPath: teleportTime
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7521190055372484344, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}
+      propertyPath: particleOffset.y
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ccb937fd46a66f49a7c4c1cadd36be8, type: 3}
 --- !u!1 &7621757897359064455 stripped

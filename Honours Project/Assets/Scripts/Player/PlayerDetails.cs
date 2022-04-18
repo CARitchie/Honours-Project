@@ -27,6 +27,13 @@ public class PlayerDetails : PersonDetails
     int layerMask = ~(1 << 2 | 1 << 10 | 1 << 11 | 1 << 12);
 
     Transform sun;
+    AudioManager audioManager;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        audioManager = GetComponent<AudioManager>();
+    }
 
     private void Start()
     {
@@ -53,6 +60,8 @@ public class PlayerDetails : PersonDetails
 
         SaveManager.OnUpgradeChanged += LoadUpgrades;
         LoadUpgrades();
+
+        SceneManager.reload = false;
     }
 
     private void OnDestroy()
@@ -133,6 +142,7 @@ public class PlayerDetails : PersonDetails
             if(powerCells <= 0) return false;
             else
             {
+                audioManager.PlaySound("newCell");
                 energy += maxEnergy;
                 powerCells--;
                 hud.SetNumberOfPowerCells(powerCells);
@@ -148,6 +158,10 @@ public class PlayerDetails : PersonDetails
     {
         bool healed = base.HealUp(amount);
         hud.SetHealthPercent(HealthPercent());
+        if (healed)
+        {
+            audioManager.PlaySound("heal");
+        }
         return healed;
     }
 
@@ -161,6 +175,7 @@ public class PlayerDetails : PersonDetails
     {
         powerCells++;
         hud.SetNumberOfPowerCells(powerCells);
+        audioManager.PlaySound("addPower");
     }
 
     public void Recharge(float amount)
@@ -201,7 +216,9 @@ public class PlayerDetails : PersonDetails
         if (!finalFight)
         {
             immune = true;
+            PlayerController.SetPaused(true);
             SaveManager.LoadGame();
+            SceneManager.reload = true;
             SceneManager.FadeToScene("Space");
         }
         else
@@ -276,4 +293,9 @@ public class PlayerDetails : PersonDetails
     }
 
     float ShieldPercent { get { return shield / maxShield; } }
+
+    public override void OnExplosion(float damage)
+    {
+        base.OnExplosion(damage * 0.2f);
+    }
 }

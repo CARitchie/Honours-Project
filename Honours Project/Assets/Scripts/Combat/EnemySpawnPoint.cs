@@ -54,9 +54,16 @@ public class EnemySpawnPoint : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
 
         float timer = 0;
+        bool audioPlayed = false;
         while(timer < teleportTime)
         {
             float percent = timer / teleportTime;
+
+            if(!audioPlayed && percent > 0.35f)
+            {
+                audioPlayed = true;
+                particles.GetComponentInChildren<AudioSource>()?.Play();
+            }
 
             foreach (RendererMaterial renderer in rendererMaterials)
             {

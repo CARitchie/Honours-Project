@@ -8,6 +8,7 @@ public class PodLift : MonoBehaviour
     Animator anim;
 
     CryoPod lastPod;
+    bool inUse = false;
 
     private void Awake()
     {
@@ -16,8 +17,11 @@ public class PodLift : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (inUse) return;
+        if (other.attachedRigidbody == null) return;
         if (other.attachedRigidbody.TryGetComponent(out CryoPod pod))
         {
+            inUse = true;
             pod.Disable();
             pod.AttachToTransform(podHolder);
             pod.StartAlign();
@@ -35,6 +39,17 @@ public class PodLift : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         anim.SetTrigger("Activate");
+        yield return new WaitForSeconds(3);
+        inUse = false;
+        if (SaveManager.NumberOfFoundPods() <= 1)
+        {
+            HUD.ChangeObjectiveTarget(1);
+            DialogueManager.PlayDialogue("audio_delivered");
+        }
+        else
+        {
+            HintManager.PlayHint("hint_newSacrifice", true);
+        }
     }
 
     public void DestroyPod()

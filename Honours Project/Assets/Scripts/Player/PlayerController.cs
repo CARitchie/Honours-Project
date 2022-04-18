@@ -32,6 +32,7 @@ public class PlayerController : PersonController
     
     PlayerDetails details;
     WeaponManager weaponManager;
+    AudioManager audioManager;
 
     float fuel;
     float maxFuel = 200;
@@ -45,6 +46,7 @@ public class PlayerController : PersonController
     bool canDoubleJump = true;
     bool canSummon = false;
     float summonCooldown = 0;
+    float footstepTimer;
     const float summonDelay = 150;
 
     bool paused = false;
@@ -53,13 +55,20 @@ public class PlayerController : PersonController
 
     int aimLayerMask = ~((1 << 6) | (1 << 2) | (1 << 11) | (1 << 12) | (1 << 13));
 
+    float originalWalk;
+    float originalSprint;
+
     protected override void Awake()
     {
         base.Awake();
 
+        originalWalk = walkSpeed;
+        originalSprint = sprintSpeed;
+
         Instance = this;
         details = GetComponentInParent<PlayerDetails>();
         weaponManager = GetComponentInChildren<WeaponManager>();
+        audioManager = GetComponentInParent<AudioManager>();
     }
 
     protected void Start()
@@ -98,7 +107,10 @@ public class PlayerController : PersonController
         fuel = maxFuel;
         evaSpeed = walkSpeed * 0.8f;
 
-        if(!finalFight) LoadData();
+        if (!finalFight) {
+            LoadData();
+            if (!SaveManager.GetBool("hint_initial")) StartCoroutine(InitialHints());
+        }
         LoadWeapon();
 
 
@@ -146,8 +158,8 @@ public class PlayerController : PersonController
 
         if (SaveManager.SacrificeMade("sacrifice_speed"))
         {
-            walkSpeed = walkSpeed * 0.7f;
-            sprintSpeed = sprintSpeed * 0.7f;
+            walkSpeed = originalWalk * 0.7f;
+            sprintSpeed = originalSprint * 0.7f;
         }
 
         if (SaveManager.SacrificeMade("sacrifice_jump"))
@@ -158,6 +170,7 @@ public class PlayerController : PersonController
         if (SaveManager.SelfUpgraded("upgrade_teleport"))
         {
             canSummon = true;
+            HintManager.PlayHint("hint_summon");
         }
 
         if (SaveManager.SelfUpgraded("upgrade_gun"))
@@ -288,6 +301,17 @@ public class PlayerController : PersonController
         if (!inSpace)
         {
             rb.MovePosition(rb.position + velocity);
+
+            if (grounded)
+            {
+                footstepTimer -= movementSpeed * 0.15f * Time.deltaTime;
+                if (footstepTimer <= 0)
+                {
+                    audioManager.PlaySound("Footstep");
+                    footstepTimer = 0.3f;
+                }
+            }
+
         }
         else
         {
@@ -378,6 +402,7 @@ public class PlayerController : PersonController
             doubleJumped = true;
             strength *= 1.2f;
             details.UseEnergy(2);
+            audioManager.PlaySound("jump");
         }
 
         AddForce(transform.up * strength);
@@ -442,7 +467,7 @@ public class PlayerController : PersonController
 
     void UseWeapon()
     {
-        if (weapon == null) return;
+        if (weapon == null || paused) return;
 
         weapon.PrimaryAction(weaponAction.ReadValue<float>());
         weapon.SecondaryAction(weaponSecondaryAction.ReadValue<float>());
@@ -461,8 +486,17 @@ public class PlayerController : PersonController
     {
         SaveManager.UnlockWeapon(index);
         weaponManager.UnlockWeapon(index);
+        audioManager.PlaySound("equip");
 
         HUD.ActivateAmmoIndicator();
+        HintManager.PlayHint("hint_fire");
+
+        Debug.Log("WEAPON COUNT: " + weaponManager.NumberUnlocked());
+
+        if(weaponManager.NumberUnlocked() == 2)
+        {
+            HintManager.PlayHint("hint_wheel");
+        }
     }
 
     void SwapWeapon(Weapon newWeapon)
@@ -601,7 +635,13 @@ public class PlayerController : PersonController
 
     public bool AddAmmo(float percentOfMax)
     {
-        return weaponManager.AddAmmo(percentOfMax);
+        bool success = weaponManager.AddAmmo(percentOfMax);
+        if (success)
+        {
+            audioManager.PlaySound("increaseAmmo");
+        }
+
+        return success;
     }
 
     public WeaponManager WeaponManager()
@@ -619,5 +659,28 @@ public class PlayerController : PersonController
         int index = SaveManager.CurrentWeapon();
         weaponManager.ForceLoad();
         EquipWeapon(index);
+    }
+
+    public void PlaySound(string sound)
+    {
+        audioManager.PlaySound(sound);
+    }
+
+    IEnumerator InitialHints()
+    {
+        while (!grounded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        HintManager.PlayHint("hint_initial");
+        HintManager.PlayHint("hint_sprint");
+        HintManager.PlayHint("hint_jump");
+        HintManager.PlayHint("hint_pause");
+    }
+
+    public bool IsDead()
+    {
+        return details.GetHealth() <= 0;
     }
 }

@@ -21,6 +21,7 @@ public class EnemyController : PersonController
     bool hostile = false;
     protected EnemyDetails details;
     bool active = true;
+    bool suspended = false;
 
     Vector3 offset;
 
@@ -52,9 +53,21 @@ public class EnemyController : PersonController
     {
         if (!active) return;
 
-        base.FixedUpdate();
+        //base.FixedUpdate();
 
         playerDistance = Vector3.Distance(transform.position, player.position);
+
+        if (playerDistance > 100)
+        {
+            if (!suspended)
+            {
+                suspended = true;
+                SetAnimFloat("MoveSpeed", 0);
+            }
+
+            return;
+        }
+        else if (suspended) suspended = false;
 
         if (currentState == null || currentState.ExitCondition())
         {
@@ -242,5 +255,21 @@ public class EnemyController : PersonController
         {
             return (details.transform.position - Origin).sqrMagnitude;
         }
+    }
+
+    public float PlayerHeight()
+    {
+        if (player == null) return -1;
+        if (Physics.Raycast(player.position, -player.up, out RaycastHit hit, 5, 1 << 8))
+        {
+            return hit.distance - 1;
+        }
+        return -1;
+    }
+
+    public bool PlayerLowEnough()
+    {
+        float height = PlayerHeight();
+        return height != -1 && height < 4;
     }
 }

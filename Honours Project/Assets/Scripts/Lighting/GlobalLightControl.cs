@@ -83,6 +83,8 @@ public class GlobalLightControl : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.attachedRigidbody == null) return;
+
         if (other.attachedRigidbody.TryGetComponent(out PersonDetails details))
         {
             details.TakeDamage(100000000);

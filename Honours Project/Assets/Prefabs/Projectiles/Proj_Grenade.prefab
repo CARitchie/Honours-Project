@@ -159,9 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53bad8c1c1dd014086ce41be0ace502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitMarkerTemplate: {fileID: 8918391228859942570, guid: 3fc6cceb663d8c449b9f2e1b231386b8, type: 3}
   hitMarker: {fileID: 3163529654340030917}
-  damage: 65
+  damage: 160
   despawnTime: 15
   OnHit:
     m_PersistentCalls:

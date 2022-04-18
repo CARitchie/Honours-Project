@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b92d8937687774e95de8f05633fcf7, type: 3}
+  m_Name: Sparks
+  m_EditorClassIdentifier: 
+  title: Spark
+  sounds:
+  - {fileID: 11400000, guid: f4f43ac30d17cfb4cb069397708b8fe8, type: 2}
+  - {fileID: 11400000, guid: 515d54d343856214aa92b6ddedfad1dc, type: 2}
+  - {fileID: 11400000, guid: d63059a1681590d41bb7edc93d755b8a, type: 2}
+  - {fileID: 11400000, guid: 04a915f4d4cf5e94fbc0a046ff231ce3, type: 2}
+  - {fileID: 11400000, guid: e16b6c75a5e687149b4e4e4e23cb72dd, type: 2}

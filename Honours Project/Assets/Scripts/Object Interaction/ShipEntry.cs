@@ -15,7 +15,7 @@ public class ShipEntry : MonoBehaviour, Interact
     {
         if (ship.IsActive()) return;
 
-        HUD.SetInteractText("Control Spaceship");
+        HUD.SetInteractText("Control/Exit Spaceship");
     }
 
     public void OnExit()

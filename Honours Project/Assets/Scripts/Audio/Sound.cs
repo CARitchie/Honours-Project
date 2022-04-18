@@ -13,6 +13,7 @@ public class Sound : PlayableSound
     [SerializeField] [Range(0f, 1f)] float volume = 1;
     [SerializeField] [Range(.1f, 3f)] float pitch = 1;
     [SerializeField] [Range(0f, 1f)] float spatialBlend;
+    [SerializeField] [Range(0f, 1f)] float doppler = 1;
 
     AudioSource audioSource;
 
@@ -30,6 +31,7 @@ public class Sound : PlayableSound
         audioSource.pitch = pitch;
         audioSource.spatialBlend = spatialBlend;
         audioSource.outputAudioMixerGroup = group;
+        audioSource.dopplerLevel = doppler;
         //audioSource.rolloffMode = AudioRolloffMode.Linear;
         //audioSource.maxDistance = 25;
     }
@@ -39,6 +41,14 @@ public class Sound : PlayableSound
         if (audioSource != null)
         {
             audioSource.Play();
+        }
+    }
+
+    public override void Stop()
+    {
+        if(audioSource != null)
+        {
+            audioSource.Stop();
         }
     }
 

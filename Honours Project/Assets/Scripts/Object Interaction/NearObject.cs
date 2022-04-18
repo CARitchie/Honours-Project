@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class NearObject : MonoBehaviour
 {
+    bool tempDisabled = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody == null) return;
+        if (tempDisabled || other.attachedRigidbody == null) return;
 
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
@@ -27,5 +29,16 @@ public class NearObject : MonoBehaviour
     private void OnDestroy()
     {
         Compass.RemoveNearObject(transform);
+    }
+
+    public void Disable()
+    {
+        tempDisabled = true;
+        Compass.RemoveNearObject(transform);
+    }
+
+    public void Enable()
+    {
+        tempDisabled = false;
     }
 }
