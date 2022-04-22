@@ -33,10 +33,11 @@ public class Projectile : PoolObject
         base.OnExitQueue();
     }
 
+    // Function to handle when fired from a gun
     public void Fire(Vector3 velocity, Transform body, Transform originator, float multiplier)
     {
-        rb.velocity = velocity;
-        transform.forward = velocity;
+        rb.velocity = velocity;             // Set the velocity
+        transform.forward = velocity;       // Face forward
         damageMultiplier = multiplier;
 
         this.body = body;
@@ -51,6 +52,7 @@ public class Projectile : PoolObject
     {
         if (DetectCollision()) return;
 
+        // If too much time passes, despawn
         timer -= Time.fixedDeltaTime;
         if (timer <= 0) {
             Despawn();
@@ -63,6 +65,7 @@ public class Projectile : PoolObject
         timer = despawnTime;
     }
 
+    // Function to handle when a collision is made
     public virtual void HitSuccess(RaycastHit hit, Vector3 direction)
     {
         PlaceHitMarker(hit, direction);
@@ -71,7 +74,7 @@ public class Projectile : PoolObject
 
         if (hit.transform.TryGetComponent(out Damageable damageable))
         {
-            damageable.OnShot(damage * damageMultiplier, originator);
+            damageable.OnShot(damage * damageMultiplier, originator);       // Add damage to the hit object
         }
 
         gameObject.SetActive(false);
@@ -91,13 +94,14 @@ public class Projectile : PoolObject
         hitMarker.SetActive(true);
     }
 
+    // Function to determine whether the projectile collided with any objects
     bool DetectCollision()
     {
         Vector3 offset = Vector3.zero;
         if (body != null) offset = body.position;
 
         lastPos += offset;
-        if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position), layerMask))
+        if(Physics.Raycast(lastPos, transform.position - lastPos, out RaycastHit hit, Vector3.Distance(lastPos, transform.position), layerMask))    // Find any collisions
         {
             HitSuccess(hit, transform.position - lastPos);
             return true;

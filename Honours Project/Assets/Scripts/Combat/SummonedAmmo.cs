@@ -17,11 +17,13 @@ public class SummonedAmmo : MonoBehaviour
 
     public void OnSpawned()
     {
+        // Activate the gravity receivers on the ammo items
         foreach(GravityReceiver receiver in GetComponentsInChildren<GravityReceiver>(true))
         {
             receiver.enabled = true;
         }
 
+        // Add the ammo items into the physics engine, causes them to fall to the ground
         foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true))
         {
             rb.isKinematic = false;
@@ -35,6 +37,8 @@ public class SummonedAmmo : MonoBehaviour
 
     private void Update()
     {
+        // Every three seconds determine if any of the ammo items still exist
+        // If none do, destroy this gameobject
         timer -= Time.deltaTime;
         if(timer <= 0)
         {
@@ -55,6 +59,7 @@ public class SummonedAmmo : MonoBehaviour
         }
     }
 
+    // Play the teleport particles and shader
     IEnumerator FadeIn()
     {
         ParticleSystem particles = GetParticles(0);
