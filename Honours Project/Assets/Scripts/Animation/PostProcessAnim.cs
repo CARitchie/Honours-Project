@@ -15,8 +15,8 @@ public class PostProcessAnim : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckNull();
-        lens.intensity.value = lensIntensity;
+        CheckNull();                                // Ensure that the lens distortion has been found
+        lens.intensity.value = lensIntensity;       // Change the intensity of the lens distortion
     }
 
     void CheckNull()
