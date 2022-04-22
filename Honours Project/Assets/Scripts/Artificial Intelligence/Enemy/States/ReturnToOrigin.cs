@@ -14,6 +14,7 @@ public class ReturnToOrigin : State
 
     public override bool ExitCondition()
     {
+        // If the player is close enough, and the enemy is close enough to its origin
         return controller.GetPlayerDistance() < 30 && controller.SquareDistanceToOrigin < 2000;
     }
 
@@ -25,14 +26,14 @@ public class ReturnToOrigin : State
 
     public override void OnExecute()
     {
-        if(controller.SquareDistanceToOrigin > 8)
+        if(controller.SquareDistanceToOrigin > 8)           // If not close enough to origin
         {
-            controller.Look(controller.Origin);
-            controller.Move();
-        }else if (!returned)
+            controller.Look(controller.Origin);             // Look at origin
+            controller.Move();                              // Move forwards
+        }else if (!returned)                                // If in range for the first time
         {
             returned = true;
-            controller.SetAnimFloat("MoveSpeed", 0);
+            controller.SetAnimFloat("MoveSpeed", 0);        // Stop playing movement animation
         }
     }
 
