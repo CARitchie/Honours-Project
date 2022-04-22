@@ -16,6 +16,7 @@ public class SceneManager : MonoBehaviour
     {
         if(Instance == null)
         {
+            // Keep this object active at all times
             Instance = this;
             DontDestroyOnLoad(gameObject);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneLoaded;
@@ -30,7 +31,7 @@ public class SceneManager : MonoBehaviour
     {
         if (Instance == null) return;
 
-        if (reload) SaveManager.LoadGame();
+        if (reload) SaveManager.LoadGame();     // Load the game again if necessary, happens when the player dies
 
         Instance.StopAllCoroutines();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
@@ -53,6 +54,7 @@ public class SceneManager : MonoBehaviour
         {
             timer -= Time.unscaledDeltaTime;
 
+            // Increase the opacity of a black image, giving the appearance of fading out
             Color colour = fadeScreen.color;
             colour.a = Mathf.Lerp(1, 0, timer / fadeOutTime);
             fadeScreen.color = colour;
@@ -63,9 +65,10 @@ public class SceneManager : MonoBehaviour
         LoadScene(sceneName);
     }
 
+    // Function called when a new scene has been loaded
     void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (fadeScreen.color.a != 0 && mode != LoadSceneMode.Additive) StartCoroutine(FadeIn());
+        if (fadeScreen.color.a != 0 && mode != LoadSceneMode.Additive) StartCoroutine(FadeIn());    // If the screen is black, fade in
     }
 
     IEnumerator FadeIn()
@@ -75,6 +78,7 @@ public class SceneManager : MonoBehaviour
         {
             timer -= Time.unscaledDeltaTime;
 
+            // Reduce the opacity of a black image, giving the appearance of fading in
             Color colour = fadeScreen.color;
             colour.a = Mathf.Lerp(0, 1, timer / fadeInTime);
             fadeScreen.color = colour;

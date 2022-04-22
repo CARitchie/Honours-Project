@@ -25,12 +25,14 @@ public class AudioControl : MonoBehaviour
         SettingsManager.OnChangesMade -= LoadAudio;
     }
 
+    // Function to muffle audio depending upon the current atmosphere strength
     public static void AtmosphereInterpolation(float val)
     {
         if (Instance == null) return;
         Instance.gameAudio.SetFloat("Frequency", val * (1 - 0.05f) + 0.05f);
     }
 
+    // Function to load the volume from user settings
     void LoadAudio()
     {
         if (PlayerPrefs.HasKey("Audio"))

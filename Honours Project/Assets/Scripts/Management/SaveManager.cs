@@ -17,7 +17,7 @@ public static class SaveManager
     {
         if (!SaveFileExists())
         {
-            CreateNewSave();
+            CreateNewSave();            // Create a new save file if one doesn't already exist
         }
 
         return save;
@@ -155,6 +155,7 @@ public static class SaveManager
         OnUpgradeChanged?.Invoke();
     }
 
+    // Function to determine whether the specified sacrifce/upgrade was sacrificed
     public static bool SacrificeMade(string key)
     {
         if (!SaveExists()) return false;
@@ -162,6 +163,7 @@ public static class SaveManager
         return state == SaveFile.UpgradeState.Sacrificed;
     }
 
+    // Function to determine whether the specified upgrade was used for the player or colony ship
     public static bool SelfUpgraded(string key)
     {
         if (!SaveExists()) return false;
@@ -192,6 +194,7 @@ public static class SaveManager
         return save.CurrentWeapon();
     }
 
+    // Try to save the game
     public static bool AttemptSave()
     {
         if (save == null || PlayerController.Instance == null || !PlayerController.Instance.Saveable()) return false;
@@ -201,6 +204,7 @@ public static class SaveManager
         return true;
     }
 
+    // Copy all data and write to file
     static void SaveGame() {
         save.CopyFromPlayer(PlayerController.Instance);
         save.CopyFromShip(ShipController.Instance);

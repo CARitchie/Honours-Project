@@ -22,6 +22,7 @@ public class GameStartReceiver : MonoBehaviour
         OnGameStart?.Invoke();
     }
 
+    // Function to tell the save file that the intro cutscene has been watched
     public void CutsceneCompleted()
     {
         SaveManager.SetGameState(1, true);
