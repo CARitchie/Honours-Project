@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class is not used in final game
 public class PathMesh : MonoBehaviour
 {
     [SerializeField][Range(0,100000)] int numberOfPoints = 30;
