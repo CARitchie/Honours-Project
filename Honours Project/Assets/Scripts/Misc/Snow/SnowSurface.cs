@@ -24,13 +24,13 @@ public class SnowSurface : MonoBehaviour
 
     private void Awake()
     {
-        drawMat = new Material(shader);
+        drawMat = new Material(shader);             // Create the material to be used for drawing to the displacement texture
         drawMat.SetColor("_Color", Color.red);
 
-        fallMat = new Material(snowFallShader);
+        fallMat = new Material(snowFallShader);     // Create the material that reduces the displacement
 
         snowMat = meshRenderer.material;
-        displacementMap = new RenderTexture(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
+        displacementMap = new RenderTexture(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);      // Create the displacement map render texture
         displacementMap.wrapMode = TextureWrapMode.Repeat;
         snowMat.SetTexture("_DispTex", displacementMap);
 
@@ -44,7 +44,7 @@ public class SnowSurface : MonoBehaviour
 
         if (QualitySettings.GetQualityLevel() < 2) return;
 
-        if (fallers != null && fallers.Length > 0)
+        if (fallers != null && fallers.Length > 0)          // For every object that adds snow
         {
             for (int i = 0; i < fallers.Length; i++)
             {
@@ -52,11 +52,11 @@ public class SnowSurface : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < imprinters.Count; i++)
+        for (int i = 0; i < imprinters.Count; i++)          // For every object that leaves a trail
         {
             if(imprinters[i] != null)
             {
-                if(imprinters[i].Contact(out Vector3 pos))
+                if(imprinters[i].Contact(out Vector3 pos))  // If the object is making contact
                 {
                     DrawToTexture(pos, imprinters[i].GetSize());
                 }
@@ -71,8 +71,8 @@ public class SnowSurface : MonoBehaviour
         drawMat.SetVector("_Coordinate", point);
         drawMat.SetFloat("_Size", size * radius / 10);
         RenderTexture temp = RenderTexture.GetTemporary(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
-        Graphics.Blit(displacementMap, temp);
-        Graphics.Blit(temp, displacementMap, drawMat);
+        Graphics.Blit(displacementMap, temp);                   // Copy the displacement map into the temporary render texture
+        Graphics.Blit(temp, displacementMap, drawMat);          // Copy the temporary render texture back into the displacement map, using the material that draws more displacement
         RenderTexture.ReleaseTemporary(temp);
     }
 
@@ -86,8 +86,8 @@ public class SnowSurface : MonoBehaviour
         fallMat.SetVector("_Origin", (faller.transform.position - transform.position) / radius);
 
         RenderTexture temp = RenderTexture.GetTemporary(resolution, resolution, 0, RenderTextureFormat.ARGBFloat);
-        Graphics.Blit(displacementMap, temp);
-        Graphics.Blit(temp, displacementMap, fallMat);
+        Graphics.Blit(displacementMap, temp);                   // Copy the displacement map into the temporary render texture
+        Graphics.Blit(temp, displacementMap, fallMat);          // Copy the temporary render texture back into the displacement map, using the material that reduces the displacement
         RenderTexture.ReleaseTemporary(temp);
     }
 
@@ -101,7 +101,7 @@ public class SnowSurface : MonoBehaviour
 
         for (int i = 0; i < imprints.Length; i++)
         {
-            if (!imprinters.Contains(imprints[i])) imprinters.Add(imprints[i]);
+            if (!imprinters.Contains(imprints[i])) imprinters.Add(imprints[i]);     // Add all new imprinters into the list if they are not already present
         }
     }
 
@@ -115,7 +115,7 @@ public class SnowSurface : MonoBehaviour
 
         for (int i = 0; i < imprints.Length; i++)
         {
-            if (imprinters.Contains(imprints[i])) imprinters.Remove(imprints[i]);
+            if (imprinters.Contains(imprints[i])) imprinters.Remove(imprints[i]);   // Remove all of the exiting imprinters from the list
         }
     }
 }
