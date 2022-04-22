@@ -15,7 +15,7 @@ public class PlayerTrigger : MonoBehaviour
 
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            OnEnter?.Invoke();
+            OnEnter?.Invoke();          // Invoke the OnEnter event if the player enters the collider
         }
     }
 
@@ -25,7 +25,7 @@ public class PlayerTrigger : MonoBehaviour
 
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            OnExit?.Invoke();
+            OnExit?.Invoke();           // Invoke the OnExit event if the player exits the collider
         }
     }
 }

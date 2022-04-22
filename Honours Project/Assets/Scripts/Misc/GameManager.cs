@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // If the player reloads when in the ship, the controls can get stuck in the ship map
+        // This guarantees that the player can still be in control once they've reloaded
         InputController.SetMap("Player");
     }
 
@@ -44,33 +46,34 @@ public class GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
     }
 
+    // Function to start the autosave process
     public static void Autosave()
     {
         if (Instance == null) return;
 
-        HUD.SpinSaveIcon(false);
+        HUD.SpinSaveIcon(false);                                // Start spinning the save icon
         Instance.saving = true;
-        Instance.StartCoroutine(Instance.RunAutosave());
+        Instance.StartCoroutine(Instance.RunAutosave());        // Start the autosave coroutine
     }
 
     IEnumerator RunAutosave()
     {
         bool saved = false;
-        while (!saved)
+        while (!saved)                                      // Loop while the game hasn't saved
         {
-            if (PlayerController.Instance.IsDead())
+            if (PlayerController.Instance.IsDead())         // Stop if the player dies
             {
                 saved = true;
                 break;
             }
             else
             {
-                saved = SaveManager.AttemptSave();
+                saved = SaveManager.AttemptSave();          // Make a save attempt
             }  
             yield return new WaitForEndOfFrame();
         }
 
-        HUD.StopSaving();
+        HUD.StopSaving();                                   // Stop spinning the save icon
 
         saving = false;
     }

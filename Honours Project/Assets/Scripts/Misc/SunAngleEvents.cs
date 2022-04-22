@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// Class invokes events depending upon the time of day on a planet
 public class SunAngleEvents : MonoBehaviour
 {
     [SerializeField] Transform planet;
@@ -32,7 +33,7 @@ public class SunAngleEvents : MonoBehaviour
         float dot = GetCurrentDot();
         if (activated)
         {
-            if(dot >= angle)
+            if(dot >= angle)                // If the dot is large enough and the startEvent has been activated
             {
                 activated = false;
                 endEvent?.Invoke();
@@ -40,7 +41,7 @@ public class SunAngleEvents : MonoBehaviour
         }
         else
         {
-            if(dot < angle)
+            if(dot < angle)                 // If the dot is small enough and the endEvent has been activated
             {
                 activated = true;
                 startEvent?.Invoke();
@@ -48,6 +49,7 @@ public class SunAngleEvents : MonoBehaviour
         }
     }
 
+    // Function to find the dot product between the direction from the planet to this gameobject, and the direction from the planet to the sun
     float GetCurrentDot()
     {
         Vector3 dir1 = (transform.position - planet.position).normalized;
