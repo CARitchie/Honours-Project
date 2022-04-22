@@ -10,13 +10,13 @@ public class PlanetReceiver : GravityReceiver
 
     public override void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
     {
-        Vector3 force = CalculateForce(sources, time) / rb.mass;
+        Vector3 acceleration = CalculateForce(sources, time) / rb.mass;
 
-        velocity += force * time;
-        velocity += playerVelocity;
+        velocity += acceleration * time;                                            // Increase the planet's velocity
+        velocity += playerVelocity;                                                 // Account for the player's velocity
 
-        rb.MovePosition(rb.position + (velocity * time));
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(angularVelocity * time));
+        rb.MovePosition(rb.position + (velocity * time));                           // Change position
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(angularVelocity * time));    // Rotate planet, this does work but all planets have an angularVelocity of 0 as a result of strange side effects
     }
 
     protected override void Start()

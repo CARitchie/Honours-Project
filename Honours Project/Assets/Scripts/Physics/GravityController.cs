@@ -33,6 +33,7 @@ public class GravityController : MonoBehaviour
         Instance.sources.Add(source);
     }
 
+    // Function to apply all gravity forces
     void AddForces()
     {
         float time = Time.fixedDeltaTime;
@@ -41,7 +42,7 @@ public class GravityController : MonoBehaviour
 
         foreach(GravityReceiver receiver in receivers)
         {
-            if(receiver.enabled) receiver.ApplyForce(sources, time, -playerVelocity);
+            if(receiver.enabled) receiver.ApplyForce(sources, time, -playerVelocity);   // Apply gravity forces to all active gravity receivers
         }
     }
 
@@ -52,6 +53,7 @@ public class GravityController : MonoBehaviour
         playerVelocity = Vector3.zero;
     }
 
+    // Function to find the gravity source closest to a specified gravity receiver
     public static GravitySource FindClosest(GravityReceiver receiver, bool global = false)
     {
         if (Instance == null) return null;
@@ -62,7 +64,7 @@ public class GravityController : MonoBehaviour
         }
         else
         {
-            return receiver.FindGlobalClosest(Instance.sources);
+            return receiver.FindGlobalClosest(Instance.sources);        // Find the closest gravity source without worrying about the source's influence range
         }
         
     }
@@ -89,6 +91,7 @@ public class GravityController : MonoBehaviour
         Instance.player = receiver;
     }
 
+    // Function to return a gravity source found by a specified key
     public static bool FindSource(string key, out GravitySource source)
     {
         source = null;

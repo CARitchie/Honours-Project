@@ -21,6 +21,7 @@ public class GravityReceiver : MonoBehaviour
         GravityController.AddReceiver(this);
     }
 
+    // Function to apply gravity forces and account for the player's velocity
     public virtual void ApplyForce(List<PlanetGravity> sources, float time, Vector3 playerVelocity)
     {
         Vector3 force = CalculateForce(sources, time);
@@ -31,6 +32,7 @@ public class GravityReceiver : MonoBehaviour
         rb.AddForce(playerVelocity, ForceMode.VelocityChange);
     }
 
+    // Function to calculate the force that should be applied
     protected Vector3 CalculateForce(List<PlanetGravity> sources, float time)
     {
         Vector3 force = Vector3.zero;
@@ -43,14 +45,14 @@ public class GravityReceiver : MonoBehaviour
             {
                 Vector3 distance = sources[i].transform.position - transform.position;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;
+                float strength = (G * rb.mass * sources[i].GetMass()) / distance.sqrMagnitude;      // Use the law of gravitation to calculate the magnitude of the force
                 force += distance.normalized * strength;
             }
         }
 
         force *= defaultMultiplier;
 
-        force += GetLocalForce();
+        force += GetLocalForce();       // Add the force originating from local gravity sources
 
         return force;
     }
@@ -67,6 +69,7 @@ public class GravityReceiver : MonoBehaviour
 
     }
 
+    // Function to determine the force originating from local gravity sources
     protected Vector3 GetLocalForce(){
         Vector3 force = Vector3.zero;
         foreach(LocalGravitySource gravitySource in localGravitySources){
@@ -75,9 +78,13 @@ public class GravityReceiver : MonoBehaviour
         return force * rb.mass * localGravityMultiplier;
     }
 
+    // Function to find the closest local gravity source
     protected LocalGravitySource ClosestLocalSource(){
         if(localGravitySources.Count < 1) return null;
         if(localGravitySources.Count < 2) return localGravitySources[0];
+
+        // If there are more than one local gravity sources acting on this object
+        // Find the local gravity source that is closest
 
         LocalGravitySource source = localGravitySources[0];
         float dist = (source.transform.position - transform.position).sqrMagnitude;
@@ -105,6 +112,7 @@ public class GravityReceiver : MonoBehaviour
         GravityController.RemoveReceiver(this);
     }
 
+    // Find the closest gravity source
     public GravitySource FindClosest(List<PlanetGravity> sources)
     {
         GravitySource closest = null;
@@ -135,6 +143,7 @@ public class GravityReceiver : MonoBehaviour
         return closest;
     }
 
+    // Find the closest gravity source without considering influence ranges
     public GravitySource FindGlobalClosest(List<PlanetGravity> sources)
     {
         GravitySource closest = null;
