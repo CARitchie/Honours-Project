@@ -14,6 +14,7 @@ public class DelayedAudio : MonoBehaviour
 
     private void Start()
     {
+        // Play the sound after a random amount of time
         source.PlayDelayed(Random.Range(0, maxDelay));
     }
 }
