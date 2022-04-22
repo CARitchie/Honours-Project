@@ -8,6 +8,7 @@ public abstract class State : MonoBehaviour
 
     public void InitialiseState(EnemyController controller)
     {
+        // Set the controller to the enemy that this state is active for
         this.controller = controller;
     }
 

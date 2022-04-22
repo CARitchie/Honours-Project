@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class containing data for when an enemy is being teleported
 public class SpawnDetails : MonoBehaviour
 {
     [SerializeField] float teleportTime;
