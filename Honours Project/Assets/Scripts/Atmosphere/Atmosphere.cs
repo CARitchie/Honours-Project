@@ -10,6 +10,7 @@ public class Atmosphere : MonoBehaviour
 
     public Material GetMaterial()
     {
+        // Update the material's properties
         mat.SetVector("_PlanetOrigin", transform.position);
         mat.SetFloat("_PlanetRadius", planetRadius);
         mat.SetFloat("_AtmosphereRadius", atmosphereRadius);
