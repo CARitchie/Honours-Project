@@ -33,7 +33,7 @@ public class RechargeStation : MonoBehaviour
     {
         while(player != null)
         {
-            player?.Recharge(rechargeRate * Time.deltaTime);
+            player?.Recharge(rechargeRate * Time.deltaTime);        // Increase the amount of energy that the player has
             yield return new WaitForEndOfFrame();
         }
     }

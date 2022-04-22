@@ -8,7 +8,7 @@ public class FinalButton : MonoBehaviour, Interact
 
     public void OnEnter()
     {
-        HUD.SetInteractText("Start Engines. There is no turning back");
+        HUD.SetInteractText("Start Engines. There is no turning back");     // Warn the player that this is the ending
     }
 
     public void OnExit()
@@ -18,9 +18,8 @@ public class FinalButton : MonoBehaviour, Interact
 
     public void OnSelect()
     {
-        PlayerController.SetPaused(true);
+        PlayerController.SetPaused(true);           // Prevent the player from performing any actions
         OnExit();
-        // TODO: Need to temporarily save some player data
-        SceneManager.FadeToScene("StoryEnding");
+        SceneManager.FadeToScene("StoryEnding");    // Start the end of the game
     }
 }
