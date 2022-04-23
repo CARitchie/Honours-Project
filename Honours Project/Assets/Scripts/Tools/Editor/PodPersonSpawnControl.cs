@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+// Tool was used to fill all of the cryo pods in the cryo bay with people
 public class PodPersonSpawnControl : EditorWindow
 {
     Transform parent;
@@ -37,8 +38,8 @@ public class PodPersonSpawnControl : EditorWindow
 
     public void SpawnPodPeople()
     {
-        PodPersonSpawner[] spawners = parent.GetComponentsInChildren<PodPersonSpawner>(true);
-        if (spawners != null && spawners.Length > 0) spawners[0].CalculateWeights();
+        PodPersonSpawner[] spawners = parent.GetComponentsInChildren<PodPersonSpawner>(true);       // Find all of the cryo pods where a person can be spawned
+        if (spawners != null && spawners.Length > 0) spawners[0].CalculateWeights();                // Calculate the weighting for when choosing a random person
         foreach(PodPersonSpawner spawner in spawners)
         {
             spawner.SpawnPerson();

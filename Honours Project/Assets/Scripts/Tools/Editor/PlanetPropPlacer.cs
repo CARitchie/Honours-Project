@@ -55,16 +55,16 @@ public class PlanetPropPlacer : EditorWindow
         CheckParent();
         while (progress < numberOfProps)
         {
-            PlaceableProp prop = scheme.GetRandomProp();
+            PlaceableProp prop = scheme.GetRandomProp();        // Get a random prop
             if (prop == null) continue;
 
-            Vector3 pos = FindPosition();
+            Vector3 pos = FindPosition();                       // Find a spawn point for the prop
 
             if (pos != Vector3.zero)
             {
                 Vector3 rot = GetRotation(pos);
 
-                prop.Spawn(parent, pos, rot);
+                prop.Spawn(parent, pos, rot);                   // Spawn the prop
             }
 
             progress++;
@@ -86,6 +86,7 @@ public class PlanetPropPlacer : EditorWindow
         }
     }
 
+    // Function to create a parent object that will hold all of the generated objects
     GameObject CreateParent(Transform originalParent, string name)
     {
         GameObject gameObject = new GameObject(name);
@@ -97,6 +98,7 @@ public class PlanetPropPlacer : EditorWindow
         return gameObject;
     }
 
+    // Function to find a suitable spawn point
     Vector3 FindPosition()
     {
         int numberOfAttempts = 50;
@@ -108,10 +110,10 @@ public class PlanetPropPlacer : EditorWindow
 
             Vector3 pos = source.transform.position + dir;
 
-            if (!Physics.Raycast(pos, -dir, out RaycastHit hit, radius)) continue;
+            if (!Physics.Raycast(pos, -dir, out RaycastHit hit, radius)) continue;      // Go to the next loop if the planet wasn't collided with
             
 
-            if (hit.collider.gameObject.layer != 8 && checkCollision) continue;
+            if (hit.collider.gameObject.layer != 8 && checkCollision) continue;         // Go to the next loop if the collided object wasn't the planet and collisions are unwanted
 
             return hit.point;
         }
