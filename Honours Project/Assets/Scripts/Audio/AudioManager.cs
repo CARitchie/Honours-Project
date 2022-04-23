@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Taken from submission for 3rd year Games Programming Module
+// Taken and modified from submission for 3rd year Games Programming Module
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] protected PlayableSound[] sounds;
@@ -10,20 +10,20 @@ public class AudioManager : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GameObject holder = new GameObject("AudioHolder");
+        GameObject holder = new GameObject("AudioHolder");                          // Create a child gameobject to contain all of the audio sources
         holder.transform.parent = transform;
         holder.transform.localPosition = Vector3.zero;
 
         foreach (PlayableSound sound in sounds)
         {
-            PlayableSound newSound = Instantiate(sound);
-            newSound.Initialise(holder);
+            PlayableSound newSound = Instantiate(sound);                            // Create a copy of all of the sound objects
+            newSound.Initialise(holder);                                            // Initialise the new sound objects
 
-            dictionary.Add(newSound.GetTitle(), newSound);
+            dictionary.Add(newSound.GetTitle(), newSound);                          // Add the sounds to the dictionary
         }
     }
 
-    // Method to find a sound and play it
+    // Function to find a sound and play it
     public void PlaySound(string key)
     {
         // Make sure that the gameObject is active and that the sound exists
@@ -33,6 +33,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // Function to stop all sounds
     public void StopAll()
     {
         foreach(KeyValuePair<string, PlayableSound> pair in dictionary)
@@ -42,6 +43,7 @@ public class AudioManager : MonoBehaviour
     }
 }
 
+// Class to store sound objects as files within the project
 public class PlayableSound : ScriptableObject
 {
     [SerializeField] string title;

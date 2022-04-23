@@ -17,33 +17,35 @@ public class MainMenuModel : MonoBehaviour
 
     private void Awake()
     {
-        Time.timeScale = 1;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("StoryIntro", UnityEngine.SceneManagement.LoadSceneMode.Additive);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 1;             // Reset the timescale
+        UnityEngine.SceneManagement.SceneManager.LoadScene("StoryIntro", UnityEngine.SceneManagement.LoadSceneMode.Additive);       // Load in the scene with the Arturius flying real fast
+        Cursor.visible = true;                              // Make the cursor visible
+        Cursor.lockState = CursorLockMode.None;             // Unlock cursor movement
 
-        saveExists = SaveManager.SaveFileExists();
-        continueButton.SetActive(saveExists);
+        saveExists = SaveManager.SaveFileExists();          // Find out if a save file exists
+        continueButton.SetActive(saveExists);               // Enable or disable the continue button depending upon the existance of a save file
     }
 
+    // Function to continue playing from an existing save file
     public void ContinueGame()
     {
         SaveManager.LoadGame();
-        if(SaveManager.GetState() > 0)
+        if(SaveManager.GetState() > 0)                      // If the intro cutscene has already been played
         {
             DisableButtons();
-            SceneManager.FadeToScene("Space");
+            SceneManager.FadeToScene("Space");              // Load into the main game scene
         }
         else
         {
-            CloseMenu();
+            CloseMenu();                                    // Close the menu and play the opening cutscene
             gameStarted?.Invoke();
         }
     }
 
+    // Function to display a warning when creating a new game
     public void NewGameWarning()
     {
-        if (saveExists)
+        if (saveExists)                             // If a save file exists, show the warning
         {
             primaryButtons.SetActive(false);
             warning.SetActive(true);
@@ -80,10 +82,11 @@ public class MainMenuModel : MonoBehaviour
         StartCoroutine(FadeOut());
     }
 
+    // Function to make sure that none of the buttons can be pressed
     public void DisableButtons()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;                         // Hide the cursor
+        Cursor.lockState = CursorLockMode.Locked;       // Lock the cursor
 
         Button[] buttons = GetComponentsInChildren<Button>(true);
         foreach (Button btn in buttons)
@@ -92,6 +95,7 @@ public class MainMenuModel : MonoBehaviour
         }
     }
 
+    // Function to gradually fade the buttons out
     IEnumerator FadeOut()
     {
         Graphic[] graphics = GetComponentsInChildren<Graphic>(true);

@@ -17,6 +17,7 @@ public class PropScheme : ScriptableObject
         }
     }
 
+    // Function to find a random prop using a weighting
     public PlaceableProp GetRandomProp()
     {
         float bigWeight = Random.Range(0, sumOfWeights);

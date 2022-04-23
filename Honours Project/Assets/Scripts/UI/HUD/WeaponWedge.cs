@@ -18,7 +18,7 @@ public class WeaponWedge : MonoBehaviour
     {
         WeaponManager.OnWeaponUnlock += Unlock;
 
-        if (SaveManager.WeaponUnlocked(index)) Unlock(index);
+        if (SaveManager.WeaponUnlocked(index)) Unlock(index);       // If this weapon has been unlocked
     }
 
     private void OnDestroy()
@@ -46,6 +46,7 @@ public class WeaponWedge : MonoBehaviour
         StartCoroutine(FadeToColour(defaultColour));
     }
 
+    // Function to gradually change the wedge colour to the specified colour
     IEnumerator FadeToColour(Color colour)
     {
         bool equal = false;
@@ -75,7 +76,7 @@ public class WeaponWedge : MonoBehaviour
     public void Unlock(int index)
     {
         if (index != this.index) return;
-        weaponImage.SetActive(true);
-        padlockImage.SetActive(false);
+        weaponImage.SetActive(true);        // Enable the image of the weapon
+        padlockImage.SetActive(false);      // Disable the image of the padlock
     }
 }

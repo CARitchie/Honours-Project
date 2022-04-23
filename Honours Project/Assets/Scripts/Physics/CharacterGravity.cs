@@ -28,18 +28,18 @@ public class CharacterGravity : GravityReceiver
         Vector3 dir = Vector3.zero;
         GravitySource closestSource = null;
 
-        for (int i = 0; i < sources.Count; i++)
+        for (int i = 0; i < sources.Count; i++)                                                                 // For every gravity source acting on this object
         {
-            if (sources[i].transform != transform)
+            if (sources[i].transform != transform)                                                              // If the source is not this object
             {
                 Vector3 direction = sources[i].transform.position - transform.position;
                 float distance = direction.sqrMagnitude;
                 direction = direction.normalized;
 
-                float strength = (G * rb.mass * sources[i].GetMass()) / distance;
+                float strength = (G * rb.mass * sources[i].GetMass()) / distance;                               // Calculate the force using the law of gravitation
                 force += direction * strength;
 
-                if(distance - sources[i].GetSquareDistance() < max && distance < sources[i].Influence)
+                if(distance - sources[i].GetSquareDistance() < max && distance < sources[i].Influence)          // Find the closest gravity source where the character is within its influence range
                 {
                     max = distance;
                     dir = direction;
@@ -50,27 +50,28 @@ public class CharacterGravity : GravityReceiver
 
         force *= defaultMultiplier;
 
-        if(localGravitySources.Count > 0){
-            force += GetLocalForce();
+        if(localGravitySources.Count > 0){                                      // If there are local gravity sources
+            force += GetLocalForce();                                           // Add the force caused by them
 
-            LocalGravitySource localGravitySource = ClosestLocalSource();
+            LocalGravitySource localGravitySource = ClosestLocalSource();       // Find the closest local gravity source
             dir = localGravitySource.GetGravityDirection(Vector3.zero);
             closestSource = localGravitySource;
         }
 
-        controller.SetNearestSource(closestSource);
+        controller.SetNearestSource(closestSource);                             // Set the controllers nearest gravity source
         nearSource = closestSource;
 
         if (float.IsNaN(force.x)) return;
 
-        rb.AddForce(force);
+        rb.AddForce(force);                                                     // Apply the force
         if (!player)
         {
-            rb.AddForce(playerVelocity, ForceMode.VelocityChange);
+            rb.AddForce(playerVelocity, ForceMode.VelocityChange);              // If not the player, add the player's velocity as a change in velocity
         }
 
     }
 
+    // Function to rotate so that the gameobject is perpendicular to its nearest source's surface
     void Rotate(Vector3 direction, float time)
     {
         if (direction == Vector3.zero) return;
@@ -87,7 +88,7 @@ public class CharacterGravity : GravityReceiver
     private void LateUpdate()
     {
         if (nearSource == null) return;
-        Vector3 direction = nearSource.GetGravityDirection(transform.position);
-        Rotate(direction, Time.deltaTime);
+        Vector3 direction = nearSource.GetGravityDirection(transform.position);     // Find the correct direction
+        Rotate(direction, Time.deltaTime);                                          // Rotate to said direction
     }
 }

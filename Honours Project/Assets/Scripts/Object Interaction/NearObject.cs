@@ -12,7 +12,7 @@ public class NearObject : MonoBehaviour
 
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            Compass.AddNearObject(transform);
+            Compass.AddNearObject(transform);           // If the player has come close enough, add this gameobject to the compass' list of objects to cause a pulse
         }
     }
 
@@ -22,7 +22,7 @@ public class NearObject : MonoBehaviour
 
         if (other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            Compass.RemoveNearObject(transform);
+            Compass.RemoveNearObject(transform);        // If the player is no longer close enough, remove this gameobject from the compass' list
         }
     }
 

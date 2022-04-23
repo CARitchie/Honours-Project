@@ -21,7 +21,7 @@ public class GlobalLightControl : MonoBehaviour
 
         for(int i = 0; i < litObjects.Length; i++)
         {
-            litObjects[i].Initialise();
+            litObjects[i].Initialise();             // Initialise all objects to be affected by the point light
         }
     }
 
@@ -35,14 +35,14 @@ public class GlobalLightControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerDir = (player[index].position - transform.position).normalized;
-
         LookAtPlayer();
 
         UpdateObjects();
     }
 
+    // Function to make the directional light face the player
     void LookAtPlayer(){
+        playerDir = (player[index].position - transform.position).normalized;       // Find the direction to the player
         directionalLight.forward = playerDir;
     }
 
@@ -73,18 +73,20 @@ public class GlobalLightControl : MonoBehaviour
         }
     }
 
+    // Function to determine whether an object should be lit by the point light or the directional light
     void UpdateObject(int index)
     {
-        float dot = Vector3.Dot(playerDir, (litObjects[index].renderer.transform.position - transform.position).normalized);
+        float dot = Vector3.Dot(playerDir, (litObjects[index].renderer.transform.position - transform.position).normalized);        // Find the angle between the direction to the player, and the direction to the object
 
-        if (dot > angle) litObjects[index].RestoreLayer();
-        else litObjects[index].SetLayer(14);
+        if (dot > angle) litObjects[index].RestoreLayer();          // Give the object its default layer if the angle is large enough
+        else litObjects[index].SetLayer(14);                        // Otherwise, make it so that the object is affected by the point light
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.attachedRigidbody == null) return;
 
+        // Damage any objects that get too close
         if (other.attachedRigidbody.TryGetComponent(out PersonDetails details))
         {
             details.TakeDamage(100000000);
@@ -114,6 +116,7 @@ public class GlobalLightControl : MonoBehaviour
             renderer.layer = newLayer;
         }
 
+        // Function to return the object to its original layer
         public void RestoreLayer()
         {
             if (renderer.layer == originalLayer) return;

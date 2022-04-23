@@ -1,3 +1,10 @@
+
+// Cloud generation comes from https://www.diva-portal.org/smash/get/diva2:1223894/FULLTEXT01.pdf
+// Cloud lighting comes from https://www.youtube.com/watch?v=4QOcCGI6xOU
+// Wrapping clouds around the planet was self done
+
+// Some terrible variable and function names were copied from those in the paper just to make sure that the code was exact
+
 Shader "My Shaders/New Cloud Shader"
 {
     Properties
@@ -127,6 +134,7 @@ Shader "My Shaders/New Cloud Shader"
 
 			float _BlueDrop;
 
+			// Function to convert coordinates on a sphere's surface to coordinates on a square
 			float2 SphereToSquare(float3 position) {
 				float3 pos = normalize(position - _PlanetPos);
 
@@ -137,6 +145,7 @@ Shader "My Shaders/New Cloud Shader"
 				return float2(x, y);
 			}
 
+			// Convert uv coordinates to work properly when in screen space
 			float2 squareUV(float2 uv) {
 				float width = _ScreenParams.x;
 				float height = _ScreenParams.y;
@@ -147,24 +156,10 @@ Shader "My Shaders/New Cloud Shader"
 				return float2 (x / scale, y / scale);
 			}
 
-			float2 BoxCollision(float3 position, float3 direction, float3 boundsMin, float3 boundsMax) {
-				float3 t0 = (_PlanetPos + boundsMin - position) / direction;
-				float3 t1 = (_PlanetPos + boundsMax - position) / direction;
-				float3 tmin = min(t0, t1);
-				float3 tmax = max(t0, t1);
-
-				float dstA = max(max(tmin.x, tmin.y), tmin.z);
-				float dstB = min(tmax.x, min(tmax.y, tmax.z));
-
-				float dstToBox = max(0, dstA);
-				float dstInsideBox = max(0, dstB - dstToBox);
-				return float2(dstToBox, dstInsideBox);
-			}
-
+			// Used https://link.springer.com/content/pdf/10.1007%2F978-1-4842-4427-2_7.pdf
+			// Determine if and where a line collides with a sphere
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius)
 			{
-				// Used https://link.springer.com/content/pdf/10.1007%2F978-1-4842-4427-2_7.pdf
-
 				float3 f = position - sphereCentre;
 
 				float a = dot(direction, direction);
@@ -189,20 +184,24 @@ Shader "My Shaders/New Cloud Shader"
 				return float2(-1, -1);
 			}
 
+			// Remap a value into a new range
 			float R(float v, float Lo, float Ho, float Ln, float Hn) {
 				return Ln + (((v - Lo) * (Hn - Ln)) / (Ho - Lo));
 			}
 
+			// Saturate a value
 			float SAT(float v) {
 				if (v < 0) return 0;
 				if (v > 1) return 1;
 				return v;
 			}
 
+			// Linearly interpolate a value
 			float Li(float Vo, float V1, float iVAL) {
 				return (1 - iVAL) * Vo + iVAL * V1;
 			}
 
+			// Convert a 3D point to a point on the weather map and return the pixel data
 			float4 SampleMap(float3 position) {
 				float2 uvw = (SphereToSquare(position) + _WeatherOffset) * _WeatherScale * 0.001;
 				return _WeatherMap.Sample(sampler_WeatherMap, uvw.xy);
@@ -218,15 +217,18 @@ Shader "My Shaders/New Cloud Shader"
 				return _DetailNoise.SampleLevel(sampler_DetailNoise, uvw, 0);
 			}
 
+			// Find the square magnitude of a vector
 			float SquareMag(float3 vec) {
 				return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 			}
 
+			// Find the percentage height within the clouds
 			float PercentHeight(float3 pos) {
 				float height = distance(pos, _PlanetPos);
 				return (height - _MinHeight) / (_MaxHeight - _MinHeight);
 			}
 
+			// Find the density of the clouds at a specified point
 			float Density(float3 pos) {
 
 				float Ph = PercentHeight(pos);
@@ -262,6 +264,7 @@ Shader "My Shaders/New Cloud Shader"
 				return d;
 			}
 
+			// Find the density along a ray from a point within the clouds to the sun
 			float DensityAlongSunRay(float3 rayOrigin) {
 				int SunSteps = 10;
 
@@ -281,12 +284,14 @@ Shader "My Shaders/New Cloud Shader"
 				return density;
 			}
 
+			// Henyey-Greenstein phase function
 			float HG(float theta, float g) {
 				float pi = 1 / (4 * 3.14159);
 				float square = g * g;
 				return pi * ((1 - square) / (pow(1 + square - 2 * g*theta, 1.5)));
 			}
 
+			// Interpolate from one colour to another
 			float4 ColourLerp(float4 col1, float4 col2, float percent) {
 				percent = saturate(percent);
 				float4 col3 = float4(1, 1, 1, 1);
@@ -298,20 +303,21 @@ Shader "My Shaders/New Cloud Shader"
 				return col3;
 			}
 
+			// Alter the colour based on the angle to the sun
 			float4 AlteredColour(float3 pos) {
 				float4 alteredColour = float4(1, 1, 1, 1);
 
 				float angle = dot(normalize(_PlanetPos - pos), normalize(_SunPosition - pos));
 
-				if (angle >= _EndDarkness) return float4(0, 0, 0, 0);
-				if (angle >= _StartDarkness) {
+				if (angle >= _EndDarkness) return float4(0, 0, 0, 0);						// Black if the clouds are behind the planet
+				if (angle >= _StartDarkness) {												// Fade to black
 					angle = (angle - _StartDarkness) / (_EndDarkness - _StartDarkness);
 					return ColourLerp(_SunColour, float4(0, 0, 0, 0), angle);
 				}
-				if (angle >= _EndSunSet) return _SunColour;
+				if (angle >= _EndSunSet) return _SunColour;									// Sunset colour
 
-				if (angle >= _StartSunSet) {
-					angle = (angle - _StartSunSet) / (_EndSunSet - _StartSunSet);
+				if (angle >= _StartSunSet) {												// Fade to sunset colour
+					angle = (angle - _StartSunSet) / (_EndSunSet - _StartSunSet);			
 
 					return ColourLerp(alteredColour, _SunColour, angle);
 				}
@@ -349,7 +355,7 @@ Shader "My Shaders/New Cloud Shader"
 				float progress = 0;
 
 				[unroll(35)]
-				for(int i = 0 ; i < _NumberOfSteps; i++ ){
+				for(int i = 0 ; i < _NumberOfSteps; i++ ){					// Progress along the ray through the clouds
 					float density = Density(position);
 					if (density > 0) {
 						float lightResult = CalculateLight(position);
@@ -357,11 +363,11 @@ Shader "My Shaders/New Cloud Shader"
 						float4 alteredColour = AlteredColour(position);
 
 						light += density * stepSize * transmittance * lightResult * phaseVal * alteredColour;
-						transmittance *= exp(-density * stepSize * _CloudAbsorption);
-						if (transmittance < 0.01) break;
+						transmittance *= exp(-density * stepSize * _CloudAbsorption);		// Decrease the amount of light that can still get through
+						if (transmittance < 0.01) break;									// Stop looping if the amount of light that can still get through is negligible
 					}
 					
-					position += direction * stepSize;
+					position += direction * stepSize;										// Move to the next point in the ray
 					progress += stepSize;
 				}
 
@@ -386,10 +392,10 @@ Shader "My Shaders/New Cloud Shader"
 
 				if (dstThroughAtmosphere > 0) {
 
-					float properScale = ((dstToAtmosphere + 1)/ _BlueDrop) * _BlueNoiseScale;
+					float properScale = ((dstToAtmosphere + 1)/ _BlueDrop) * _BlueNoiseScale;						// Used to change the scale of the blue noise based on distance to clouds, had strange results
 					properScale = 3;
 
-					float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * properScale), 0);
+					float offset = _BlueNoise.SampleLevel(sampler_BlueNoise, squareUV(i.uv * properScale), 0);		// Find an offset for the ray based on a blue noise texture
 					offset *= _BlueNoisePower;
 
 					float2 innerResult = SphereCollision(origin, dir, _PlanetPos, _MinHeight);
@@ -410,7 +416,7 @@ Shader "My Shaders/New Cloud Shader"
 
 					float3 newColour = colourResult.rgb;
 
-					col.rgb *= colourResult.a;
+					col.rgb *= colourResult.a;			// Reduce the original pixel colour by the amount of light blocked by clouds
 					col.rgb += newColour.rgb;
 				}
 

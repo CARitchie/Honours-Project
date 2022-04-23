@@ -25,7 +25,7 @@ public class ShipEntry : MonoBehaviour, Interact
 
     public void OnSelect()
     {
-        ship.Activate();
+        ship.Activate();        // Disable the player and let them take control of the spaceship
         OnExit();
     }
 }

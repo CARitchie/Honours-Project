@@ -24,9 +24,9 @@ public class OrbitViewer : MonoBehaviour
 
     private void Start()
     {
-        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)
+        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)                 // If a relative body is to be used
         {
-            transform.parent = orbitObjects[relativeBody].SourceTransform();
+            transform.parent = orbitObjects[relativeBody].SourceTransform();        // Move the visualisers into the relative body
         }
     }
 
@@ -45,9 +45,9 @@ public class OrbitViewer : MonoBehaviour
             orbitObject.Initialise();
         }
 
-        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)
+        if (relativeBody >= 0 && relativeBody < orbitObjects.Count)     // If a relative body is to be used
         {
-            origin = orbitObjects[relativeBody].GetPosition();
+            origin = orbitObjects[relativeBody].GetPosition();          // Set the origin to the relative body's position
             relative = true;
         }
         else
@@ -59,18 +59,18 @@ public class OrbitViewer : MonoBehaviour
         {
             foreach (OrbitObject orbitObject in orbitObjects)
             {
-                orbitObject.ChangeVelocity(orbitObjects, timeStep);
+                orbitObject.ChangeVelocity(orbitObjects, timeStep);     // Alter the velocity of all the visualisers
             }
 
             foreach (OrbitObject orbitObject in orbitObjects)
             {
                 if (!relative)
                 {
-                    orbitObject.ChangePosition(timeStep);
+                    orbitObject.ChangePosition(timeStep);               // Change the position of all of the visualisers
                 }
                 else
                 {
-                    orbitObject.ChangePosition(timeStep, orbitObjects[relativeBody].GetLastPos() - origin);
+                    orbitObject.ChangePosition(timeStep, orbitObjects[relativeBody].GetLastPos() - origin);     // Change the position of all of the visualisers relative to the relative body
                 }
             }
         }
@@ -180,7 +180,7 @@ class OrbitObject
             {
                 Vector3 distance = orbitObjects[i].lastPos - lastPos;
 
-                float strength = (G * orbitObjects[i].mass) / distance.sqrMagnitude;
+                float strength = (G * orbitObjects[i].mass) / distance.sqrMagnitude;        // Use the law of gravitation to work out acceleration
                 acceleration += distance.normalized * strength;
             }
         }
@@ -211,7 +211,7 @@ class OrbitObject
         lineRenderer.positionCount = positions.Count;
         for (int i = 0 ; i < positions.Count; i++)
         {
-            lineRenderer.SetPosition(i, positions[i]);
+            lineRenderer.SetPosition(i, positions[i]);      // Use all positions as points in the line renderer
         }
     }
 

@@ -8,6 +8,7 @@ public class ChaseState : State
 
     public override bool EntryCondition()
     {
+        // Enter this state if hostile or the player is close enough
         return controller.IsHostile() || controller.GetPlayerDistance() < closeness;
     }
 
@@ -19,6 +20,7 @@ public class ChaseState : State
 
     public override void OnExecute()
     {
+        // Look at the player and then move forwards
         controller.Look(controller.PlayerPos());
         controller.Move();
     }

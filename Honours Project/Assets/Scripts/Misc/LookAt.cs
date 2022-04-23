@@ -9,6 +9,7 @@ public class LookAt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Look at, or away from, the specified target transform
         transform.rotation = Quaternion.LookRotation(!inverted ? target.position - transform.position : transform.position - target.position);
     }
 }

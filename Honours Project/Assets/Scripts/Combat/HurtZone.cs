@@ -11,6 +11,7 @@ public class HurtZone : MonoBehaviour
     {
         for(int i = 0; i < damaged.Count; i++)
         {
+            // Remove the damageable object if it no longer exists
             if(damaged[i] == null)
             {
                 damaged.RemoveAt(i);
@@ -18,7 +19,7 @@ public class HurtZone : MonoBehaviour
                 continue;
             }
 
-            damaged[i].OnMelee(damage * Time.deltaTime, transform);
+            damaged[i].OnMelee(damage * Time.deltaTime, transform);         // Damage any damageable objects within the zone
         }
     }
 
@@ -29,7 +30,7 @@ public class HurtZone : MonoBehaviour
         {
             if (damageable == GetComponentInParent<Damageable>()) return;
 
-            if (!damaged.Contains(damageable)) damaged.Add(damageable);
+            if (!damaged.Contains(damageable)) damaged.Add(damageable);     // Add the new damageable object to the list
 
         }
     }
@@ -41,7 +42,7 @@ public class HurtZone : MonoBehaviour
         {
             if (damageable == GetComponentInParent<Damageable>()) return;
 
-            if (damaged.Contains(damageable)) damaged.Remove(damageable);
+            if (damaged.Contains(damageable)) damaged.Remove(damageable);   // Remove the damageable object from the list
 
         }
     }

@@ -12,11 +12,11 @@ public class SnowImprinter : MonoBehaviour
     public bool Contact(out Vector3 pos)
     {
         pos = Vector3.zero;
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, distanceDown, layerMask))
+        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, distanceDown, layerMask))    // Detect a downward collision
         {
             if (!hit.collider.CompareTag("Snow")) return false;
             pos = hit.point;
-            return true;
+            return true;                                                                                        // Return true if a snowy surface is collided with
         }
         return false;
     }

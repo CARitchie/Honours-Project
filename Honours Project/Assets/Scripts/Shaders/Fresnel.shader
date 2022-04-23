@@ -1,4 +1,6 @@
+
 // Adapted from https://www.ronja-tutorials.com/post/012-fresnel/
+
 Shader "Custom/Fresnel"
 {
     Properties
@@ -75,14 +77,14 @@ Shader "Custom/Fresnel"
 
 			fresnel = 1 - saturate(fresnel);
 
-			fresnel = pow(fresnel, _FresnelExponent) * _FresnelStrength;
+			fresnel = pow(fresnel, _FresnelExponent) * _FresnelStrength;					// Change the strength of the effect
 
-			float2 coords = IN.screenPos.xy / IN.screenPos.w;
+			float2 coords = IN.screenPos.xy / IN.screenPos.w;								// Find the screen space coordinates
 			
-			float extraLines = saturate(sin(coords.y * _Frequency + _Time.y * _Speed));
+			float extraLines = saturate(sin(coords.y * _Frequency + _Time.y * _Speed));		// Determine strength of extra lines based on sine function with vertical screen space coordinate
 
 			if (extraLines > 0.8) {
-				fresnel += pow(((extraLines - 0.8) / 0.2) * 0.4,3);
+				fresnel += pow(((extraLines - 0.8) / 0.2) * 0.4,3);							// Change strength of extra lines
 			}
 
 			//apply the fresnel value to the emission

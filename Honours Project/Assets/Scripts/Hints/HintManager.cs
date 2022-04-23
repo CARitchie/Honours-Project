@@ -25,15 +25,17 @@ public class HintManager : MonoBehaviour
         }
     }
 
+    // Function to play a hint
     public static void PlayHint(string key, bool replayable = false)
     {
-        if (Instance == null || !Instance.HintPlayable(key ,replayable)) return;
+        if (Instance == null || !Instance.HintPlayable(key ,replayable)) return;        // Return if the hint cannot be played
 
-        SaveManager.SetBool(key, true);
+        SaveManager.SetBool(key, true);                                                 // Tell the savemanager that the hint has been played
         Instance.StartHint(key);
 
     }
 
+    // Function to determine whether a hint is playable
     bool HintPlayable(string key, bool replayable)
     {
         if (!replayable && SaveManager.GetBool(key)) return false;
@@ -43,6 +45,7 @@ public class HintManager : MonoBehaviour
         return true;
     }
 
+    // Function to add a hint to the queue, and start the play hint coroutine if not already active
     void StartHint(string key)
     {
         queue.Enqueue(key);
@@ -63,9 +66,9 @@ public class HintManager : MonoBehaviour
         col2.a = 1;
 
         text.color = col1;
-        while(queue.Count > 0)
+        while(queue.Count > 0)                                      // While there are still hints to be played
         {
-            string key = queue.Dequeue();
+            string key = queue.Dequeue();                           // Retrieve the next hint key from the queue
 
             text.text = dictionary[key].Text;
 
@@ -74,7 +77,7 @@ public class HintManager : MonoBehaviour
             float percent = 0;
             while (percent < 1)
             {
-                text.color = Color.Lerp(col1, col2, percent);
+                text.color = Color.Lerp(col1, col2, percent);       // Fade the hint text colour in
                 percent += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
@@ -83,7 +86,7 @@ public class HintManager : MonoBehaviour
 
             while (percent > 0)
             {
-                text.color = Color.Lerp(col1, col2, percent);
+                text.color = Color.Lerp(col1, col2, percent);       // Fade the hint text colour out
                 percent -= Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }

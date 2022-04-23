@@ -74,7 +74,7 @@ Shader "Unlit/Aurora"
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_NoiseTex, i.noiseUV * _NoiseScale + float2(0, _Time.y * _Speed));
+                fixed4 col = tex2D(_NoiseTex, i.noiseUV * _NoiseScale + float2(0, _Time.y * _Speed));		// Change the vertical offset of the texture to make it look like it's moving
 				
 			
 
@@ -82,8 +82,8 @@ Shader "Unlit/Aurora"
 				UNITY_APPLY_FOG(i.fogCoord, col);
 
 				col *= tex2D(_MaskTex, i.uv);
-				fixed4 dissolve = tex2D(_NoiseTex, i.noiseUV * _NoiseScale + float2(0.005, _Time.y * (_Speed + 0.005)));
-				dissolve = pow(dissolve, _DissolvePower);
+				fixed4 dissolve = tex2D(_NoiseTex, i.noiseUV * _NoiseScale + float2(0.005, _Time.y * (_Speed + 0.005)));	// Add more detail and motion
+				dissolve = pow(dissolve, _DissolvePower);																	// Reduce the strength
 				col *= dissolve;
 				float a = col.r;
 				col *= _Colour;

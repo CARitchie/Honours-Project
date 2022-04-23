@@ -23,6 +23,8 @@ public class ColonyTeleport : MonoBehaviour
         StartCoroutine(FadeOut());
     }
 
+    // Works the same as in EnemySpawnPoint.cs
+    // Teleporting in/out should have been a separate component to reduce so much repetition of code
     IEnumerator FadeOut()
     {
         yield return new WaitForSeconds(1);

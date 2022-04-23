@@ -21,7 +21,7 @@ public class CompassItem : MonoBehaviour
     {
         if (icon != null) Destroy(icon.gameObject);
 
-        icon = Instantiate(itemIcon, parent);
+        icon = Instantiate(itemIcon, parent);           // Create a copy of the icon
 
         icon.localPosition = Vector3.zero;
 
@@ -55,6 +55,7 @@ public class CompassItem : MonoBehaviour
         Compass.RemoveItem(this);
     }
 
+    // Determine whether the specified transform is a parent of this transform
     public bool SameParent(Transform parent)
     {
         Transform temp = transform.parent;

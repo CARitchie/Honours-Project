@@ -59,13 +59,13 @@ public class TransformEditor : Editor
         {
             Quaternion rot = Quaternion.FromToRotation(transform.up, (transform.position - source.transform.position));
 
-            transform.rotation = rot * transform.rotation;
+            transform.rotation = rot * transform.rotation;      // Rotate the transform so that it is perpendicular to the planet's surface
         }
 
         if (stick)
         {
             Vector3 direction = (transform.position - source.transform.position).normalized;
-            if(Physics.Raycast(source.transform.position + source.GetDistance() * direction, -direction, out RaycastHit hit,100, 1 << 8))
+            if(Physics.Raycast(source.transform.position + source.GetDistance() * direction, -direction, out RaycastHit hit,100, 1 << 8))       // Find a point on the ground
             {
                 transform.position = hit.point;
             }

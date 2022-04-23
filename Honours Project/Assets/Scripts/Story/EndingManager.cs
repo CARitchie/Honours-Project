@@ -33,6 +33,7 @@ public class EndingManager : MonoBehaviour
         CalculateSurvival();
     }
 
+    // Function that was used during testing to determine the outcome of having certain sacrifices/upgrades unlocked
     void ForceStates()
     {
         SaveManager.LoadGame();
@@ -56,6 +57,7 @@ public class EndingManager : MonoBehaviour
         //SaveManager.SaveToFile();
     }
 
+    // Function to determine the chance of survival
     public void CalculateSurvival()
     {
         Teleport();
@@ -64,6 +66,7 @@ public class EndingManager : MonoBehaviour
         Debug.Log("COLONY SHIP HEALTH: " + health);
     }
 
+    // Calculate the survival chance as a result of the teleport upgrades
     void Teleport()
     {
         if (SaveManager.SacrificeMade("upgrade_teleport"))
@@ -75,7 +78,7 @@ public class EndingManager : MonoBehaviour
             switch (count)
             {
                 case 3:
-                    // Escape if at least one other sacrifice made
+                    // Escape if at least one other sacrifice made (not necessarily true anymore)
                     teleportType = 2;
                     break;
                 case 2:
@@ -93,6 +96,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Calculate the survival chance as a result of the offensive upgrades
     void Offense()
     {
         float multi = 1;
@@ -117,6 +121,7 @@ public class EndingManager : MonoBehaviour
         health -= reduction;
     }
 
+    // Calculate the survival chance as a result of the defensive upgrades
     void Avoidance()
     {
         if (SaveManager.SacrificeMade("sacrifice_pulse"))
@@ -136,6 +141,7 @@ public class EndingManager : MonoBehaviour
         if (SaveManager.SacrificeMade("sacrifice_health")) health += 20;
     }
 
+    // Determine whether the colony ship collides with the explosive mine
     public void StartMineCollision()
     {
         if (SaveManager.SacrificeMade("sacrifice_pulse"))
@@ -158,6 +164,7 @@ public class EndingManager : MonoBehaviour
         SetTime(mineExplosionTime);
     }
 
+    // Function to go to a specific time in the cutscene
     void SetTime(float time)
     {
         director.Stop();
@@ -165,6 +172,7 @@ public class EndingManager : MonoBehaviour
         director.Play();
     }
 
+    // Function to go to a specific time in the specified cutscene
     public void SetTime(float time, PlayableDirector playableDirector)
     {
         playableDirector.Stop();
@@ -172,6 +180,7 @@ public class EndingManager : MonoBehaviour
         playableDirector.Play();
     }
 
+    // Determine whether more colony pods are sucked out
     public void SuckOutPods()
     {
         if (!SaveManager.SacrificeMade("sacrifice_health"))
@@ -184,6 +193,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Determine whether the early warning system is active
     public void EarlyWarning()
     {
         SetTime(enemyArriveTime);
@@ -196,22 +206,28 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Function to move the turrets
     public void PlayTurrets()
     {
         if (turretsPlayed) return;
         turretsPlayed = true;
 
+        // Used to play dialogue when the enemy ship arrived without warning
+        // Removed as dialogue clip wasn't very good
         if (!SaveManager.SacrificeMade("sacrifice_indicators"))
         {
             //DialogueManager.PlayDialogue("audio_unexpected");
         }
 
+        // If the turrets have been unlocked
         if (SaveManager.SacrificeMade("sacrifice_speed"))
         {
+            // Make the turrets aim at the enemy ship
             SetTime(0, turret);
         }
     }
 
+    // First attempt at teleporting away
     public void FirstEscapeAttempt()
     {
         if(teleportType == 2 && health > 40)
@@ -220,6 +236,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Second attempt at teleporting away
     public void SecondEscapeAttempt()
     {
         if((teleportType == 2 && health > 10) ||(teleportType == 1 && health > 50))
@@ -232,6 +249,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Third and final attempt at teleporting away
     public void ThirdEscapeAttempt()
     {
         if(teleportType == 1 && health > 40)
@@ -244,6 +262,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Function to aim and fire the big gun
     void BigGun()
     {
         if (SaveManager.SacrificeMade("upgrade_gun"))
@@ -257,6 +276,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Activate the turret particle system
     bool FireTurrets()
     {
         if (SaveManager.SacrificeMade("sacrifice_speed"))
@@ -267,6 +287,7 @@ public class EndingManager : MonoBehaviour
         return false;
     }
 
+    // Determine whether the colony ship can attack the enemy
     void AttackEnemy()
     {
         if (FireTurrets())
@@ -279,6 +300,7 @@ public class EndingManager : MonoBehaviour
         }
     }
 
+    // Once the colony ship has attacked the enemy, determine whether the enemy survives or explodes
     public void AfterAttack()
     {
         if(health > 70)

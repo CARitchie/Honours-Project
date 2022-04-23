@@ -9,6 +9,7 @@ public class DroneChase : State
 
     public override bool EntryCondition()
     {
+        // Enter this state if hostile or the player is close enough
         return controller.IsHostile() || controller.GetPlayerDistance() < closeness;
     }
 
@@ -23,23 +24,26 @@ public class DroneChase : State
     {
         findTime -= Time.deltaTime;
 
+        // If the player can be seen or is piloting their ship
         if (controller.PlayerVisible() || !PlayerController.IsPlayerActive())
         {
             MoveToPlayer();
         }
         else
         {
-            if(findTime <= 0 && controller.PlayerLowEnough())
+            if(findTime <= 0 && controller.PlayerLowEnough())           // If enough time between finding paths has passed and the player is close enough to the ground
             {
-                findTime = 3;
-                controller.FindPath(controller.PlayerPos(), true);
+                findTime = 3;                                           // Reset the timer
+                controller.FindPath(controller.PlayerPos(), true);      // Find a new path towards the player
             }
 
-            Vector3 target = controller.GetCurrentNode();
+            Vector3 target = controller.GetCurrentNode();               // Retrieve the current node in the path
 
+            // Look at the node and move forwards
             controller.Look(target);
             controller.Move();
 
+            // If close enough to the node, move on to the next node
             if (Useful.Close(controller.transform.position, target, 1)) controller.NextNode();
         }
 
@@ -47,6 +51,7 @@ public class DroneChase : State
 
     void MoveToPlayer()
     {
+        // Look at the player and move forwards
         controller.Look(controller.PlayerPos());
         controller.Move();
     }

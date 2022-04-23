@@ -8,10 +8,12 @@ public class EnemySpawnPoint : MonoBehaviour
     [SerializeField] EnemyDetails enemy;
     [SerializeField] bool inScene = false;
     [SerializeField] bool teleportIn = false;
-    EnemyWave wave;
-    GravitySource centre;
+
     float teleportTime;
     float noiseScale = 961.1f;
+
+    EnemyWave wave;
+    GravitySource centre;
     Vector3 offset = Vector3.zero;
 
     public void Spawn()
@@ -22,6 +24,8 @@ public class EnemySpawnPoint : MonoBehaviour
 
     IEnumerator DelayedSpawn()
     {
+        // This should probably be replaced with yield return new WaitForSeconds(spawnDelay)
+        // but I don't want to make any changes this close to submission in case anything breaks
         float timer = 0;
         while(timer < spawnDelay)
         {
@@ -33,6 +37,7 @@ public class EnemySpawnPoint : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+        // Disable the enemy while they are fading in
         EnemyController controller = enemy.GetComponentInChildren<EnemyController>();
         enemy.SetImmune(true);
         controller.SetActive(false);
@@ -41,6 +46,7 @@ public class EnemySpawnPoint : MonoBehaviour
         particles.transform.localPosition += offset;
         particles.Play();
 
+        // Retrieve the necessary components from the particle system
         var emission = particles.emission;
         var shape = particles.shape;
         var main = particles.main;
@@ -71,11 +77,11 @@ public class EnemySpawnPoint : MonoBehaviour
             }
 
             percent -= 0.2f;
-            emission.rateOverTime = percent * (200 - 60) + 60;
-            shape.radius = (1 - percent) * initialRadius;
+            emission.rateOverTime = percent * (200 - 60) + 60;      // Change the emission rate depending upon the percentage
+            shape.radius = (1 - percent) * initialRadius;           // Decrease the size of the particle spawn area with the percentage
 
             ParticleSystem.MinMaxCurve newLifetime = new ParticleSystem.MinMaxCurve(initialLifetime.constantMin * (1 - percent), initialLifetime.constantMax * (1.2f-percent));
-            main.startLifetime = newLifetime;
+            main.startLifetime = newLifetime;                       // Decrease the lifetime of the particles with the percentage
 
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -83,9 +89,10 @@ public class EnemySpawnPoint : MonoBehaviour
 
         foreach (RendererMaterial renderer in rendererMaterials)
         {
-            renderer.Restore();
+            renderer.Restore();                                     // Give all meshes their original material
         }
 
+        // Activate the enemy
         enemy.SetImmune(false);
         controller.SetActive(true);
         particles.Stop();
@@ -98,6 +105,7 @@ public class EnemySpawnPoint : MonoBehaviour
         ParticleSystem particles = GetParticles(1);
         particles.Play();
 
+        // Retrieve the necessary components from the particle system
         var emission = particles.emission;
         var main = particles.main;
         var shape = particles.shape;
@@ -107,6 +115,7 @@ public class EnemySpawnPoint : MonoBehaviour
 
         List<RendererMaterial> rendererMaterials = GetRendererMaterials(1);
 
+        // Play just the particles for 0.75 seconds
         float timer = 0;
         while(timer < 0.75f)
         {
@@ -127,9 +136,9 @@ public class EnemySpawnPoint : MonoBehaviour
                 renderer.SetThreshold(percent);
             }
 
-            emission.rateOverTime = (1 - percent) * (200 - 60) + 60;
+            emission.rateOverTime = (1 - percent) * (200 - 60) + 60;            // Decrease the emition rate with the percentage
 
-            shape.angle = 3 + (20 - 3) * (percent - 0.1f);
+            shape.angle = 3 + (20 - 3) * (percent - 0.1f);                      // The larger the percentage, the larger the angle
 
             timer += Time.deltaTime;
 
@@ -137,7 +146,7 @@ public class EnemySpawnPoint : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        enemy.DestroyEnemy();
+        enemy.DestroyEnemy();                           // Despawn the enemy
         particles.transform.parent = transform;
 
         yield return new WaitForSeconds(0.2f);
@@ -146,20 +155,22 @@ public class EnemySpawnPoint : MonoBehaviour
         
     }
 
+    // Function to spawn the enemy
     public void InstantSpawn()
     {
-        if (!inScene)
+        if (!inScene)                                                                                   // If the enemy isn't already in the scene
         {
-            enemy = Instantiate(enemy, transform).GetComponent<EnemyDetails>();
-            enemy.GetComponentInChildren<EnemyController>()?.SetNearestSource(wave.GetSource());
+            enemy = Instantiate(enemy, transform).GetComponent<EnemyDetails>();                         // Instantiate the enemy prefab
+            enemy.GetComponentInChildren<EnemyController>()?.SetNearestSource(wave.GetSource());        // Tell the enemy which gravity source they are closest to
             enemy.gameObject.SetActive(false);
             enemy.transform.localPosition = Vector3.zero;
             enemy.transform.localEulerAngles = Vector3.zero;
         }
-        enemy.SetWave(wave, this);
+        enemy.SetWave(wave, this);                  // Tell the enemy which wave they are in
         enemy.gameObject.SetActive(true);
-        enemy.GetComponentInChildren<Rigidbody>().AddForce(wave.GetVelocity(), ForceMode.VelocityChange);
+        enemy.GetComponentInChildren<Rigidbody>().AddForce(wave.GetVelocity(), ForceMode.VelocityChange);       // Match the enemey's velocity to that of the nearest gravity source
 
+        // Retrieve the enemy's teleport details
         if(enemy.TryGetComponent(out SpawnDetails details))
         {
             teleportTime = details.GetTeleportTime();
@@ -167,7 +178,7 @@ public class EnemySpawnPoint : MonoBehaviour
             offset = details.GetParticleOffset();
         }
 
-        if (teleportIn) StartCoroutine(FadeIn());
+        if (teleportIn) StartCoroutine(FadeIn());           // If the enemy is supposed to teleport in, start the fade in coroutine
     }
 
     public Vector3 GetParticleUp(Transform particles)
@@ -203,6 +214,7 @@ public class EnemySpawnPoint : MonoBehaviour
         return GameManager.GetTeleportMaterial();
     }
 
+    // Function to retrieve the desired teleport particle system
     ParticleSystem GetParticles(int index)
     {
         GameObject particles = Instantiate(GameManager.GetTeleportFX(index).gameObject);
@@ -212,6 +224,7 @@ public class EnemySpawnPoint : MonoBehaviour
         return particles.GetComponent<ParticleSystem>();
     }
 
+    // Function to find all of the enemy's renderers and create a RendererMaterial for each
     List<RendererMaterial> GetRendererMaterials(float threshold)
     {
         Renderer[] renderers = enemy.GetComponentsInChildren<Renderer>();
@@ -221,7 +234,7 @@ public class EnemySpawnPoint : MonoBehaviour
         {
             if (renderers[i].GetComponent<MeshRenderer>() || renderers[i].GetComponent<SkinnedMeshRenderer>())
             {
-                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold, noiseScale));
+                rendererMaterials.Add(new RendererMaterial(renderers[i], mat, threshold, noiseScale));              // Create a new RendererMaterial for the renderer
             }
         }
 
@@ -248,6 +261,7 @@ class RendererMaterial
         SetThreshold(threshold);
     }
 
+    // Function to copy the properties of the renderers default material into its teleport material
     void CopyMaterialSettings(float scale)
     {
         renderer.material.mainTexture = originalMat.mainTexture;
@@ -261,6 +275,7 @@ class RendererMaterial
         renderer.material.SetFloat("_Threshold", value);
     }
 
+    // Function to set the renderers material back to its original
     public void Restore()
     {
         renderer.material = originalMat;

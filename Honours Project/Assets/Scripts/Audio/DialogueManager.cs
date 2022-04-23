@@ -23,6 +23,7 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    // Function to play a dialogue clip
     public static void PlayDialogue(string key)
     {
         if (Instance == null || SaveManager.GetBool(key)) return;

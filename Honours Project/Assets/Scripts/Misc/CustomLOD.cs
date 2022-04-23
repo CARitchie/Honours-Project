@@ -17,11 +17,11 @@ public class CustomLOD : MonoBehaviour
     {
         if((player.position - lodObject.transform.position).sqrMagnitude > distance)
         {
-            if (lodObject.activeInHierarchy) lodObject.SetActive(false);
+            if (lodObject.activeInHierarchy) lodObject.SetActive(false);    // Disable the gameobject if it is too far from the player
         }
         else
         {
-            if (!lodObject.activeInHierarchy) lodObject.SetActive(true);
+            if (!lodObject.activeInHierarchy) lodObject.SetActive(true);    // Enable the gameobject if it is close enough to the player
         }
     }
 

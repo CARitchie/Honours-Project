@@ -74,9 +74,9 @@ public class PlayerDetails : PersonDetails
     {
         if (!SolarPanelUsage(false))
         {
-            if (!UseEnergy(energyDrainRate * Time.deltaTime))
+            if (!UseEnergy(energyDrainRate * Time.deltaTime))           // Slowly drain energy
             {
-                TakeDamage(energyDrainRate * Time.deltaTime * 2);
+                TakeDamage(energyDrainRate * Time.deltaTime * 2);       // Slowly take damage if there is no more energy
             }
         }
 
@@ -85,6 +85,7 @@ public class PlayerDetails : PersonDetails
         NanitesCooldown();
     }
 
+    // Function to handle things that should keep occurring even when the player is piloting the spaceship
     public void KeepLooping()
     {
         SolarPanelUsage(true);
@@ -92,12 +93,14 @@ public class PlayerDetails : PersonDetails
         NanitesCooldown();
     }
 
+    // Function to recharge with a solar panel, and even faster when facing the sun
     bool SolarPanelUsage(bool inShip)
     {
         if (!solarPanel) return false;
 
         float rate = energyDrainRate * 2;
 
+        // Find out if the player has line of sight with the sun
         if (!inShip && sun != null && Physics.Raycast(transform.position, sun.position - transform.position, out RaycastHit hit, (sun.position - transform.position).magnitude, layerMask))
         {
             if (hit.transform.CompareTag("Sun")) rate *= 5;
@@ -124,9 +127,11 @@ public class PlayerDetails : PersonDetails
         else HealUp(4 * Time.deltaTime);
     }
 
+    // Function to handle taking damage
+    // Returns false if dead
     public override bool TakeDamage(float amount)
     {
-        amount *= Random.Range(0.9f, 1.05f);
+        amount *= Random.Range(0.9f, 1.05f);        // Add a bit of randomness
         bool val = base.TakeDamage(amount);
 
         hud.SetHealthPercent(HealthPercent());
@@ -135,16 +140,18 @@ public class PlayerDetails : PersonDetails
         return val;
     }
 
+    // Function to use energy
+    // Returns false if no more energy can be used
     public bool UseEnergy(float amount)
     {
         if (energy <= 0)
         {
             if(powerCells <= 0) return false;
-            else
+            else                                            // Activate a new power cell if at least one exists
             {
                 audioManager.PlaySound("newCell");
-                energy += maxEnergy;
-                powerCells--;
+                energy += maxEnergy;                        // Reset energy to the max
+                powerCells--;                               // Reduce the number of power cells
                 hud.SetNumberOfPowerCells(powerCells);
             }
         }
@@ -185,6 +192,7 @@ public class PlayerDetails : PersonDetails
         hud.SetEnergyPercent(EnergyPercent);
     }
 
+    // Function to handle being shot
     public override void OnShot(float damage, Transform origin)
     {
         if (!shieldActive || !DecreaseShield(damage))
@@ -192,13 +200,13 @@ public class PlayerDetails : PersonDetails
             base.OnShot(damage, origin);
         }
         shieldTimer = shieldDelay;
-        HUD.AddDamageIndicator(origin);
+        HUD.AddDamageIndicator(origin);         // Try to add a damage indicator pointing to the origin of the projectile
     }
 
     public override void OnMelee(float damage, Transform origin)
     {
         base.OnMelee(damage, origin);
-        HUD.AddDamageIndicator(origin);
+        HUD.AddDamageIndicator(origin);         // Try to add a damage indicator pointing to the origin of the attack
     }
 
     public float GetEnergy()
@@ -213,23 +221,24 @@ public class PlayerDetails : PersonDetails
 
     public override void OnDeath()
     {
-        if (!finalFight)
+        if (!finalFight)                                        // If not in the final fight
         {
-            immune = true;
-            PlayerController.SetPaused(true);
-            SaveManager.LoadGame();
+            immune = true;                                      // Prevent the player from taking any more damage and potentially dying again
+            PlayerController.SetPaused(true);                   // Prevent the player from making any more actions
+            SaveManager.LoadGame();                             // Reload the save data, doesn't need to occur here but done so just to be safe
             SceneManager.reload = true;
-            SceneManager.FadeToScene("Space");
+            SceneManager.FadeToScene("Space");                  // Reload the scene
         }
         else
         {
-            FindObjectOfType<EndFight>()?.OnPlayerDeath();
+            FindObjectOfType<EndFight>()?.OnPlayerDeath();      // If this is the final fight, activate the correct cutscene
         }
 
     }
 
     void LoadUpgrades()
     {
+        // If the health sacrifice has been made, reduce the maximum health
         if (SaveManager.SacrificeMade("sacrifice_health"))
         {
             maxHealth = 0.7f * fullMaxHealth;
@@ -241,6 +250,7 @@ public class PlayerDetails : PersonDetails
             HUD.SetReducedMaxHealth();
         }
 
+        // If the energy sacrifice has been made, reduce the maximum energy
         if (SaveManager.SacrificeMade("sacrifice_energy"))
         {
             maxEnergy = 0.7f * fullMaxEnergy;
@@ -252,17 +262,20 @@ public class PlayerDetails : PersonDetails
             HUD.SetReducedMaxEnergy();
         }
 
+        // Enable healing nanites if unlocked
         if (SaveManager.SelfUpgraded("upgrade_nanites"))
         {
             nanites = true;
         }
 
+        // Activate energy recharging if the solar panel is unlocked
         if (SaveManager.SelfUpgraded("upgrade_solar"))
         {
             sun = GlobalLightControl.SunTransform();
             solarPanel = true;
         }
 
+        // Activat the shield if it has been unlocked
         if (SaveManager.SelfUpgraded("upgrade_shield"))
         {
             shieldActive = true;

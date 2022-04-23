@@ -16,9 +16,10 @@ public class Shotgun : Gun
         Vector3 aimDirection = controller.GetAimDirection(firePoint);
         Vector3 playerVelocity = controller.GetVelocity();
 
+        // Fire as many projectiels as has been specified
         for(int i = 0; i < numberOfProjectiles; i++)
         {
-            Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();
+            Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();      // Retrieve a projectile from the pool
 
             projectile.transform.position = firePoint.position;
 

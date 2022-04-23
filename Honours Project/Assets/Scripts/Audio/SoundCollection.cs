@@ -34,6 +34,7 @@ public class SoundCollection : PlayableSound
         }
     }
 
+    // Function to return a random clip from within the collection
     public override AudioClip GetClip()
     {
         int index = Random.Range(0, sounds.Length);

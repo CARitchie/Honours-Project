@@ -44,14 +44,14 @@ public class CryoPod : MonoBehaviour, Interact
 
         if (!grabbed)
         {
-            SaveManager.SetPodState(key, 1);
+            SaveManager.SetPodState(key, 1);                // Tell the save file that this pod has been found
             HUD.SetInteractText("Drop");
-            AttachToTransform(Camera.main.transform);
-            meshCollider.enabled = false;
-            if (SaveManager.NumberOfFoundPods() < 1)
+            AttachToTransform(Camera.main.transform);       // Attach the pod to the camera
+            meshCollider.enabled = false;                   // Disabel the pod's collider
+            if (SaveManager.NumberOfFoundPods() < 1)        // If no pods have previously been found
             {
-                HUD.ChangeObjectiveTarget(0);
-                DialogueManager.PlayDialogue("audio_found");
+                HUD.ChangeObjectiveTarget(0);                   // Dispay an objective marker
+                DialogueManager.PlayDialogue("audio_found");    // Play dialogue explaining what to do
             }
             ObjectInteractor.podGrabbed = true;
         }
@@ -88,12 +88,12 @@ public class CryoPod : MonoBehaviour, Interact
         else
         {
             int state = podData.GetState();
-            if(state >= 4)
+            if(state >= 4)                      // If the pod has been recovered
             {
                 destroy = true;
-                Destroy(gameObject);
+                Destroy(gameObject);            // Destroy this gameobject
             }
-            else if(podData.transform.LoadIntoTransform(transform, out Vector3 velocity))
+            else if(podData.transform.LoadIntoTransform(transform, out Vector3 velocity))       // Otherwise, load the saved position and apply it
             {
                 rb.velocity = velocity;
             }
@@ -107,20 +107,23 @@ public class CryoPod : MonoBehaviour, Interact
         if (allPods.Contains(this)) allPods.Remove(this);
     }
 
+    // Function to make this pod move with the desired transform
     public void AttachToTransform(Transform parent)
     {
         transform.parent = parent;
         offset = transform.localPosition;
         gravity.enabled = false;
         nearObject.Disable();
-        Destroy(rb);
+        Destroy(rb);        // Strange results occurred without deleting the rigidbody
     }
 
+    // Function to make the pod behave like an ordinary physics object again
     public void Detach()
     {
         Vector3 velocity = transform.parent.GetComponentInParent<Rigidbody>().velocity;
         transform.parent = null;
 
+        // Recreate the rigidbody
         rb = gameObject.AddComponent<Rigidbody>();
         rb.useGravity = false;
         rb.mass = mass;
@@ -138,6 +141,7 @@ public class CryoPod : MonoBehaviour, Interact
         StartCoroutine(Align());
     }
 
+    // Function to gradually change local position and rotation to 0
     IEnumerator Align()
     {
         float percent = 0;
@@ -162,7 +166,7 @@ public class CryoPod : MonoBehaviour, Interact
 
     public void PutIntoLift()
     {
-        SaveManager.SetPodState(key, 4);
+        SaveManager.SetPodState(key, 4);        // Tell the save file that the pod has been recovered
     }
 
     public string Key { get { return key; } }

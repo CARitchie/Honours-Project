@@ -11,7 +11,7 @@ public class ParticleSpaceFixer : MonoBehaviour
         EnemyController controller = GetComponentInParent<EnemyController>();
 
         var main = particles.main;
-        main.customSimulationSpace = controller.GetNearestSource().transform;
+        main.customSimulationSpace = controller.GetNearestSource().transform;       // Make the particle's simulation space the enemy's nearest gravity source
         Destroy(this);
     }
 }

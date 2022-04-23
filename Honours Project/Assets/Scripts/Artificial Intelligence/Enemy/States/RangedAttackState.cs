@@ -10,6 +10,7 @@ public class RangedAttackState : State
 
     public override bool EntryCondition()
     {
+        // Enter the state if the player is within range
         return controller.GetPlayerDistance() < firingRange;
     }
 
@@ -24,16 +25,16 @@ public class RangedAttackState : State
     {
         Vector3 playerPos = controller.PlayerPos();
 
-        controller.Look(playerPos);
+        controller.Look(playerPos);                             // Look at the player
 
-        gun.AimAt(playerPos);
+        gun.AimAt(playerPos);                                   // Aim the ranged weapon at the player
 
-        if(controller.GetPlayerDistance() >= closeRange)
+        if(controller.GetPlayerDistance() >= closeRange)        // If the player is too far away
         {
-            controller.Move();
+            controller.Move();                                  // Move forwards
         }
 
-        gun.PrimaryAction(1);
+        gun.PrimaryAction(1);                                   // Fire the ranged weapon
     }
 
     public override void OnExitState()

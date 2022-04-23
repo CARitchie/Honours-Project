@@ -16,7 +16,7 @@ public class CombatArea : MonoBehaviour
 
     private void Start()
     {
-        if (SaveManager.IsCombatAreaComplete(areaKey))
+        if (SaveManager.IsCombatAreaComplete(areaKey))      // Find out if this area has been completed
         {
             complete = true;
         }
@@ -27,6 +27,7 @@ public class CombatArea : MonoBehaviour
         
     }
 
+    // Function to spawn a wave that should be active even if the area hasn't yet been activated
     void SpawnInitialWave()
     {
         if (waves == null || waves.Length <= 0 || !waves[0].IsInitialWave()) return;
@@ -66,9 +67,9 @@ public class CombatArea : MonoBehaviour
     {
         if (!complete)
         {
-            PlayerController.Instance.SetCanSave(false);
+            PlayerController.Instance.SetCanSave(false);        // Prevent the player from saving
             StopAllCoroutines();
-            StartCoroutine(SpawnAllWaves());
+            StartCoroutine(SpawnAllWaves());                    // Start to spawn all of the waves
         }
     }
 
@@ -78,7 +79,7 @@ public class CombatArea : MonoBehaviour
 
         for(int i = 0; i < waves.Length; i++)
         {
-            if (waves[i] != null && !waves[i].IsComplete()) return;
+            if (waves[i] != null && !waves[i].IsComplete()) return;     // Return if any of the waves are incomplete
         }
 
         complete = true;
@@ -88,9 +89,8 @@ public class CombatArea : MonoBehaviour
 
     public void OnComplete()
     {
-        Debug.Log("Yay");
-        PlayerController.Instance.SetCanSave(true);
-        if (dontSave || PlayerController.Instance.IsDead()) return;
+        PlayerController.Instance.SetCanSave(true);                     // Allow the player to save
+        if (dontSave || PlayerController.Instance.IsDead()) return;     // If the player is dead, or this area shouldn't autosave, return
         SaveManager.CompleteCombatArea(areaKey);
         GameManager.Autosave();
         completed?.Invoke();
@@ -124,6 +124,7 @@ public class CombatArea : MonoBehaviour
         return gravitySource;
     }
 
+    // Function to prevent any more waves from spawning
     public void ForceOff()
     {
         complete = true;

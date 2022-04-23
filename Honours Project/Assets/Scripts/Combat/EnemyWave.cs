@@ -8,9 +8,10 @@ public class EnemyWave : MonoBehaviour
     [SerializeField] float spawnDelay;
     [SerializeField] EnemySpawnPoint[] enemies;
 
+    CombatArea area;
+
     bool spawned = false;
     float timer = 0;
-    CombatArea area;
     bool complete = false;
 
     private void Awake()
@@ -23,12 +24,14 @@ public class EnemyWave : MonoBehaviour
         return initialWave;
     }
 
+    // Function to determine whether enough time has passed for this wave to spawn
     public bool TimeToSpawn()
     {
         timer += Time.deltaTime;
         return timer >= spawnDelay;
     }
 
+    // Function to activate the wave
     public void SpawnWave(CombatArea area)
     {
         if (spawned) return;
@@ -37,9 +40,9 @@ public class EnemyWave : MonoBehaviour
         this.area = area;
         gameObject.SetActive(true);
 
-        if (initialWave)
+        if (initialWave)                            // If this is happening at the start of the game
         {
-            StartCoroutine(WaitAFrame());
+            StartCoroutine(WaitAFrame());           // Wait a couple of frames to ensure that spawned enemies will correctly match the nearest gravity source's velocity       
         }
         else
         {
@@ -64,13 +67,14 @@ public class EnemyWave : MonoBehaviour
         }
     }
 
+    // Function to determine whether this wave has been completed
     public bool IsComplete()
     {
         if (complete) return true;
 
         for(int i = 0; i < enemies.Length; i++)
         {
-            if (enemies[i] != null && enemies[i].IsAlive()) return false;
+            if (enemies[i] != null && enemies[i].IsAlive()) return false;       // Return false if any of the enemies are still alive
         }
         complete = true;
         return true;

@@ -39,7 +39,7 @@ public class Gun : Weapon
 
     private void Start()
     {
-        projectilePool = ObjectPool.GetPool(projectileKey);         
+        projectilePool = ObjectPool.GetPool(projectileKey);             // Store the object pool that is used for the type of projectile used by this gun   
     }
 
     public override void OnEquip(PersonController controller)
@@ -47,11 +47,12 @@ public class Gun : Weapon
         base.OnEquip(controller);
     }
 
+    // Use the gun's primary action, shoot
     public override void PrimaryAction(float val)
     {
         if(val > 0)
         {
-            if (fired && !automatic) return;
+            if (fired && !automatic) return;                        // Return if the gun has been fired but is not automatic
 
             if(delayTimer > 0)
             {
@@ -59,13 +60,13 @@ public class Gun : Weapon
                 return;
             }
 
-            if(currentAmmo > 0 || maxAmmo == -450)
+            if(currentAmmo > 0 || maxAmmo == -450)                  // If there is still ammunition
             {
-                if (maxAmmo != -450) currentAmmo--;
+                if (maxAmmo != -450) currentAmmo--;                 // Decrease the amount of ammo if there is not an infinite amount
 
                 Fire();
 
-                if (automatic) delayTimer = automaticDelay;
+                if (automatic) delayTimer = automaticDelay;         // Reset the delay
             }
 
         }
@@ -73,7 +74,7 @@ public class Gun : Weapon
         {
             if(fired && animator != null)
             {
-                animator.ResetTrigger("Fire");
+                animator.ResetTrigger("Fire");      // If the fire animation trigger is still active, reset it
             }
 
             fired = false;
@@ -82,6 +83,9 @@ public class Gun : Weapon
 
     }
 
+    // Function for a secondary action
+    // Could have been used for aiming down the weapons sights, or some other ability
+    // Ultimately not used
     public override void SecondaryAction(float val)
     {
         if (val > 0)
@@ -92,25 +96,26 @@ public class Gun : Weapon
         }
     }
 
+    // Function to fire a projectile from the gun
     protected virtual void Fire()
     {
         fired = true;
-        controller.Recoil(recoilStrength);
+        controller.Recoil(recoilStrength);                                                  // Add recoil to the enemy/player
 
         if (projectilePool == null) return;
         
-        Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();
+        Projectile projectile = projectilePool.GetObject().GetComponent<Projectile>();      // Retrieve a projectile from the pool
 
-        projectile.transform.position = firePoint.position;
+        projectile.transform.position = firePoint.position;                                 // Move the projectile to the gun's muzzle
 
-        Vector3 direction = controller.GetAimDirection(firePoint);
-        direction = SpreadAim(direction);
-        Vector3 velocity = controller.GetVelocity() + direction * projectileSpeed;
+        Vector3 direction = controller.GetAimDirection(firePoint);                          // Find the direction that the gun should be aiming at
+        direction = SpreadAim(direction);                                                   // Add some spread to the direction
+        Vector3 velocity = controller.GetVelocity() + direction * projectileSpeed;          // Create the velocity for the projectile
 
         GravitySource source = controller.GetNearestSource();
         Transform body = source != null ? source.transform : null; 
 
-        projectile.Fire(velocity, body, transform.parent, damageMultiplier);
+        projectile.Fire(velocity, body, transform.parent, damageMultiplier);                // Fire the projectile
 
         FireEffects();
     }
@@ -120,6 +125,7 @@ public class Gun : Weapon
         firePoint.LookAt(point);
     }
 
+    // Function to add some random spread to an aim direction
     public Vector3 SpreadAim(Vector3 baseDirection)
     {
         Vector3 spread = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0) * spreadSize / 100;
@@ -131,13 +137,14 @@ public class Gun : Weapon
         _MaxAmmo = (int)(maxAmmo * percent);
     }
 
+    // Function to play the special effects when firing a projectile
     protected void FireEffects()
     {
-        if (animator != null) animator.SetTrigger("Fire");
-        if (muzzleFlash != null) muzzleFlash.Play();
+        if (animator != null) animator.SetTrigger("Fire");          // Play the gun's fire animation
+        if (muzzleFlash != null) muzzleFlash.Play();                // Play the muzzle flash particle system
 
-        if (recoil != null) recoil.RecoilFire(recoilDirection);
-        if (audioManager != null) audioManager.PlaySound("Fire");
+        if (recoil != null) recoil.RecoilFire(recoilDirection);     // Add a recoil screen shake
+        if (audioManager != null) audioManager.PlaySound("Fire");   // Play a gun shot sound effect
     }
 
     public override string GetAmmoText()
@@ -152,6 +159,7 @@ public class Gun : Weapon
 
     public override bool AddAmmo(float percentOfMax)
     {
+        if (_MaxAmmo == -450) _MaxAmmo = maxAmmo;
         if (currentAmmo == _MaxAmmo || IsInfinite()) return false;
         currentAmmo = (int)Mathf.Clamp(currentAmmo + percentOfMax * _MaxAmmo, 0, _MaxAmmo);
         return true;

@@ -26,14 +26,15 @@ public class ObjectPool : MonoBehaviour
 
     private void Start()
     {
-        objects = new Queue<PoolObject>();
+        objects = new Queue<PoolObject>();                                  // Create a new queue
         for(int i = 0; i < numberOfObjects; i++)
         {
-            PoolObject poolObject = Instantiate(prefab, transform);
-            objects.Enqueue(poolObject);
+            PoolObject poolObject = Instantiate(prefab, transform);         // Create the desired number of pool objects
+            objects.Enqueue(poolObject);                                    // Add them to the queue
         }
     }
 
+    // Function to retrieve a pool object
     public PoolObject GetObject()
     {
         PoolObject poolObject = objects.Dequeue();
@@ -42,6 +43,7 @@ public class ObjectPool : MonoBehaviour
         return poolObject;
     }
 
+    // Function to gain access to a specific pool
     public static ObjectPool GetPool(string key)
     {
         if (dictionary == null || !dictionary.ContainsKey(key)) return null;

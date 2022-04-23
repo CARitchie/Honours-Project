@@ -23,7 +23,7 @@ public class Lift : MonoBehaviour
 
         if (other.attachedRigidbody != null)
         {
-            if (!bodies.Contains(other.attachedRigidbody)) bodies.Add(other.attachedRigidbody);
+            if (!bodies.Contains(other.attachedRigidbody)) bodies.Add(other.attachedRigidbody);     // Add any rigidbodies that enter the lift to a list
         }
     }
 
@@ -33,7 +33,7 @@ public class Lift : MonoBehaviour
 
         if (other.attachedRigidbody != null)
         {
-            if (bodies.Contains(other.attachedRigidbody)) bodies.Remove(other.attachedRigidbody);
+            if (bodies.Contains(other.attachedRigidbody)) bodies.Remove(other.attachedRigidbody);   // Remove any rigidbodies that exit the lift from a list
         }
     }
 
@@ -42,6 +42,7 @@ public class Lift : MonoBehaviour
         transform.localPosition = floors[currentIndex].Position;
     }
 
+    // Function to determine which floor should be moved to
     public void MoveToTarget(bool up)
     {
         if (up) targetIndex = currentIndex - 1;
@@ -76,14 +77,14 @@ public class Lift : MonoBehaviour
         while(transform.localPosition != floors[targetIndex].Position)
         {
             Vector3 initial = transform.position;
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, floors[targetIndex].Position, Time.deltaTime * speed);
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, floors[targetIndex].Position, Time.deltaTime * speed);   // Move towards the target
             Vector3 offset = transform.position - initial;
 
             for (int i = 0;i < bodies.Count; i++)
             {
                 if (bodies[i] != null)
                 {
-                    bodies[i].transform.position += offset;
+                    bodies[i].transform.position += offset;         // Change the position of the rigidbodies by the distance that the lift moved this frame
                 }
             }
 

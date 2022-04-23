@@ -43,14 +43,15 @@ public class SaveFile
         return gravitySource;
     }
 
+    // Function to save all of the player's data
     public void CopyFromPlayer(PlayerController player)
     {
-        gravitySource = player.GetNearestSource().Key;
-        position.SetData(player.transform.position - player.GetNearestSource().transform.position);
-        parentRot.SetData(player.GetParentRotation());
-        localRot.SetData(player.GetLocalRotation());
-        player.WeaponManager()?.SaveWeapons();
-        currentWeapon = player.GetWeaponIndex();
+        gravitySource = player.GetNearestSource().Key;                                                      // Find the player's closest gravity source
+        position.SetData(player.transform.position - player.GetNearestSource().transform.position);         // Save the player's position relative to the nearest source
+        parentRot.SetData(player.GetParentRotation());                                                      // Save the player's physics rotation
+        localRot.SetData(player.GetLocalRotation());                                                        // Save the player's look direction
+        player.WeaponManager()?.SaveWeapons();                                                              // Save the state of all the weapons
+        currentWeapon = player.GetWeaponIndex();                                                            // Save which weapon is currently equipped
 
         PlayerDetails details = player.GetDetails();
         if (details == null) return;
@@ -62,9 +63,10 @@ public class SaveFile
     public void CopyFromShip(ShipController ship)
     {
         shipTransform = new RelativeTransform();
-        shipTransform.CopyFromReceiver(ship.GetComponent<GravityReceiver>());
+        shipTransform.CopyFromReceiver(ship.GetComponent<GravityReceiver>());       // Save the ship's position and rotation
     }
 
+    // Function to save data for all of the cryopods
     public void CopyCryoPods(List<CryoPod> cryoPods)
     {
         foreach(CryoPod pod in cryoPods)
@@ -113,7 +115,7 @@ public class SaveFile
         if (weapons == null) weapons = new List<WeaponData>();
         while(index >= weapons.Count)
         {
-            weapons.Add(new WeaponData());
+            weapons.Add(new WeaponData());          // Add more weapon data until the list is large enough
         }
 
         weapons[index].CopyFromWeaponContainer(container);
@@ -124,7 +126,7 @@ public class SaveFile
         if (weapons == null) weapons = new List<WeaponData>();
         while (index >= weapons.Count)
         {
-            weapons.Add(new WeaponData());
+            weapons.Add(new WeaponData());          // Add more weapon data until the list is large enough
         }
 
         weapons[index].unlocked = true;
@@ -141,7 +143,7 @@ public class SaveFile
     {
         if (!combatAreas.ContainsKey(key))
         {
-            combatAreas.Add(key, true);
+            combatAreas.Add(key, true);         // Add the combat area to the dictionary if it doesn't already exist
         }
         else
         {
@@ -153,7 +155,7 @@ public class SaveFile
     {
         if (!combatAreas.ContainsKey(key))
         {
-            combatAreas.Add(key, false);
+            combatAreas.Add(key, false);        // Add the combat area to the dictionary if it doesn't already exist
             return false;
         }
 
@@ -173,7 +175,7 @@ public class SaveFile
     {
         if (!cryoPods.ContainsKey(key))
         {
-            cryoPods.Add(key, new Pod());
+            cryoPods.Add(key, new Pod());       // Add the cryopod to the dictionary if it doesn't already exist
         }
         cryoPods[key].SetState(state);
     }
@@ -184,7 +186,7 @@ public class SaveFile
 
         if (!cryoPods.ContainsKey(key))
         {
-            cryoPods.Add(key, new Pod());
+            cryoPods.Add(key, new Pod());       // Add the cryopod to the dictionary if it doesn't already exist
         }
 
         cryoPods[key].transform.CopyFromReceiver(receiver);
@@ -199,7 +201,7 @@ public class SaveFile
     public void SetUpgradeState(string key, UpgradeState state)
     {
         if (!upgrades.ContainsKey(key)) upgrades.Add(key, state);
-        else if( state > upgrades[key]) upgrades[key] = state;
+        else if( state > upgrades[key]) upgrades[key] = state;          // Only change the upgrade state if it is of a higher value than the current state
     }
 
     public int NumberOfFoundPods()
@@ -207,7 +209,7 @@ public class SaveFile
         int count = 0;
         foreach(KeyValuePair<string,Pod> pair in cryoPods)
         {
-            if (pair.Value.GetState() >= 4) count++;
+            if (pair.Value.GetState() >= 4) count++;                    // Increase the count if the cryopod has been found and returned
         }
         return count;
     }
@@ -322,6 +324,7 @@ public class RelativeTransform
     SaveFile.float3 rotation;
     string gravitySource = "null";
 
+    // Function to work out and save an object's relative position
     public void CopyFromReceiver(GravityReceiver receiver)
     {
         GravitySource gravitySource = GravityController.FindClosest(receiver, true);
@@ -330,6 +333,7 @@ public class RelativeTransform
         this.gravitySource = gravitySource.Key;
     }
 
+    // Function to load the position and rotation data into an object
     public bool LoadIntoTransform(Transform transform, out Vector3 velocity)
     {
         velocity = Vector3.zero;

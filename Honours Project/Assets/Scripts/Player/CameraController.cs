@@ -28,13 +28,15 @@ public class CameraController : MonoBehaviour
         SettingsManager.OnChangesMade -= LoadAtmosphereSetting;
     }
 
+    // Function to start the process of aligning the camera with a transform
     public void MoveToTransform(Transform transform)
     {
         StopAllCoroutines();
-        this.transform.parent = transform;
+        this.transform.parent = transform;      // Make the camera a child of the desired transform
         StartCoroutine(Move());
     }
 
+    // Function to move the camera so that its local position and rotation are 0
     IEnumerator Move()
     {
         float percent = 0;
@@ -54,6 +56,7 @@ public class CameraController : MonoBehaviour
 
     public void LoadAtmosphereSetting()
     {
+        // Enable/disable the atmosphere and cloud renderers depending upon user settings
         if (PlayerPrefs.HasKey("Atmosphere"))
         {
             bool active = PlayerPrefs.GetInt("Atmosphere") == 1;
@@ -62,25 +65,26 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    // Function to determine if the planet info display should be active, and what info it should display
     public Vector3 UpdatePlanetHUD(Rigidbody rb)
     {
-        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, 50000, layerMask))
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, 50000, layerMask))        // Try to collide with a planet
         {
-            Vector3 objectVelocity = hitInfo.rigidbody.velocity;
+            Vector3 objectVelocity = hitInfo.rigidbody.velocity;                                                    // Find the planet's velocity
 
-            float relativeVel = Vector3.Distance(rb.velocity, objectVelocity);
+            float relativeVel = Vector3.Distance(rb.velocity, objectVelocity);                                      // Find out the relative velocity
 
             string planetName = hitInfo.rigidbody.name;
             Vector3 planetPos = hitInfo.rigidbody.position;
 
-            if (hitInfo.collider.name == "Arturius") {
-                planetName = "Arturius";
+            if (hitInfo.collider.name == "Arturius") {                                                              // If the Arturius has been hit
+                planetName = "Arturius";                                                                            // Ensure that details for Arturius are displayed rather than those for Coille
                 planetPos = hitInfo.collider.transform.position;
             }
 
             float distance = Vector3.Distance(rb.position, planetPos);
 
-            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - planetPos) > 0) relativeVel *= -1;
+            if (Vector3.Dot(rb.velocity - objectVelocity, rb.position - planetPos) > 0) relativeVel *= -1;          // Determine whether the player is moving towards or away from the planet
 
             HUD.SetPlanetDetails(planetName, relativeVel, distance);
 

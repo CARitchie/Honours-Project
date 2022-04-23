@@ -47,6 +47,7 @@ public class PostProcessControl : MonoBehaviour
         Instance.vignette.smoothness.value = Instance.defaultVignette;
     }
 
+    // Function to interpolate the focal length of the depth of field
     public static void SetDepth(float from, float to, float t)
     {
         if (Instance == null) return;
@@ -54,6 +55,7 @@ public class PostProcessControl : MonoBehaviour
         Instance.depth.focalLength.Interp(from, to, t);
     }
 
+    // Function to set the focal length of the depth of field
     public static void SetDepth(float value)
     {
         if (Instance == null) return;
@@ -65,7 +67,7 @@ public class PostProcessControl : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("Processing"))
         {
-            gameObject.SetActive(PlayerPrefs.GetInt("Processing") == 1);
+            gameObject.SetActive(PlayerPrefs.GetInt("Processing") == 1);        // Disable/enable post processing depending upon user settings
         }
     }
 }

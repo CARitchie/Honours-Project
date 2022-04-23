@@ -19,14 +19,17 @@ public class Clouds : MonoBehaviour
 
     private void Update()
     {
+        // Increase the offset of the weather map, gives the illusion of moving clouds
         offset += weatherSpeed * Time.deltaTime;
     }
 
+    // Retrieve the material and update its properties
     public Material GetMaterial()
     {
         mat.SetVector("_PlanetPos", transform.position);
+        mat.SetVector("_WeatherOffset", offset);
 
-        // These don't need to be updated every frame
+        // These don't need to be updated every frame and so could be optimised
         mat.SetFloat("_MinHeight", minRadius);
         mat.SetFloat("_MaxHeight", maxRadius);
         mat.SetFloat("_Gc", globalCoverage);
@@ -35,8 +38,6 @@ public class Clouds : MonoBehaviour
         mat.SetFloat("_EndSunSet", sunsetEndAngle);
         mat.SetFloat("_StartDarkness", darknessStartAngle);
         mat.SetFloat("_EndDarkness", darknessFullAngle);
-
-        mat.SetVector("_WeatherOffset", offset);
 
         return mat;
     }

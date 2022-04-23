@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Weapon parent class
+// Functions were mostly left blank as it was intended to be able to create proper melee weapons
 public class Weapon : MonoBehaviour
 {
     [SerializeField] protected float damageMultiplier = 1;

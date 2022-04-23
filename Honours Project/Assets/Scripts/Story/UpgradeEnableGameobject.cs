@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class used to enable or disable gameobjects depending upon the state of an upgrade
 public class UpgradeEnableGameobject : MonoBehaviour
 {
     [SerializeField] string upgradeKey;
@@ -23,7 +24,7 @@ public class UpgradeEnableGameobject : MonoBehaviour
 
     void LoadSacrifice()
     {
-        bool upgraded = sacrificed ? SaveManager.SacrificeMade(upgradeKey) : SaveManager.SelfUpgraded(upgradeKey);
+        bool upgraded = sacrificed ? SaveManager.SacrificeMade(upgradeKey) : SaveManager.SelfUpgraded(upgradeKey);  // Determine whether the upgrade objects should be enabled when the upgrade is chosen for self or chosen for colony ship
 
         if (upgraded)
         {

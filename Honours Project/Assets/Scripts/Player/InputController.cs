@@ -21,6 +21,7 @@ public class InputController : MonoBehaviour
     {
         if (Instance == null)
         {
+            // Keep this object loaded
             Instance = this;
             DontDestroyOnLoad(gameObject);
             input = GetComponent<PlayerInput>();
@@ -39,6 +40,7 @@ public class InputController : MonoBehaviour
         return Instance.input;
     }
 
+    // Function to change the current input action map
     public static void SetMap(string map)
     {
         if (Instance == null) return;

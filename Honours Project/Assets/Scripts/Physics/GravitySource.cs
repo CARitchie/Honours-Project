@@ -11,6 +11,7 @@ public class GravitySource : MonoBehaviour
 
     public float Influence { get { return influenceRange * influenceRange; } }
 
+    // Function to find the direction north from the player's position
     public virtual Vector3 GetNorthDirection(Transform player)
     {
         return Vector3.zero;
@@ -33,7 +34,7 @@ public class GravitySource : MonoBehaviour
 
     public float SoundPercent(Vector3 point)
     {
-        if (influenceRange <= 0 && startFade <= 0) return 1;
+        if (influenceRange <= 0 && startFade <= 0) return 1;        // Return if there should not be any sound fading
 
         float height = (point - transform.position).magnitude;
         if (height < startFade) return 1;

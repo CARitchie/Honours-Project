@@ -13,8 +13,8 @@ public class LocalGravitySource : GravitySource
         GravityReceiver receiver = other.GetComponentInParent<GravityReceiver>();
         if(receiver != null && receiver.GetComponent<PlanetReceiver>() == null){
             if(!receivers.Contains(receiver)){
-                receivers.Add(receiver);
-                receiver.AddLocalGravitySource(this);
+                receivers.Add(receiver);                    // Add the gravity receiver to the list of receivers
+                receiver.AddLocalGravitySource(this);       // Tell the receiver that it is being affected by this local gravity source
             } 
         }
     }
@@ -36,6 +36,7 @@ public class LocalGravitySource : GravitySource
 
     public override Vector3 GetGravityDirection(Vector3 point)
     {
+        // Direction of gravity in a local gravity source will always be downwards
         return -transform.up;
     }
 

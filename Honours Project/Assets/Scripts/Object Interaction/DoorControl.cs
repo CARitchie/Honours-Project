@@ -24,9 +24,9 @@ public class DoorControl : MonoBehaviour, Interact
 
     public void OnSelect()
     {
-        open = !open;
+        open = !open;                   // Toggle the state of the door
         DisplayText();
-        anim.SetBool("Open", open);
+        anim.SetBool("Open", open);     // Play the appropriate door animation
     }
 
     void DisplayText()

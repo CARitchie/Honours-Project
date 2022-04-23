@@ -8,6 +8,7 @@ public class Chainer : PoolObject
     EnemyDetails target;
     float damage;
 
+    // Function to set the chase target
     public void StartChase(EnemyDetails target, float damage)
     {
         this.target = target;
@@ -19,11 +20,11 @@ public class Chainer : PoolObject
     {
         if(target != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, Time.deltaTime * 8);
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, Time.deltaTime * 8);    // Move towards the target
 
-            if((transform.position- target.transform.position).sqrMagnitude < 2)
+            if((transform.position- target.transform.position).sqrMagnitude < 2)                                            // If close enough
             {
-                target.TakeDamage(damage);
+                target.TakeDamage(damage);                                                                                  // Damage the target
                 gameObject.SetActive(false);
 
                 if (hitMarker == null)
@@ -31,7 +32,7 @@ public class Chainer : PoolObject
                     Debug.LogWarning("No hitmarker present");
                     return;
                 }
-                hitMarker.transform.position = target.transform.position;
+                hitMarker.transform.position = target.transform.position;                                                   // Move the hitmarker to the target
                 hitMarker.transform.parent = target.transform;
                 hitMarker.gameObject.SetActive(true);
                 hitMarker.Play();

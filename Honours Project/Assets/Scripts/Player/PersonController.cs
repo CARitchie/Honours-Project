@@ -23,7 +23,7 @@ public class PersonController : MonoBehaviour
     }
 
     protected virtual void FixedUpdate(){
-        CheckGrounded();
+        CheckGrounded();            // Determine whether the controller is making contact with the ground
     }
 
     public virtual void Move(){
@@ -35,8 +35,11 @@ public class PersonController : MonoBehaviour
         rb.velocity = velocity;
     }
 
+    // Function to move the controller
     public void SetPosition(Vector3 position)
     {
+        // All controllers are children of a parent gravity object
+        // As such it is the parent object that is moved rather than the controller itself
         transform.parent.position = position;
     }
 
@@ -52,6 +55,7 @@ public class PersonController : MonoBehaviour
         }
     }
 
+    // Function to determine whether the controller is making contact with the ground
     public virtual bool IsGrounded(){
         return Physics.BoxCast(transform.position, new Vector3(0.3f, 0.05f, 0.3f), -transform.up, transform.rotation, 1);
     }
@@ -71,6 +75,7 @@ public class PersonController : MonoBehaviour
         return rb.velocity;
     }
 
+    // Function to add a recoild force when firing a weapon
     public virtual void Recoil(float strength)
     {
         AddForce(strength * -transform.forward);
@@ -102,6 +107,7 @@ public class PersonController : MonoBehaviour
         return animator.GetFloat(key);
     }
 
+    // Function that can be used to override the aim direction of a ranged weapon
     public virtual Vector3 GetAimDirection(Transform fireHole)
     {
         return fireHole.forward;

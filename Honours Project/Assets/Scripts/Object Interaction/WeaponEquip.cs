@@ -8,7 +8,7 @@ public class WeaponEquip : MonoBehaviour, Interact
 
     private void Start()
     {
-        if (SaveManager.WeaponUnlocked(weaponIndex))
+        if (SaveManager.WeaponUnlocked(weaponIndex))        // Destroy the gameobject if the player has already unlocked it
         {
             Destroy(gameObject);
         }

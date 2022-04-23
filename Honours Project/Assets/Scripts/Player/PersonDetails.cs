@@ -14,6 +14,8 @@ public class PersonDetails : MonoBehaviour, Damageable
         health = maxHealth;
     }
 
+    // Function to handle taking damage
+    // Returns false if the damage was fatal
     public virtual bool TakeDamage(float amount)
     {
         if (immune) return false;
@@ -50,6 +52,8 @@ public class PersonDetails : MonoBehaviour, Damageable
         immune = val;
     }
 
+    // Function to increase the person's health
+    // Returns true if successful
     public virtual bool HealUp(float amount)
     {
         if (health >= maxHealth) return false;
