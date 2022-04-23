@@ -65,11 +65,11 @@ Shader "My Shaders/Teleport Shader"
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
 
-			fixed4 n = tex2D(_Noise, IN.uv_MainTex * _Scale);
-			if (n.x > _Threshold || _Threshold == 0) o.Alpha = 0;
-			else o.Alpha = c.a;
+			fixed4 n = tex2D(_Noise, IN.uv_MainTex * _Scale);			// Read value from noise texture
+			if (n.r > _Threshold || _Threshold == 0) o.Alpha = 0;		// Pixel should be transparent if noise is greater than threshold
+			else o.Alpha = c.a;											// Otherwise transparency should not change
 
-			if (n.x + _Offset > _Threshold) {
+			if (n.r + _Offset > _Threshold) {							// Add a glowing outline around transparent pixels
 				o.Albedo = float3(1,1,1);
 				o.Emission = _Colour2;
 			}

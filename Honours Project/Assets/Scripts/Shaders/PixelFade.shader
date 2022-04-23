@@ -1,3 +1,7 @@
+
+// Shader wasn't used
+// Designed to make large squares of the screen turn black over time
+
 Shader "My Shaders/Pixel Fade"
 {
     Properties
@@ -61,8 +65,8 @@ Shader "My Shaders/Pixel Fade"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-				float value = _Noise.SampleLevel(sampler_Noise, squareUV(i.uv * _Scale), 0);
-				if (value > _Threshold || _Threshold == 0) col.rgb = 0;
+				float value = _Noise.SampleLevel(sampler_Noise, squareUV(i.uv * _Scale), 0);		// Read the value from the noise texture
+				if (value > _Threshold || _Threshold == 0) col.rgb = 0;								// If the value is greater than the threshold, make this pixel black
                 return col;
             }
             ENDCG

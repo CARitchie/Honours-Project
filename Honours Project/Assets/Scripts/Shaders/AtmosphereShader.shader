@@ -72,11 +72,10 @@ Shader "My Shaders/Atmosphere Shader"
 
 			float _StarFade;
 
-
+			// Used https://link.springer.com/content/pdf/10.1007%2F978-1-4842-4427-2_7.pdf
+			// Determine if and where a line collides with a sphere
 			float2 SphereCollision(float3 position, float3 direction, float3 sphereCentre, float sphereRadius) 
 			{
-				// Used https://link.springer.com/content/pdf/10.1007%2F978-1-4842-4427-2_7.pdf
-
 				float3 f = position - sphereCentre;
 
 				float a = dot(direction, direction);
@@ -111,16 +110,19 @@ Shader "My Shaders/Atmosphere Shader"
 				return val1 * val2;
 			}
 
+			// Find the height percentage within the atmosphere
 			float HeightPercent(float3 pos) {
 				float height = distance(pos, _PlanetOrigin) - _PlanetRadius;
 				return saturate(height / (_AtmosphereRadius - _PlanetRadius));
 			}
 
+			// Find the density of the atmosphere at this point
 			float Density(float3 pos) {
 				float height = HeightPercent(pos);
 				return exp(-height / (_ScaleHeight * 0.01));
 			}
 
+			// Find the density along a ray through the atmosphere
 			float DensityAlongRay(float3 origin, float3 direction, float distance) {
 				float step = distance / _OutScatterSteps;
 				float3 pos = origin;
@@ -135,10 +137,12 @@ Shader "My Shaders/Atmosphere Shader"
 				return density;
 			}
 
+			// Calculate the amount of outscattering
 			float3 OutScatter(float3 origin, float3 direction, float distance) {
 				return DensityAlongRay(origin, direction, distance) * 4 * 3.14159 * _ScatterConstant;
 			}
 
+			// Find the angle towards the sun
 			float GetSunAngle(float3 pos, float3 direction) {
 				float3 dirToSun = normalize(_LightOrigin - pos);
 				float3 dirToOrigin = normalize(-direction);
@@ -147,6 +151,7 @@ Shader "My Shaders/Atmosphere Shader"
 				return acos(dotProduct);
 			}
 
+			// Find the amount of inscattering
 			float3 InScatter(float3 origin, float3 direction, float distance) {
 				float sunAngle = GetSunAngle(origin, direction);
 				float phase = PhaseFunction(sunAngle, 0);
@@ -159,7 +164,7 @@ Shader "My Shaders/Atmosphere Shader"
 
 				float3 lightIn = float3(0,0,0);
 
-				while (progress < distance) {
+				while (progress < distance) {		// Progress along the ray
 
 					float density = Density(pos);
 
@@ -196,17 +201,17 @@ Shader "My Shaders/Atmosphere Shader"
 					return col;
 				}
 
-				float distanceIn = result.y - result.x;
+				float distanceIn = result.y - result.x;					// Distance travelled within the atmosphere
 				float limit = min(distanceIn, depth - result.x);
 				
 				float3 position = origin + direction * result.x;
 				float3 light = InScatter(position, normalize(direction), limit);
 
 				if (depth < _Closeness) {
-					light *= depth / _Closeness;
+					light *= depth / _Closeness;				// Reduce the strength of the atmosphere if it is appearing in front of an object close to the player
 				}
 				else if (depth > 10000) {
-					col.rgb *= 1 - saturate(light.g / _StarFade);
+					col.rgb *= 1 - saturate(light.g / _StarFade);		// Make the starts less visible the stronger the atmosphere is, not used as strange results when multiple atmospheres used
 				}
 
 				col.rgb += light;

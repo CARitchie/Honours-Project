@@ -1,5 +1,6 @@
 
 // Adapted from https://youtu.be/_NfxMMzYwgo
+// Uses Unity's distance based tesselation shader as a starting point https://docs.unity3d.com/Manual/SL-SurfaceShaderTessellation.html
 
 Shader "My Shaders/Snow Surface"
 {
@@ -48,6 +49,7 @@ Shader "My Shaders/Snow Surface"
 		float3 _Origin;
 
 		// Adapted form https://en.wikipedia.org/wiki/UV_mapping
+		// Convert a point on a sphere to 2d UV coordinates
 		float2 SphereToSquare(float3 pos) {
 			pos = normalize(pos);
 			float u = 0.5 + (atan2(pos.x, pos.z) / (2 * 3.14159));
@@ -58,9 +60,9 @@ Shader "My Shaders/Snow Surface"
 		void disp(inout appdata v)
 		{
 			float3 worldPos = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)).xyz;
-			float d = tex2Dlod(_DispTex, float4(SphereToSquare(worldPos - _Origin),0,0)).r * _Displacement;
+			float d = tex2Dlod(_DispTex, float4(SphereToSquare(worldPos - _Origin),0,0)).r * _Displacement;		// Read the displacement from the displacement map
 
-			float3 dir = normalize(worldPos - _Origin);
+			float3 dir = normalize(worldPos - _Origin);		// Align the displacement with the direction from the centre of the planet to the point
 			v.vertex.xyz -= dir * d;
 			v.vertex.xyz += dir * _Displacement;
 		}
@@ -93,10 +95,10 @@ Shader "My Shaders/Snow Surface"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
 			half amount = tex2D(_DispTex, SphereToSquare(normalize(IN.worldPos - _Origin))).r;
-			fixed4 c = lerp(tex2D(_SnowTex, IN.uv_SnowTex) * _SnowColor, tex2D(_GroundTex, IN.uv_GroundTex) * _GroundColor, amount);
+			fixed4 c = lerp(tex2D(_SnowTex, IN.uv_SnowTex) * _SnowColor, tex2D(_GroundTex, IN.uv_GroundTex) * _GroundColor, amount);	// Interpolate between textures based on displacement
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
-            o.Smoothness = lerp(_Glossiness, _GroundGlossiness, amount);
+            o.Smoothness = lerp(_Glossiness, _GroundGlossiness, amount);		// Interpolate between different smoothnesses based on displacement
             o.Alpha = c.a;
         }
         ENDCG
