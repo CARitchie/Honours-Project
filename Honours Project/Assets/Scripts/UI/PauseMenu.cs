@@ -43,12 +43,12 @@ public class PauseMenu : MonoBehaviour
     {
         paused = true;
 
-        Time.timeScale = 0;
+        Time.timeScale = 0;                         // Freeze time
 
-        PostProcessControl.SetVignette(1);
-        PostProcessControl.SetDepth(10);
+        PostProcessControl.SetVignette(1);          // Increase the vignette
+        PostProcessControl.SetDepth(10);            // Increase the depth of field intensity
 
-        Cursor.visible = true;
+        Cursor.visible = true;                      // Release the cursor
         Cursor.lockState = CursorLockMode.None;
 
         CloseWarning();
@@ -63,7 +63,7 @@ public class PauseMenu : MonoBehaviour
     {
         paused = false;
 
-        Time.timeScale = 1;
+        Time.timeScale = 1;                         // Unfreeze time
         PostProcessControl.RestoreVignette();
         PostProcessControl.SetDepth(0);
 
@@ -84,15 +84,16 @@ public class PauseMenu : MonoBehaviour
 
     public void Save()
     {
-        if (!SaveManager.AttemptSave())
+        if (!SaveManager.AttemptSave())     // Show a warning if the game cannot be saved
         {
             buttons.SetActive(false);
             saveWarning.SetActive(true);
             Debug.Log("Could not save");
         }
-        else HUD.SpinSaveIcon(true);
+        else HUD.SpinSaveIcon(true);        // Otherwise, show the save icon
     }
 
+    // Function to load the last save
     public void Restart()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -114,6 +115,7 @@ public class PauseMenu : MonoBehaviour
         SceneManager.FadeToScene("MainMenu");
     }
 
+    // Functions to set whether the buttons can be used
     public void SetButtonsInteractive(bool val)
     {
         Button[] buttons = GetComponentsInChildren<Button>(true);

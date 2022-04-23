@@ -41,44 +41,46 @@ public class OptionsMenu : MonoBehaviour
     {
         resolutions = new List<Resolution>();
 
-        Resolution[] allRes = Screen.resolutions;
+        Resolution[] allRes = Screen.resolutions;                                   // Retrieve all possible resolutions
         for(int i = 0; i < allRes.Length; i++)
         {
-            if (ResolutionExists(allRes[i]) == -1) resolutions.Add(allRes[i]);
+            if (ResolutionExists(allRes[i]) == -1) resolutions.Add(allRes[i]);      // Add new resolutions to the list, a different refresh rate does not make the resolution new
         }
 
         foreach (Resolution res in resolutions)
         {
-            resolutionDrop.options.Add(new TMP_Dropdown.OptionData(res.width + " x " + res.height));
+            resolutionDrop.options.Add(new TMP_Dropdown.OptionData(res.width + " x " + res.height));    // Add resolutions to the dropdown
         }
 
         bool resLoaded = false;
 
-        if(PlayerPrefs.HasKey("Screen_Width") && PlayerPrefs.HasKey("Screen_Height"))
+        if(PlayerPrefs.HasKey("Screen_Width") && PlayerPrefs.HasKey("Screen_Height"))                               // If the player has saved resolution settings
         {
-            int index = ResolutionExists(PlayerPrefs.GetInt("Screen_Width"), PlayerPrefs.GetInt("Screen_Width"));
-            if (index != -1)
+            int index = ResolutionExists(PlayerPrefs.GetInt("Screen_Width"), PlayerPrefs.GetInt("Screen_Width"));   // Find the index of their saved resolution
+            if (index != -1)                                                                                        // If it exists, set the drop down to that index
             {
                 resolutionDrop.SetValueWithoutNotify(index);
                 resLoaded = true;
             }
         }
 
-        if (!resLoaded)
+        if (!resLoaded)                                                     // If a resolution wasn't loaded from settings
         {
-            int current = ResolutionExists(Screen.currentResolution);
-            if (current != -1)
+            int current = ResolutionExists(Screen.currentResolution);       // Find the current screen resolution
+            if (current != -1)                                              // If it has an index
             {
-                resolutionDrop.SetValueWithoutNotify(current);
+                resolutionDrop.SetValueWithoutNotify(current);              // Set the drop down to that index
             }
         }
     }
 
+    // Determine whether two resolutions are equal, only care about height and width
     bool ResolutionEqual(Resolution res1, Resolution res2)
     {
         return res1.height == res2.height && res1.width == res2.width;
     }
 
+    // Find the index of a resolution within the list
     int ResolutionExists(Resolution res)
     {
         for(int i = 0; i < resolutions.Count; i++)
@@ -88,6 +90,7 @@ public class OptionsMenu : MonoBehaviour
         return -1;
     }
 
+    // Find the index of a resolution based only on width and height
     int ResolutionExists(int width, int height)
     {
         for (int i = 0; i < resolutions.Count; i++)
@@ -206,12 +209,14 @@ public class OptionsMenu : MonoBehaviour
 
     void SaveSettings()
     {
+        // Only save resolution if the settings have been loaded
         if (SettingsManager.loaded)
         {
             PlayerPrefs.SetInt("Screen_Width", resolutions[resolutionDrop.value].width);
             PlayerPrefs.SetInt("Screen_Height", resolutions[resolutionDrop.value].height);
         }
 
+        // Save all settings to player prefs
         PlayerPrefs.SetInt("Fullscreen", fullscreenDrop.value);
         PlayerPrefs.SetInt("VSync", vSyncDrop.value);
         PlayerPrefs.SetInt("Audio", (int)audioSlider.value);
@@ -221,7 +226,7 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetInt("Processing", processingDrop.value);
         PlayerPrefs.SetInt("Atmosphere", atmosphereDrop.value);
 
-        SettingsManager.ApplyChanges();
+        SettingsManager.ApplyChanges();     // Apply the changes
     }
 
     public void CloseSettings()

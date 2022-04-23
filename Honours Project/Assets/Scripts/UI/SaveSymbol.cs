@@ -32,6 +32,7 @@ public class SaveSymbol : MonoBehaviour
 
         image.rectTransform.localEulerAngles = Vector3.zero;
 
+        // Spin the symbol while trying to save
         while (saving)
         {
             Vector3 rot = image.rectTransform.localEulerAngles;
@@ -43,12 +44,15 @@ public class SaveSymbol : MonoBehaviour
         float progress = 1.2f;
         while (progress > 0)
         {
+
+            // Spin the save symbol
             Vector3 rot = image.rectTransform.localEulerAngles;
             rot.z -= Time.unscaledDeltaTime * 60;
             image.rectTransform.localEulerAngles = rot;
 
             if (progress < 1)
             {
+                // Fade the symbol out after 0.2 seconds
                 Color colour = image.color;
                 colour.a = progress;
                 image.color = colour;
