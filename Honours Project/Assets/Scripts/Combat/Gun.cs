@@ -159,6 +159,7 @@ public class Gun : Weapon
 
     public override bool AddAmmo(float percentOfMax)
     {
+        if (_MaxAmmo == -450) _MaxAmmo = maxAmmo;
         if (currentAmmo == _MaxAmmo || IsInfinite()) return false;
         currentAmmo = (int)Mathf.Clamp(currentAmmo + percentOfMax * _MaxAmmo, 0, _MaxAmmo);
         return true;
