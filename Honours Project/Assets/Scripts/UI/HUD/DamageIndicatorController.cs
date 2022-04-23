@@ -16,20 +16,22 @@ public class DamageIndicatorController : MonoBehaviour
 
     public void AddIndicator(Transform newTarget)
     {
-        if (!NotVisible(newTarget)) return;
+        if (!NotVisible(newTarget)) return;                                                 // Don't create a damage indicator if the damage causer is alredy visible
 
         for(int i = 0; i < indicators.Count; i++)
         {
-            if (indicators[i].EqualTargets(newTarget)) return;
+            if (indicators[i].EqualTargets(newTarget)) return;                              // Find out if the damage causer already has a linked damage indicator
         }
-        DamageIndicator newIndicator = pool.GetObject().GetComponent<DamageIndicator>();
-        newIndicator.SetTarget(newTarget);
+        DamageIndicator newIndicator = pool.GetObject().GetComponent<DamageIndicator>();    // Get a new damage indicatorfrom the pool
+        newIndicator.SetTarget(newTarget);                                                  // Link the indicator to the causer
         indicators.Add(newIndicator);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Rotate all damage indicators towards their causers
+        // Remove them from the list if they have become invisible
         for(int i = 0; i < indicators.Count; i++)
         {
             indicators[i].RotateTo(player);
@@ -41,6 +43,7 @@ public class DamageIndicatorController : MonoBehaviour
         }
     }
 
+    // Determine whether the player can see a transform
     public bool NotVisible(Transform target)
     {
         Vector3 dir = target.position - player.position;

@@ -126,6 +126,7 @@ public class HUD : MonoBehaviour
 
     private void LateUpdate()
     {
+        // Shake the HUD with player movement
         targetPos = Vector3.Lerp(targetPos, Vector3.zero, returnSpeed * Time.deltaTime);
         currentPos = Vector3.Lerp(currentPos, targetPos, snappiness * Time.deltaTime);
         transform.localPosition = currentPos;
@@ -259,11 +260,13 @@ public class HUD : MonoBehaviour
         float width = Screen.currentResolution.width;
         float height = Screen.currentResolution.height;
 
-
+        // If the objective marker is supposed to be behind the player, invert the coordinates
         if (Vector3.Dot(objectiveTargets[objectiveTarget].position - cam.transform.position, cam.transform.forward) < 0)
         {
             screenPos *= -1;
         }
+        
+        // Prevent the objective marker from leaving the screen
         screenPos.x = Mathf.Clamp(screenPos.x, 0.1f * width, 0.9f * width);
         screenPos.y = Mathf.Clamp(screenPos.y, 0.1f * height, 0.9f * height);
         screenPos.z = 0;

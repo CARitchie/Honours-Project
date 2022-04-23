@@ -9,10 +9,12 @@ public class Compass : MonoBehaviour
     [SerializeField] RectTransform compassImage;
     [SerializeField] TextMeshProUGUI distanceText;
     [SerializeField] float fadeSpeed;
-    float pulseDelay;
     [SerializeField] Color pulseColour;
-
+    
     public static Compass Instance;
+
+    // This could cause issues
+    static bool active = true;
 
     PersonController player;
     GravitySource planet;
@@ -27,12 +29,10 @@ public class Compass : MonoBehaviour
     Vector3 targetPos = new Vector3(200, 0, 0);
     AudioManager audioManager;
 
-    // This could cause issues
-    static bool active = true;
-
     float size = 800;
     float pulseTime;
     float pulsePercent = 0;
+    float pulseDelay;
 
     bool pulseActive = true;
     bool sacrificedCompass = false;
@@ -54,7 +54,7 @@ public class Compass : MonoBehaviour
 
         for (int i = 0; i < pulseImages.Length; i++)
         {
-            images.Add(pulseImages[i]);
+            images.Add(pulseImages[i]);         // Add pulse images to the list of images that will fade in/out
         }
 
         pulseTime = pulseDelay;
@@ -72,9 +72,12 @@ public class Compass : MonoBehaviour
 
     void LoadSacrifices()
     {
+        // Disable pulsing if the sacrifice was made
         if (SaveManager.SacrificeMade("sacrifice_pulse"))
         {
             pulseActive = false;
+
+            // Restore pulse images to their original colour
             foreach (Graphic image in pulseImages)
             {
                 Color target = Color.white;
@@ -83,9 +86,11 @@ public class Compass : MonoBehaviour
             }
         }
 
+        // Disable the functionality of the compass if the sacrifice was made
         if (SaveManager.SacrificeMade("sacrifice_compass"))
         {
             sacrificedCompass = true;
+            // If the pulse was also sacrificed, completely disable the gameobject
             if (!pulseActive) gameObject.SetActive(false);
         }
     }
@@ -95,7 +100,7 @@ public class Compass : MonoBehaviour
     {
         GravitySource tempPlanet = player.GetNearestSource();
 
-        if (tempPlanet == null || !active)
+        if (tempPlanet == null || !active)      // Fade out the compass if it is inactive or if the player is in space
         {
             FadeOut();
             return;
@@ -114,6 +119,7 @@ public class Compass : MonoBehaviour
         float minDist = 1000;
         int minIndex = -1;
 
+        // Find the distance of the compass item closest to the middle of the compass
         for(int i = 0; i < items.Count; i++)
         {
             if (items[i].active)
@@ -133,12 +139,14 @@ public class Compass : MonoBehaviour
         {
             if (!distanceText.enabled)
             {
+                // Enable the distance text
                 distanceText.enabled = true;
                 Color colour = distanceText.color;
                 colour.a = 1;
                 distanceText.color = colour;
             }
 
+            // Display the distance to the compass item closest to the middle of the compass
             int distance = (int)Vector3.Distance(player.transform.position, items[minIndex].transform.position);
             distanceText.text = distance.ToString() + "m";
             
@@ -158,6 +166,7 @@ public class Compass : MonoBehaviour
         Pulse();
     }
 
+    // Function to find the rotation for the compass direction indicators
     void UpdateTarget()
     {
         Vector3 north = planet.GetNorthDirection(playerT);
@@ -183,6 +192,8 @@ public class Compass : MonoBehaviour
         }
     }
 
+    // Function to find the angle between the player and the item
+    // Sets the item's compass image to the correct position
     float FindItem(CompassItem item)
     {
         Vector3 directToItem = (playerT.position - item.transform.position).normalized;
@@ -213,6 +224,7 @@ public class Compass : MonoBehaviour
         return x;
     }
 
+    // Function to fade all of the images in
     void FadeIn()
     {
         float alpha = images[0].color.a;
@@ -223,6 +235,7 @@ public class Compass : MonoBehaviour
         }
     }
 
+    // Function to fade out all of the images
     void FadeOut()
     {
         float alpha = images[0].color.a;
@@ -239,8 +252,8 @@ public class Compass : MonoBehaviour
 
         if(nearObjects.Count > 0)
         {
-            float distance = NearestDistance();
-            pulseDelay = Mathf.Clamp01((distance - 2) / 500) * 5;
+            float distance = NearestDistance();                         // Find the closest object
+            pulseDelay = Mathf.Clamp01((distance - 2) / 500) * 5;       // Work out the pulse rate
             if (pulseTime > pulseDelay) pulseTime = pulseDelay;
         }
         else
@@ -250,19 +263,20 @@ public class Compass : MonoBehaviour
 
         if(pulseTime < 0)
         {
-            if(pulseTime != -450 && pulseDelay >= 0)
+            if(pulseTime != -450 && pulseDelay >= 0)            // Make the pulse images change from white to orange
             {
                 pulsePercent += Time.deltaTime * 3;
 
                 if (pulsePercent >= 1) pulseTime = -450;
             }
-            else if (pulsePercent > 0)
+            else if (pulsePercent > 0)                          // Make the pulse images change from orange to white
             {
                 pulsePercent -= Time.deltaTime * 3;
 
                 if (pulsePercent <= 0) pulseTime = pulseDelay;
             }
 
+            // Change the colour of all of the pulse images
             foreach (Graphic image in pulseImages)
             {
                 Color target = Color.Lerp(Color.white, pulseColour, pulsePercent);
@@ -272,14 +286,15 @@ public class Compass : MonoBehaviour
         }
         else if(pulseDelay >= 0)
         {
-            pulseTime -= Time.deltaTime;
-            if(pulseTime <= 0)
+            pulseTime -= Time.deltaTime;            // Count down until the next pulse
+            if(pulseTime <= 0)                      // If it is time to pulse
             {
-                audioManager.PlaySound("pulse");
+                audioManager.PlaySound("pulse");    // Play the pulse sound effect
             }
         }
     }
 
+    // Function to find the shortest distance to a nearby object
     float NearestDistance()
     {
         float dist = 10000;
@@ -311,6 +326,7 @@ public class Compass : MonoBehaviour
         }
     }
 
+    // Disable compass items if they are on a planet that the player is not on
     void CheckSamePlanet()
     {
         Transform playerPlanet = player.GetNearestSource().transform;
@@ -329,6 +345,7 @@ public class Compass : MonoBehaviour
         }
     }
 
+    // Function to add a new item to the compass
     public static void AddItem(CompassItem item)
     {
         if (Instance == null || Instance.sacrificedCompass) return;

@@ -47,8 +47,8 @@ public class WeaponWheel : MonoBehaviour
         else goingUp = false;
         lastVal = active;
 
-        Time.timeScale = slowness + (1 - (active / activeTime)) * (1 - slowness);
-        PostProcessControl.SetDepth(0,10,active/activeTime);
+        Time.timeScale = slowness + (1 - (active / activeTime)) * (1 - slowness);       // Gradually slow down / speed up time
+        PostProcessControl.SetDepth(0,10,active/activeTime);                            // Gradually increase / decrease the depth of field strength
 
         if(active > 0)
         {
@@ -68,7 +68,7 @@ public class WeaponWheel : MonoBehaviour
         }
 
         if (swapped && val > 0 && goingUp) swapped = false;
-        if (!goingUp && !swapped) SwapWeapons();
+        if (!goingUp && !swapped) SwapWeapons();                // Swap to the selected weapon if the wheel is fading out and not already swapped
     }
 
     void SwapWeapons()
@@ -83,11 +83,13 @@ public class WeaponWheel : MonoBehaviour
         float percent = active / activeTime;
         if (!goingUp)
         {
+            // Fade out between 1 and 0.5
             if (percent < 0.5f) percent = 0;
             else percent = (percent - 0.5f) * 2;
         }
         else
         {
+            // Fade in between 0 and 0.5
             if (percent > 0.5f) percent = 1;
             else percent *= 2;
         }
@@ -95,17 +97,17 @@ public class WeaponWheel : MonoBehaviour
 
         if (!goingUp) return;
 
-        lookDirection += lookAction.ReadValue<Vector2>();
+        lookDirection += lookAction.ReadValue<Vector2>();   // Read the mouse input
 
-        lookDirection = lookDirection.normalized * 50;
+        lookDirection = lookDirection.normalized * 50;      // Restrict the magnitude of the lookdirection, makes rotating the arrow easier for the player
 
         arrow.up = lookDirection;
 
         int newIndex = GetIndex();
-        if(newIndex != lastIndex)
+        if(newIndex != lastIndex)                                               // If a new wedge is selected
         {
-            if (lastIndex < wedges.Length) wedges[lastIndex].Deselect();
-            if (newIndex < wedges.Length) wedges[newIndex].Select();
+            if (lastIndex < wedges.Length) wedges[lastIndex].Deselect();        // Deselect the old one
+            if (newIndex < wedges.Length) wedges[newIndex].Select();            // Select the new one
             lastIndex = newIndex;
         }
     }
@@ -122,6 +124,7 @@ public class WeaponWheel : MonoBehaviour
 
     int GetIndex()
     {
+        // Work out the index based on the arrow's rotation
         return (int)Mathf.Floor((arrow.localEulerAngles.z / 45 + 0.5f) % 8);
     }
 }
