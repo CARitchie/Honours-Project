@@ -25,6 +25,8 @@ public class NoiseGenerator : MonoBehaviour
     Vector3[] points;
     double[,,] noise;
 
+
+    // Code came from https://lodev.org/cgtutor/randomnoise.html
     void GenerateRandomNoise()
     {
         noise = new double[dimension, dimension, dimension];
@@ -41,6 +43,7 @@ public class NoiseGenerator : MonoBehaviour
         }
     }
 
+    // Code came from https://lodev.org/cgtutor/randomnoise.html
     double smoothNoise(double x, double y, double z)
     {
         double fractX = x - (int)x;
@@ -69,6 +72,7 @@ public class NoiseGenerator : MonoBehaviour
         return value;
     }
 
+    // Code came from https://lodev.org/cgtutor/randomnoise.html
     double turbulence(double x, double y, double z, double size)
     {
         double value = 0.0;
@@ -83,6 +87,7 @@ public class NoiseGenerator : MonoBehaviour
         return 128.0 * value / initialSize;
     }
 
+    // Code adapted from https://lodev.org/cgtutor/randomnoise.html
     public void GeneratePerlinNoise()
     {
         Debug.Log("Generating Perlin Noise");
@@ -160,6 +165,8 @@ public class NoiseGenerator : MonoBehaviour
         return distance;
     }
 
+    // Copies points to the outside of the texture
+    // This is done to allow the worley texture to tile perfectly
     void GeneratePoints()
     {
         points = new Vector3[numberOfPoints * 27];
@@ -203,6 +210,7 @@ public class NoiseGenerator : MonoBehaviour
         return ln + ((val - lo) * (hn - ln)) / (ho - lo);
     }
 
+    // Function to combine different textures into one texture using the different colour channels
     public void CombineTextures()
     {
         Texture3D texture = new Texture3D(dimension, dimension, dimension, TextureFormat.RGBA32, false);

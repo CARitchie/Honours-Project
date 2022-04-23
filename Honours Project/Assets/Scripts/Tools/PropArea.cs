@@ -19,10 +19,10 @@ public class PropArea : MonoBehaviour
         int progress = 0;
         scheme.CalculateWeights();
         height = source.GetDistance() + 10;
-        while (progress < numberOfProps)
+        while (progress < numberOfProps)                        // Loop for as many props as wanted
         {
-            PlaceableProp prop = scheme.GetRandomProp();
-            if (prop == null) continue;
+            PlaceableProp prop = scheme.GetRandomProp();        // Get a random prop
+            if (prop == null) continue;                         // Go to next loop if no prop was found
 
             Vector3 pos = FindPosition();
 
@@ -42,6 +42,7 @@ public class PropArea : MonoBehaviour
         return (pos - source.transform.position);
     }
 
+    // Function to find a spawn location
     Vector3 FindPosition()
     {
         int numberOfAttempts = 50;
@@ -49,16 +50,16 @@ public class PropArea : MonoBehaviour
         {
             numberOfAttempts--;
 
-            Vector3 pos = Random.onUnitSphere * radius + transform.position;
+            Vector3 pos = Random.onUnitSphere * radius + transform.position;            // Choose a random point on the planet's surface
 
             Vector3 dir = (pos - source.transform.position).normalized * height;
 
             pos = source.transform.position + dir;
 
-            if (!Physics.Raycast(pos, -dir, out RaycastHit hit, height)) continue;
+            if (!Physics.Raycast(pos, -dir, out RaycastHit hit, height)) continue;      // Go to next loop if there was no collision with planet
 
 
-            if (hit.collider.gameObject.layer != 8 && checkCollision) continue;
+            if (hit.collider.gameObject.layer != 8 && checkCollision) continue;         // Go to next loop if collision wasn't planet and collisions aren't allowed
 
             return hit.point;
         }
@@ -69,10 +70,12 @@ public class PropArea : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        // Draw the area where props can be spawned
         Gizmos.color = new Color(0, 0, 1, 0.1f);
         Gizmos.DrawSphere(transform.position, radius);
     }
 
+    // Function to destroy all props that have been generated
     public void DestroyProps()
     {
         List<GameObject> children = new List<GameObject>();

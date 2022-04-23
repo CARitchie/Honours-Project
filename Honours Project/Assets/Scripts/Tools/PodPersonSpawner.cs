@@ -30,6 +30,7 @@ public class PodPersonSpawner : MonoBehaviour
         }
     }
 
+    // Function to return a random person model
     public PodPerson GetRandomPerson()
     {
         float bigWeight = Random.Range(0, sumOfWeights);
@@ -43,6 +44,7 @@ public class PodPersonSpawner : MonoBehaviour
         return null;
     }
 
+    // Function to destroy unnecessary gameobjects
     public void TidyUp()
     {
         List<GameObject> objects = FindChildren(transform);
@@ -53,6 +55,7 @@ public class PodPersonSpawner : MonoBehaviour
         }
     }
 
+    // Function to return a list of all child gameobjects
     public List<GameObject> FindChildren(Transform parent)
     {
         List<GameObject> children = new List<GameObject>();
