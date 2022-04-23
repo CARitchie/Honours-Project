@@ -24,6 +24,7 @@ public class EndFight : MonoBehaviour
     {
         cinematicCamera.SetActive(false);
 
+        // Work out what the fight timer should be
         float health = Mathf.Clamp(EndingManager.health, 10, 70);
         float percent = 1 - ((health - 10) / 60);
 
@@ -38,6 +39,7 @@ public class EndFight : MonoBehaviour
     {
         if (!countDown) return;
 
+        // Reduce the time
         timer -= Time.deltaTime;
         timerText.text = GetTime(timer);
 
@@ -54,17 +56,20 @@ public class EndFight : MonoBehaviour
         }
     }
 
+    // Start the section of the final fight where the player has to return to the colony ship
     void StartSecondSegment()
     {
         state = 1;
         if (faster) timer = 10;
-        else timer = 60;
-        combat.ForceOff();
-        colonyDoor.SetBool("Open", true);
+        else timer = 60;                    // Give the player one minute to return
+        combat.ForceOff();                  // Stop spawning enemy waves
+        colonyDoor.SetBool("Open", true);   // Open the colony ship door
 
         DialogueManager.PlayDialogue("audio_oneMinute");
     }
 
+    // Function to convert a time value into a timer string
+    // Taken from https://answers.unity.com/questions/25614/how-do-i-format-a-string-into-daysminuteshoursseco.html
     public string GetTime(float value)
     {
         value = value * 1000;
@@ -76,6 +81,7 @@ public class EndFight : MonoBehaviour
 
     }
 
+    // Function to handle what happens when the player dies
     public void OnPlayerDeath()
     {
         DisablePlayer();
@@ -91,6 +97,7 @@ public class EndFight : MonoBehaviour
         }
     }
 
+    // Function that occurs when the player reaches the colony ship
     public void OnPlayerReturn()
     {
         if (state == 0) return;
@@ -98,6 +105,7 @@ public class EndFight : MonoBehaviour
         SetTime(0);
     }
 
+    // Function that occurs when the player fails to reach the colony ship in time
     public void OnOutOfTime()
     {
         DisablePlayer();
@@ -105,6 +113,7 @@ public class EndFight : MonoBehaviour
         DialogueManager.PlayDialogue("audio_soLong");
     }
 
+    // Function to prevent the player from making any more action
     void DisablePlayer()
     {
         countDown = false;
@@ -131,6 +140,7 @@ public class EndFight : MonoBehaviour
         director.Play();
     }
 
+    // Function that occurs when the game is over
     public void GameEnd()
     {
         director.Stop();

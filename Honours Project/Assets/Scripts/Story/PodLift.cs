@@ -19,7 +19,7 @@ public class PodLift : MonoBehaviour
     {
         if (inUse) return;
         if (other.attachedRigidbody == null) return;
-        if (other.attachedRigidbody.TryGetComponent(out CryoPod pod))
+        if (other.attachedRigidbody.TryGetComponent(out CryoPod pod))       // If a cryo pods triggerd the collider
         {
             inUse = true;
             pod.Disable();
@@ -35,20 +35,21 @@ public class PodLift : MonoBehaviour
         }
     }
 
+    // Function to lower the lift
     IEnumerator StartDecent()
     {
-        yield return new WaitForSeconds(1);
-        anim.SetTrigger("Activate");
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);         // Provide enough time for the cryo pod to align properly
+        anim.SetTrigger("Activate");                // Start the lift descend animation
+        yield return new WaitForSeconds(3);         // Wait for the lift to return
         inUse = false;
-        if (SaveManager.NumberOfFoundPods() <= 1)
+        if (SaveManager.NumberOfFoundPods() <= 1)   // If this was the first pod delivered
         {
-            HUD.ChangeObjectiveTarget(1);
+            HUD.ChangeObjectiveTarget(1);           // Add an objective marker to the science lab
             DialogueManager.PlayDialogue("audio_delivered");
         }
         else
         {
-            HintManager.PlayHint("hint_newSacrifice", true);
+            HintManager.PlayHint("hint_newSacrifice", true);        // Tell the player that a new sacrifice is available
         }
     }
 

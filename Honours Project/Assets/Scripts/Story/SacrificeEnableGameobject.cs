@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class used to enable or disable gameobjects depending upon the state of a sacrifice
 public class SacrificeEnableGameobject : MonoBehaviour
 {
     [SerializeField] string sacrificeKey;
@@ -24,13 +25,13 @@ public class SacrificeEnableGameobject : MonoBehaviour
     {
         if (SaveManager.SacrificeMade(sacrificeKey))
         {
-            SetSacrificedObjects(true);
-            SetDefaultObjects(false);
+            SetSacrificedObjects(true);     // Enable sacrifice objects
+            SetDefaultObjects(false);       // Disable default objects
         }
         else
         {
-            SetSacrificedObjects(false);
-            SetDefaultObjects(true);
+            SetSacrificedObjects(false);    // Disable sacrifice objects
+            SetDefaultObjects(true);        // Enable default objects
         }
     }
 
