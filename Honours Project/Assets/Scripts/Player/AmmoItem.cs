@@ -12,9 +12,9 @@ public class AmmoItem : MonoBehaviour
         if (!active) return;
         if (other.attachedRigidbody == null) return;
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))         // If the player has entered the collider
         {
-            if (PlayerController.Instance.AddAmmo(percent / 100)) Useful.DestroyGameObject(gameObject);
+            if (PlayerController.Instance.AddAmmo(percent / 100)) Useful.DestroyGameObject(gameObject);     // Attempt to increase the player's ammo, destroy self if successful
         }
     }
 

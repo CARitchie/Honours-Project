@@ -50,6 +50,8 @@ public class ShipController : MonoBehaviour
 
         if (input != null)
         {
+            // Find and store all of the relevant input actions
+            // Done so that they don't need to be found every time they need to be accessed
             shipControls[0] = input.actions.FindAction("ShipForward");
             shipControls[1] = input.actions.FindAction("ShipRight");
             shipControls[2] = input.actions.FindAction("ShipBack");
@@ -67,7 +69,7 @@ public class ShipController : MonoBehaviour
 
         if (!LoadData())
         {
-            if (GravityController.FindSource("planet_jungle", out GravitySource source)) SetVelocity(source.GetVelocity());
+            if (GravityController.FindSource("planet_jungle", out GravitySource source)) SetVelocity(source.GetVelocity());     // Match the ship's velocity to that of Coille if no save was found
         }
 
         SettingsManager.OnChangesMade += LoadSensitivity;
@@ -77,6 +79,8 @@ public class ShipController : MonoBehaviour
         LoadUpgrades();
     }
 
+    // Function to load in the ship's data from the save file
+    // Returns false if no position could be loaded
     bool LoadData()
     {
         if (!SaveManager.SaveExists()) return false;
@@ -90,13 +94,14 @@ public class ShipController : MonoBehaviour
             SetVelocity(velocity);
         }
 
-        if (SaveManager.GetState() >= 2) compassIcon.SetActive(true);
+        if (SaveManager.GetState() >= 2) compassIcon.SetActive(true);       // Activate the ship's compass icon if it has been flown before
 
         return true;
     }
 
     void LoadSensitivity()
     {
+        // Load the ship sensitivity from the user settings
         if (PlayerPrefs.HasKey("Ship"))
         {
             int val = PlayerPrefs.GetInt("Ship");
@@ -106,6 +111,7 @@ public class ShipController : MonoBehaviour
 
     void LoadUpgrades()
     {
+        // Increase the speed of the ship if the thruster upgrade has been unlocked
         if (SaveManager.SelfUpgraded("upgrade_thruster"))
         {
             engineStrength = originalStrength * 3;
@@ -128,6 +134,7 @@ public class ShipController : MonoBehaviour
 
         MatchVelocity();
 
+        // Used to ensure that the ship remains still when using physics, and that its the other objects that move around it
         AddForce(rb.velocity);
         rb.velocity = Vector3.zero;
     }
@@ -135,9 +142,9 @@ public class ShipController : MonoBehaviour
     void MatchVelocity()
     {
         Vector3 target = cam.UpdatePlanetHUD(rb);
-        if (matchVeloAction.ReadValue<float>() > 0)
+        if (matchVeloAction.ReadValue<float>() > 0)         // If the match velocity button is held
         {
-            target = Vector3.MoveTowards(rb.velocity, target, Time.fixedDeltaTime * matchVelocitySpeed);
+            target = Vector3.MoveTowards(rb.velocity, target, Time.fixedDeltaTime * matchVelocitySpeed);        // Move the velocity towards that of the target's
             target -= rb.velocity;
             AddForce(target);
         }
@@ -149,38 +156,43 @@ public class ShipController : MonoBehaviour
 
         Look();
 
-        PlayerController.Instance.KeepLooping();
+        PlayerController.Instance.KeepLooping();        // Keep looping through the player's necessary functions even though they have been disabled
     }
 
+    // Function to make the player take control of the ship
     public void Activate()
     {
         GravityController.SetPlayer(GetComponent<GravityReceiver>());
 
-        cam.MoveToTransform(cameraHolder);
+        cam.MoveToTransform(cameraHolder);              // Move the camera into position
         active = true;
-        InputController.SetMap("Ship");
-        PlayerController.Instance.Deactivate();
-        GlobalLightControl.SwitchToShip(transform);
-        Compass.SetActive(false);
+        InputController.SetMap("Ship");                 // Switch to the ship control scheme
+        PlayerController.Instance.Deactivate();         // Deactivate the player
+        GlobalLightControl.SwitchToShip(transform);     // Make the sun point at the ship
+        Compass.SetActive(false);                       // Disable the compass
         compassIcon.SetActive(true);
         AudioControl.AtmosphereInterpolation(1);
-        SaveManager.SetGameState(2);
+        SaveManager.SetGameState(2);                    // Tell the save file that the ship has been flown
 
         if (!SaveManager.GetBool("hint_takeOff"))
         {
-            HintManager.PlayHint("hint_takeOff");
+            HintManager.PlayHint("hint_takeOff");       // Play the basic control hints if not already played
             HintManager.PlayHint("hint_roll");
             StartCoroutine(MatchVelocityHint());
         }
     }
 
+    // Function to exit control of the ship
     public void Deactivate()
     {
         active = false;
-        InputController.SetMap("Player");
+        InputController.SetMap("Player");               // Switch back to the player control scheme
 
-        GlobalLightControl.SwitchToPlayer();
-        PlayerController.Instance.SetRotation(transform.eulerAngles);
+        GlobalLightControl.SwitchToPlayer();            // Make the sun point at the player
+
+        // Put the player in a position so that it will look like they were standing in the ship the entire time
+        // Also force the player to have the same velocity as the ship to prevent the possibility of the player getting launched due to an incorrect velocity
+        PlayerController.Instance.SetRotation(transform.eulerAngles);       
         PlayerController.Instance.SetPosition(cameraHolder.position - (PlayerController.Instance.GetCameraHolder().position - PlayerController.Instance.transform.position));
         PlayerController.Instance.ForceVelocity(rb.velocity);
         PlayerController.Instance.Activate();
@@ -188,7 +200,7 @@ public class ShipController : MonoBehaviour
 
         GravityController.SetPlayer(PlayerController.Instance.GetComponentInParent<GravityReceiver>());
 
-        cam.MoveToTransform(PlayerController.Instance.GetCameraHolder());
+        cam.MoveToTransform(PlayerController.Instance.GetCameraHolder());       // Move the camera back to the player
 
         angVel = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -196,14 +208,14 @@ public class ShipController : MonoBehaviour
 
     void Movement()
     {
-        Vector3 move = transform.forward * (shipControls[0].ReadValue<float>() - shipControls[2].ReadValue<float>());
-        move += transform.right * (shipControls[1].ReadValue<float>() - shipControls[3].ReadValue<float>());
-        move += transform.up * (shipControls[4].ReadValue<float>() - shipControls[5].ReadValue<float>()) * 1.2f;
+        Vector3 move = transform.forward * (shipControls[0].ReadValue<float>() - shipControls[2].ReadValue<float>());       // Read input from W and S keys
+        move += transform.right * (shipControls[1].ReadValue<float>() - shipControls[3].ReadValue<float>());                // Read input from A and D keys
+        move += transform.up * (shipControls[4].ReadValue<float>() - shipControls[5].ReadValue<float>()) * 1.2f;            // Read input from Shift and Control keys
 
         move *= engineStrength;
         move *= Time.fixedDeltaTime;
 
-        AddForce(move);
+        AddForce(move);                                                                                                    // Apply input as a force
     }
 
     void Look()
@@ -211,12 +223,12 @@ public class ShipController : MonoBehaviour
         float time = Time.deltaTime;
 
         // 0.5 and 0.1 are necessary to make motion smoother https://forum.unity.com/threads/mouse-delta-input.646606/
-        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f;
+        Vector2 look = lookAction.ReadValue<Vector2>() * 0.5f * 0.1f;           // Read mouse movement input
 
         angVel.x -= look.y * sensitivity;
         angVel.y += look.x * sensitivity;
 
-        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * rollSensitivity * time;
+        angVel.z -= (shipControls[6].ReadValue<float>() - shipControls[7].ReadValue<float>())  * rollSensitivity * time;        // Read input for Q and E keys, used for rolling
 
         // 0.08 makes rotation fade out rather than instantly stop
         angVel -= angVel.normalized * angVel.sqrMagnitude * 0.08f * time;
@@ -226,9 +238,9 @@ public class ShipController : MonoBehaviour
         angVel.y = Mathf.Clamp(angVel.y, -maxRotation, maxRotation);
         angVel.z = Mathf.Clamp(angVel.z, -maxRotation, maxRotation);
 
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(angVel * time));
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(angVel * time));         // Apply rotation
 
-        rb.angularVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;                                      // Prevent any unwanted rotation as a result of collision
     }
 
     public void AddForce(Vector3 force)

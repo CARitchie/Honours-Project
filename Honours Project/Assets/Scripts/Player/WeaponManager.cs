@@ -30,6 +30,7 @@ public class WeaponManager : MonoBehaviour
 
     void LoadUpgrades()
     {
+        // Make weapons more damaging if upgrade unlocked
         if (SaveManager.SelfUpgraded("upgrade_damage"))
         {
             for(int i = 0; i < weapons.Length; i++)
@@ -38,6 +39,7 @@ public class WeaponManager : MonoBehaviour
             }
         }
 
+        // Allow weapons to store more ammo if upgrade unlocked
         if (SaveManager.SelfUpgraded("upgrade_ammo"))
         {
             for (int i = 0; i < weapons.Length; i++)
@@ -63,6 +65,7 @@ public class WeaponManager : MonoBehaviour
         return weapons[index].GetWeapon();
     }
 
+    // Function to tilt the weapon as the player rotates
     public void Rotate(float yChange)
     {
         yChange *= rotateSpeed;
@@ -77,6 +80,7 @@ public class WeaponManager : MonoBehaviour
         transform.localEulerAngles = Vector3.forward * weaponZ;
     }
 
+    // Function to change weapon by using the scroll wheel
     public int Scroll(float value)
     {
         bool increase = value < 0;
@@ -125,6 +129,7 @@ public class WeaponManager : MonoBehaviour
         return states;
     }
 
+    // Function to load in the states of weapons from the save file
     public void LoadWeapons()
     {
         bool unlocked = false;
@@ -138,7 +143,7 @@ public class WeaponManager : MonoBehaviour
             {
                 UnlockWeapon(i);
                 unlocked = true;
-                if(data.currentAmmo != -1000)
+                if(data.currentAmmo != -1000)       // If a proper value for the amount of ammo has been found
                 {
                     weapons[i].GetWeapon().SetAmmo(data.currentAmmo);
                 }
@@ -148,6 +153,7 @@ public class WeaponManager : MonoBehaviour
         if (unlocked) HUD.ActivateAmmoIndicator();
     }
 
+    // Function to restore a percentage of ammo back to every weapon
     public bool AddAmmo(float percentOfMax)
     {
         bool added = false;
@@ -163,6 +169,7 @@ public class WeaponManager : MonoBehaviour
         return added;
     }
 
+    // Function to save the data for every weapon
     public void SaveWeapons()
     {
         for (int i = 0; i < weapons.Length; i++)

@@ -11,7 +11,7 @@ public class HealthItem : MonoBehaviour
         if (other.attachedRigidbody == null) return;
         if(other.attachedRigidbody.TryGetComponent(out PlayerDetails player))
         {
-            if(player.HealUp(amount)) Useful.DestroyGameObject(gameObject);
+            if(player.HealUp(amount)) Useful.DestroyGameObject(gameObject);         // Try to heal the player, destroy self if successful
         }
     }
 }
